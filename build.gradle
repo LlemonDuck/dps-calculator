@@ -2,6 +2,11 @@ plugins {
 	id 'java'
 }
 
+compileJava {
+    options.compilerArgs << '-Xmaxerrs'
+    options.compilerArgs << '50000'
+}
+
 repositories {
 	mavenLocal()
 	maven {
@@ -10,7 +15,7 @@ repositories {
 	mavenCentral()
 }
 
-def runeLiteVersion = '1.6.35'
+def runeLiteVersion = '1.7.6-SNAPSHOT'
 
 dependencies {
 	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
@@ -23,7 +28,7 @@ dependencies {
 	testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
 }
 
-group = 'com.example'
+group = 'com.duckblade.osrs'
 version = '1.0-SNAPSHOT'
 sourceCompatibility = '1.8'
 
