@@ -45,8 +45,8 @@ public class DPSCalcUITest
 
 			CalcManager cm = new CalcManager(new MageDpsCalc(), new MeleeDpsCalc(), new RangedDpsCalc());
 			NpcStatsPanel nsp = new NpcStatsPanel(npcDataManager);
-			EquipmentPanel ep = new EquipmentPanel(null, null, itemDataManager);
-			SkillsPanel sp = new SkillsPanel(null);
+			EquipmentPanel ep = new EquipmentPanel(null, null, null, itemDataManager);
+			SkillsPanel sp = new SkillsPanel(null, null);
 			PrayerPanel pp = new PrayerPanel(); // heh
 
 			// preloading (current is tbow max hit)

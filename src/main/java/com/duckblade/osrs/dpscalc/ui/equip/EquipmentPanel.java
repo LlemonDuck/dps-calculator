@@ -31,6 +31,7 @@ import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.ItemID;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.PluginPanel;
@@ -40,6 +41,7 @@ public class EquipmentPanel extends JPanel
 {
 
 	private final Client client;
+	private final ClientThread clientThread;
 	private final ItemManager rlItemManager;
 	private final ItemDataManager itemDataManager;
 
@@ -54,9 +56,10 @@ public class EquipmentPanel extends JPanel
 	private final JPanel totalsPanel;
 
 	@Inject
-	public EquipmentPanel(Client client, ItemManager rlItemManager, ItemDataManager itemDataManager)
+	public EquipmentPanel(Client client, ClientThread clientThread, ItemManager rlItemManager, ItemDataManager itemDataManager)
 	{
 		this.client = client;
+		this.clientThread = clientThread;
 		this.rlItemManager = rlItemManager;
 		this.itemDataManager = itemDataManager;
 		this.slotPanels = new HashMap<>(EquipmentInventorySlot.values().length);
@@ -89,7 +92,7 @@ public class EquipmentPanel extends JPanel
 			this.slotPanels.put(slot, innerPanel);
 			slotPanel.add(innerPanel);
 			slotPanel.add(Box.createVerticalStrut(5));
-			
+
 			if (slot == EquipmentInventorySlot.HEAD)
 				slotPanel.add(slayerCheck);
 		}
@@ -136,7 +139,7 @@ public class EquipmentPanel extends JPanel
 	{
 		return weaponModeSelect.getValue();
 	}
-	
+
 	public void setWeaponMode(WeaponMode newValue)
 	{
 		weaponModeSelect.setValue(newValue);
@@ -149,24 +152,24 @@ public class EquipmentPanel extends JPanel
 		slotPanels.forEach((key, value) -> resultMap.put(key, value.getValue()));
 		return resultMap;
 	}
-	
+
 	public void setEquipment(Map<EquipmentInventorySlot, ItemStats> newEquipment)
 	{
 		newEquipment.forEach((slot, item) -> slotPanels.get(slot).setValue(item));
-		
+
 		// don't defer this step to onEquipmentChanged, since it uses invokeLater, and a caller may set this value after setting a weapon
 		ItemStats newWeapon = newEquipment.get(EquipmentInventorySlot.WEAPON);
 		List<WeaponMode> modes = newWeapon == null ? WeaponType.UNARMED.getWeaponModes() : newWeapon.getWeaponType().getWeaponModes();
 		weaponModeSelect.setItems(modes);
-		
+
 		onEquipmentChanged();
 	}
-	
+
 	public boolean isOnSlayerTask()
 	{
 		return slayerCheck.getValue();
 	}
-	
+
 	public void setOnSlayerTask(boolean newValue)
 	{
 		slayerCheck.setValue(newValue);
@@ -177,7 +180,7 @@ public class EquipmentPanel extends JPanel
 	{
 		return tbpDartSelectPanel.getValue();
 	}
-	
+
 	public Spell getSpell()
 	{
 		return spellSelect.getValue();
@@ -185,27 +188,31 @@ public class EquipmentPanel extends JPanel
 
 	public void loadFromClient()
 	{
-		if (client == null)
-			return; // ui test
-		
-		ItemContainer equipped = client.getItemContainer(InventoryID.EQUIPMENT);
-		if (equipped == null)
-			return;
-		
-		slotPanels.forEach((slot, panel) ->
+		if (client == null || clientThread == null)
+			return; // ui test, or not init yet somehow
+
+		clientThread.invokeLater(() ->
 		{
-			Item rlItem = equipped.getItem(slot.getSlotIdx());
-			if (rlItem == null)
-			{
-				panel.setValue(null);
+			ItemContainer equipped = client.getItemContainer(InventoryID.EQUIPMENT);
+			if (equipped == null)
 				return;
-			}
+
+			slotPanels.forEach((slot, panel) ->
+			{
+				Item rlItem = equipped.getItem(slot.getSlotIdx());
+				if (rlItem == null)
+				{
+					panel.setValue(null);
+					return;
+				}
+
+				int canonicalId = rlItemManager.canonicalize(rlItem.getId());
+				ItemStats calcItem = itemDataManager.getItemStatsById(canonicalId);
+				panel.setValue(calcItem);
+			});
 			
-			int canonicalId = rlItemManager.canonicalize(rlItem.getId());
-			ItemStats calcItem = itemDataManager.getItemStatsById(canonicalId);
-			panel.setValue(calcItem);
+			onEquipmentChanged();
 		});
-		onEquipmentChanged();
 	}
 
 	public void onEquipmentChanged()
@@ -214,7 +221,7 @@ public class EquipmentPanel extends JPanel
 		{
 			Map<EquipmentInventorySlot, ItemStats> equipment = getEquipment();
 			slayerCheck.setVisible(EquipmentRequirement.BLACK_MASK_MELEE.isSatisfied(equipment));
-			
+
 			ItemStats currentWeapon = weaponSlot.getValue();
 
 			boolean dartSelectVisible = currentWeapon != null && currentWeapon.getItemId() == ItemID.TOXIC_BLOWPIPE;
@@ -296,7 +303,7 @@ public class EquipmentPanel extends JPanel
 		WeaponMode weaponMode = weaponModeSelect.getValue();
 		if (weaponMode == null)
 			return false;
-		
+
 		// ensure spell is selected if needed
 		return weaponMode.getMode() != CombatMode.MAGE || spellSelect.getValue() != null;
 	}

@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import net.runelite.api.Client;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
+import net.runelite.client.callback.ClientThread;
 
 import static net.runelite.api.Skill.*;
 
@@ -22,14 +23,16 @@ public class SkillsPanel extends JPanel
 {
 
 	private final Client client;
+	private final ClientThread clientThread;
 
 	private final Map<Skill, StatBox> statBoxes;
 	private final Map<Skill, StatBox> boostBoxes;
 
 	@Inject
-	public SkillsPanel(Client client)
+	public SkillsPanel(Client client, ClientThread clientThread)
 	{
 		this.client = client;
+		this.clientThread = clientThread;
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -65,14 +68,17 @@ public class SkillsPanel extends JPanel
 
 	private void loadFromClient()
 	{
-		if (client == null)
+		if (client == null || clientThread == null)
 			return; // ui test
 
-		Player p = client.getLocalPlayer();
-		if (p == null)
-			return;
+		clientThread.invokeLater(() ->
+		{
+			Player p = client.getLocalPlayer();
+			if (p == null)
+				return;
 
-		statBoxes.forEach((skill, box) -> box.setValue(client.getRealSkillLevel(skill)));
+			statBoxes.forEach((skill, box) -> box.setValue(client.getRealSkillLevel(skill)));
+		});
 	}
 
 	public boolean isReady()
@@ -96,7 +102,7 @@ public class SkillsPanel extends JPanel
 		statBoxes.forEach((k, v) -> results.put(k, v.getValue()));
 		return results;
 	}
-	
+
 	public void setSkills(Map<Skill, Integer> newSkills)
 	{
 		newSkills.forEach((s, v) -> statBoxes.get(s).setValue(v));

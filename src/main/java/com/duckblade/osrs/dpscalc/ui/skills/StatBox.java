@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import net.runelite.client.util.ImageUtil;
 
 public class StatBox extends JPanel
@@ -38,7 +39,7 @@ public class StatBox extends JPanel
 
 	public void setValue(int value)
 	{
-		valueField.setText(Integer.toString(value));
+		SwingUtilities.invokeLater(() -> valueField.setText(Integer.toString(value)));
 	}
 
 	public int getValue()
