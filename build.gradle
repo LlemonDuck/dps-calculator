@@ -1,10 +1,13 @@
 plugins {
 	id 'java'
+    id 'idea'
 }
 
-compileJava {
-    options.compilerArgs << '-Xmaxerrs'
-    options.compilerArgs << '50000'
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
 }
 
 repositories {
@@ -15,7 +18,7 @@ repositories {
 	mavenCentral()
 }
 
-def runeLiteVersion = '1.7.6-SNAPSHOT'
+def runeLiteVersion = '1.7.6'
 
 dependencies {
 	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
