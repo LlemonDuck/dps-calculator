@@ -108,7 +108,7 @@ public class MageDpsCalc extends AbstractCalc
 		if (bonusProvider != null)
 			maxHit += bonusProvider.apply(input);
 		
-		float magDmgBonus = input.getEquipmentStats().getStrengthMagic() / 100f;
+		float magDmgBonus = input.getEquipmentStats().getStrengthMagic() / 100f + 1f;
 		maxHit = (int) (maxHit * magDmgBonus);
 		
 		if (salveLevel(input) == 2)
