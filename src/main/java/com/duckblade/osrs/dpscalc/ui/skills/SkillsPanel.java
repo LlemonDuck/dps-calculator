@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.Box;
@@ -29,7 +30,7 @@ public class SkillsPanel extends JPanel
 	private final Map<Skill, StatBox> boostBoxes;
 
 	@Inject
-	public SkillsPanel(Client client, ClientThread clientThread)
+	public SkillsPanel(@Nullable Client client, @Nullable ClientThread clientThread)
 	{
 		this.client = client;
 		this.clientThread = clientThread;

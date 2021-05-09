@@ -16,8 +16,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -36,7 +36,6 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.PluginPanel;
 
-@Singleton
 public class EquipmentPanel extends JPanel
 {
 
@@ -56,7 +55,7 @@ public class EquipmentPanel extends JPanel
 	private final JPanel totalsPanel;
 
 	@Inject
-	public EquipmentPanel(Client client, ClientThread clientThread, ItemManager rlItemManager, ItemDataManager itemDataManager)
+	public EquipmentPanel(@Nullable Client client, @Nullable ClientThread clientThread, @Nullable ItemManager rlItemManager, ItemDataManager itemDataManager)
 	{
 		this.client = client;
 		this.clientThread = clientThread;
@@ -102,15 +101,12 @@ public class EquipmentPanel extends JPanel
 
 		tbpDartSelectPanel = new CustomJComboBox<>(itemDataManager.getAllDarts(), ItemStats::getName, "Blowpipe Darts");
 		tbpDartSelectPanel.setCallback(this::onEquipmentChanged);
-		tbpDartSelectPanel.setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH - 25, 50));
 		tbpDartSelectPanel.setAlignmentX(CENTER_ALIGNMENT);
 		tbpDartSelectPanel.setVisible(false);
-		tbpDartSelectPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 		add(tbpDartSelectPanel);
 
 		weaponModeSelect = new CustomJComboBox<>(WeaponType.UNARMED.getWeaponModes(), WeaponMode::getDisplayName, "Weapon Mode");
 		weaponModeSelect.setCallback(this::onEquipmentChanged);
-		weaponModeSelect.setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH - 25, 50));
 		weaponModeSelect.setAlignmentX(CENTER_ALIGNMENT);
 		add(weaponModeSelect);
 
@@ -118,7 +114,6 @@ public class EquipmentPanel extends JPanel
 
 		spellSelect = new CustomJComboBox<>(Collections.emptyList(), Spell::getDisplayName, "Spell");
 		spellSelect.setCallback(this::onEquipmentChanged);
-		spellSelect.setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH - 25, 50));
 		spellSelect.setAlignmentX(CENTER_ALIGNMENT);
 		spellSelect.setVisible(false);
 		spellSelect.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));

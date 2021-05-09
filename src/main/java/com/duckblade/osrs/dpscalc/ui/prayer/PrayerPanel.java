@@ -9,14 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import net.runelite.client.ui.PluginPanel;
 
-@Singleton
 public class PrayerPanel extends JPanel
 {
 

@@ -1,9 +1,10 @@
 package com.duckblade.osrs.dpscalc;
 
 import com.duckblade.osrs.dpscalc.model.NpcStats;
-import com.duckblade.osrs.dpscalc.ui.DpsCalculatorPanel;
+import com.duckblade.osrs.dpscalc.ui.DpsPluginPanel;
 import com.google.inject.Provides;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.MenuAction;
@@ -20,6 +21,7 @@ import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.util.ImageUtil;
 
 @Slf4j
+@Singleton
 @PluginDescriptor(
 		name = "DPS Calculator"
 )
@@ -33,20 +35,20 @@ public class DpsCalcPlugin extends Plugin
 
 	@Inject
 	private DpsCalcConfig config;
-	
+
 	@Inject
 	private NpcDataManager npcDataManager;
-	
-	private DpsCalculatorPanel panel;
+
+	private DpsPluginPanel panel;
 
 	private NavigationButton navButton;
-	
+
 	private static final String ACTION_DPS_NPC = "DPS";
 
 	@Override
 	protected void startUp()
 	{
-		panel = injector.getInstance(DpsCalculatorPanel.class);
+		panel = injector.getInstance(DpsPluginPanel.class);
 
 		navButton = NavigationButton.builder()
 				.priority(5)
@@ -72,7 +74,7 @@ public class DpsCalcPlugin extends Plugin
 	{
 		if (!config.showMinimenuEntry())
 			return;
-		
+
 		if (MenuAction.of(event.getType()) == MenuAction.EXAMINE_NPC)
 		{
 			NPC npc = client.getCachedNPCs()[event.getIdentifier()];
@@ -87,7 +89,7 @@ public class DpsCalcPlugin extends Plugin
 				loadToDpsPanelEntry.setParam0(event.getActionParam0());
 				loadToDpsPanelEntry.setParam1(event.getActionParam1());
 				loadToDpsPanelEntry.setIdentifier(event.getIdentifier());
-				
+
 				MenuEntry[] currentEntries = client.getMenuEntries();
 				MenuEntry[] newEntries = new MenuEntry[currentEntries.length + 1];
 				System.arraycopy(currentEntries, 0, newEntries, 0, currentEntries.length);
@@ -96,7 +98,7 @@ public class DpsCalcPlugin extends Plugin
 			}
 		}
 	}
-	
+
 	@Subscribe
 	public void onMenuOptionClicked(MenuOptionClicked event)
 	{
@@ -108,9 +110,9 @@ public class DpsCalcPlugin extends Plugin
 		NpcStats stats = npcDataManager.getNpcStatsById(npcId);
 		if (stats == null)
 			return;
-		
+
 		panel.openNpcStats(stats);
-		
+
 		if (!navButton.isSelected())
 			navButton.getOnSelect().run();
 	}

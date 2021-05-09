@@ -41,6 +41,7 @@ public class MenuPanelNavEntry extends JPanel
 		setOpaque(true);
 		setBackground(ColorScheme.DARKER_GRAY_COLOR.darker());
 		setPreferredSize(new Dimension(PluginPanel.PANEL_WIDTH - 20, 40));
+		setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH - 20, 40));
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		JButton navButton = new JButton(NAVIGATION_ICON);

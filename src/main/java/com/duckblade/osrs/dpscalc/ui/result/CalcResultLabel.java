@@ -1,4 +1,4 @@
-package com.duckblade.osrs.dpscalc.ui;
+package com.duckblade.osrs.dpscalc.ui.result;
 
 import com.duckblade.osrs.dpscalc.calc.CalcResult;
 import java.awt.Color;

@@ -1,15 +1,21 @@
 package com.duckblade.osrs.dpscalc.ui.util;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.List;
 import java.util.function.Function;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import lombok.Setter;
+import net.runelite.client.ui.PluginPanel;
 
 public class CustomJComboBox<T> extends JPanel
 {
+	
+	private static final int HEIGHT_WITH_TITLE = 40;
+	private static final int HEIGHT_WITHOUT_TITLE = 25;
 
 	private final JLabel titleLabel;
 	private final JComboBox<String> comboBox;
@@ -25,6 +31,8 @@ public class CustomJComboBox<T> extends JPanel
 	public CustomJComboBox(List<T> items, Function<T, String> displayMapper, String title)
 	{
 		this.displayMapper = displayMapper;
+		setMinimumSize(new Dimension(0, title != null ? HEIGHT_WITH_TITLE : HEIGHT_WITHOUT_TITLE));
+		setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH, title != null ? HEIGHT_WITH_TITLE : HEIGHT_WITHOUT_TITLE));
 		setLayout(new BorderLayout());
 
 		titleLabel = new JLabel();
@@ -44,21 +52,25 @@ public class CustomJComboBox<T> extends JPanel
 
 	public void setTitle(String title)
 	{
-		boolean alreadyVisible = titleLabel.isVisible();
-		titleLabel.setText(title);
-		titleLabel.setVisible(title != null);
+		SwingUtilities.invokeLater(() ->
+		{
+			boolean alreadyVisible = titleLabel.isVisible();
+			titleLabel.setText(title);
+			titleLabel.setVisible(title != null);
+			setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH, title != null ? HEIGHT_WITH_TITLE : HEIGHT_WITHOUT_TITLE));
 
-		if (!alreadyVisible && titleLabel.isVisible())
-			add(titleLabel, BorderLayout.NORTH);
-		else if (alreadyVisible && !titleLabel.isVisible())
-			remove(titleLabel);
+			if (!alreadyVisible && titleLabel.isVisible())
+				add(titleLabel, BorderLayout.NORTH);
+			else if (alreadyVisible && !titleLabel.isVisible())
+				remove(titleLabel);
+		});
 	}
 
 	public void setItems(List<T> newItems)
 	{
 		if (newItems == items)
 			return;
-		
+
 		callbackEnabled = false;
 		items = newItems;
 		comboBox.removeAllItems();

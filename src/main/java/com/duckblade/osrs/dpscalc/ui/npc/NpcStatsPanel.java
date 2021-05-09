@@ -3,27 +3,21 @@ package com.duckblade.osrs.dpscalc.ui.npc;
 import com.duckblade.osrs.dpscalc.NpcDataManager;
 import com.duckblade.osrs.dpscalc.model.NpcStats;
 import com.duckblade.osrs.dpscalc.ui.skills.StatCategory;
+import com.duckblade.osrs.dpscalc.ui.util.CustomJCheckBox;
 import com.duckblade.osrs.dpscalc.ui.util.CustomJComboBox;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import net.runelite.client.ui.PluginPanel;
 
-@Singleton
 public class NpcStatsPanel extends JPanel
 {
 
-	private final JCheckBox manualEntry;
+	private final CustomJCheckBox manualEntry;
 	private final CustomJComboBox<NpcStats> npcSelect;
 
 	private final List<NpcStatBox> statBoxes;
@@ -34,27 +28,11 @@ public class NpcStatsPanel extends JPanel
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		JPanel manualEntryPanel = new JPanel();
-		manualEntryPanel.setLayout(new BorderLayout());
-		add(manualEntryPanel);
+		manualEntry = new CustomJCheckBox("Manual Entry Mode");
+		manualEntry.setCallback(() -> setManualMode(manualEntry.getValue()));
+		add(manualEntry);
 
-		manualEntry = new JCheckBox();
-		manualEntry.addActionListener(e -> setManualMode(manualEntry.isSelected()));
-		manualEntryPanel.add(manualEntry, BorderLayout.WEST);
-
-		JLabel manualEntryLabel = new JLabel("Manual Entry Mode");
-		manualEntryLabel.addMouseListener(new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-				manualEntry.setSelected(!manualEntry.isSelected());
-				setManualMode(manualEntry.isSelected());
-			}
-		});
-		manualEntryPanel.add(manualEntryLabel, BorderLayout.CENTER);
-
-		add(Box.createRigidArea(new Dimension(1, 5)));
+		add(Box.createVerticalStrut(5));
 
 		npcSelect = new CustomJComboBox<>(npcDataManager.getAll(), NpcStats::getName, null);
 		npcSelect.setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH - 25, 25));
@@ -117,12 +95,12 @@ public class NpcStatsPanel extends JPanel
 
 	public boolean isReady()
 	{
-		return manualEntry.isSelected() || npcSelect.getValue() != null;
+		return manualEntry.getValue() || npcSelect.getValue() != null;
 	}
 
 	public NpcStats toNpcStats()
 	{
-		if (!manualEntry.isSelected())
+		if (!manualEntry.getValue())
 			return npcSelect.getValue();
 
 		NpcStats.NpcStatsBuilder builder = NpcStats.builder();
@@ -133,7 +111,7 @@ public class NpcStatsPanel extends JPanel
 
 	public void loadNpcStats(NpcStats stats)
 	{
-		manualEntry.setSelected(false);
+		manualEntry.setValue(false);
 		npcSelect.setValue(stats);
 		loadValues(stats);
 	}
@@ -156,7 +134,7 @@ public class NpcStatsPanel extends JPanel
 		if (!isReady())
 			return "Not Set";
 
-		return manualEntry.isSelected() ? "Entered Manually" : npcSelect.getValue().getName();
+		return manualEntry.getValue() ? "Entered Manually" : npcSelect.getValue().getName();
 	}
 
 }
