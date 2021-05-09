@@ -51,6 +51,7 @@ public class DpsCalcPlugin extends Plugin
 		navButton = NavigationButton.builder()
 				.priority(5)
 				.icon(ImageUtil.loadImageResource(getClass(), "ui/equip/slot_0.png"))
+				.tooltip("DPS Calculator")
 				.panel(panel)
 				.build();
 		toolbar.addNavigation(navButton);
