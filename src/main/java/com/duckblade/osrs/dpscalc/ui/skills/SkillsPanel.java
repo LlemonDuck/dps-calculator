@@ -1,9 +1,14 @@
 package com.duckblade.osrs.dpscalc.ui.skills;
 
+import com.duckblade.osrs.dpscalc.ui.util.CustomJComboBox;
 import com.google.common.collect.ImmutableMap;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -16,6 +21,7 @@ import net.runelite.api.Client;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.ui.PluginPanel;
 
 import static net.runelite.api.Skill.*;
 
@@ -65,6 +71,25 @@ public class SkillsPanel extends JPanel
 				.put(PRAYER, new StatBox("prayer", true))
 				.build();
 		add(new StatCategory("Boosts", new ArrayList<>(boostBoxes.values())));
+		
+		add(Box.createVerticalStrut(10));
+
+		List<SkillBoostPreset> presets = Arrays.asList(SkillBoostPreset.values());
+		presets.sort(Comparator.comparing(SkillBoostPreset::getDisplayName));
+		CustomJComboBox<SkillBoostPreset> presetSelect = new CustomJComboBox<>(presets, SkillBoostPreset::getDisplayName, null);
+		add(presetSelect);
+
+		JButton applyPresetButton = new JButton("Apply");
+		applyPresetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		applyPresetButton.setMinimumSize(new Dimension(0, 35));
+		applyPresetButton.setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH, 30));
+		applyPresetButton.addActionListener(e ->
+		{
+			SkillBoostPreset preset = presetSelect.getValue();
+			if (preset != null)
+				preset.apply(statBoxes, boostBoxes);
+		});
+		add(applyPresetButton);
 	}
 
 	private void loadFromClient()

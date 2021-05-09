@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -33,7 +32,7 @@ import net.runelite.client.util.ImageUtil;
 public class DpsPluginPanel extends PluginPanel
 {
 	private static final int INPUT_SET_COUNT = 5;
-	
+
 	private final JPanel inputCardPanel;
 	private final CardLayout inputCardLayout;
 
@@ -41,12 +40,6 @@ public class DpsPluginPanel extends PluginPanel
 	private final List<DpsCalcPanel> inputPanels;
 
 	private static final String GITHUB_LINK = "https://github.com/LlemonDuck/dps-calculator";
-
-	// used by ui test
-	public DpsPluginPanel(DpsCalcPanel... calcPanels)
-	{
-		this(Arrays.asList(calcPanels));
-	}
 
 	// used by plugin
 	@Inject
