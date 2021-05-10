@@ -1,6 +1,7 @@
 package com.duckblade.osrs.dpscalc.calc;
 
 import com.duckblade.osrs.dpscalc.model.CombatFocus;
+import com.duckblade.osrs.dpscalc.model.NpcStats;
 import com.duckblade.osrs.dpscalc.model.Prayer;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
@@ -64,7 +65,8 @@ public class RangedDpsCalc extends AbstractCalc
 
 		maxHit = (int) (maxHit * leafyMod(input));
 
-		if (input.getNpcTarget().getName().contains("Zulrah"))
+		NpcStats target = input.getNpcTarget();
+		if (target.getName() != null && target.getName().contains("Zulrah"))
 			maxHit = Math.min(maxHit, 50);
 
 		return maxHit;

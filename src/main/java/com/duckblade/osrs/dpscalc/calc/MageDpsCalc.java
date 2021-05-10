@@ -120,8 +120,9 @@ public class MageDpsCalc extends AbstractCalc
 			maxHit = (int) (maxHit * 1.5f);
 		
 		maxHit *= leafyMod(input);
-		
-		if (input.getNpcTarget().getName().contains("Zulrah"))
+
+		NpcStats target = input.getNpcTarget();
+		if (target.getName() != null && target.getName().contains("Zulrah"))
 			maxHit = Math.min(maxHit, 50);
 
 		return maxHit;
