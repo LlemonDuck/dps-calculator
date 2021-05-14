@@ -22,9 +22,9 @@ public enum Spell
 	SARADOMIN_STRIKE("Saradomin Strike", 20, Spellbook.POWERED_STAVES),
 	CRUMBLE_UNDEAD("Crumble Undead", 15, Spellbook.POWERED_STAVES),
 	IBAN_BLAST("Iban Blast", 25, Spellbook.POWERED_STAVES),
-	SANGUINESTI("", 24, Spellbook.POWERED_STAVES),
-	SWAMP("", 23, Spellbook.POWERED_STAVES),
-	SEAS("", 20, Spellbook.POWERED_STAVES),
+	SANGUINESTI("Sanguinesti Staff", 24, Spellbook.POWERED_STAVES),
+	SWAMP("Trident of the Swamp", 23, Spellbook.POWERED_STAVES),
+	SEAS("Trident of the Seas", 20, Spellbook.POWERED_STAVES),
 	
 	// ancient spells
 	ICE_BARRAGE("Ice Barrage", 30, Spellbook.ANCIENT),
