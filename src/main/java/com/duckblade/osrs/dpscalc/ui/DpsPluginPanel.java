@@ -27,6 +27,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.util.ImageUtil;
+import net.runelite.client.util.LinkBrowser;
 
 @Singleton
 public class DpsPluginPanel extends PluginPanel
@@ -93,23 +94,7 @@ public class DpsPluginPanel extends PluginPanel
 
 	private void openGhLink()
 	{
-		if (!Desktop.isDesktopSupported())
-		{
-			JOptionPane.showMessageDialog(this, "Your desktop environment does not support opening links automatically. " +
-					"You can file issues, read the source, or contribute to this plugin at " + GITHUB_LINK);
-			return;
-		}
-
-		try
-		{
-			URI ghUri = URI.create(GITHUB_LINK);
-			Desktop.getDesktop().browse(ghUri);
-		}
-		catch (Exception e)
-		{
-			JOptionPane.showMessageDialog(this, "Your desktop environment does not support opening links automatically. " +
-					"You can file issues, read the source, or contribute to this plugin at " + GITHUB_LINK);
-		}
+		LinkBrowser.browse(GITHUB_LINK);
 	}
 
 	private DpsCalcPanel currentPanel()
