@@ -14,10 +14,10 @@ public enum SkillBoostPreset
 	DEFENSE_POTION("Defence potion", Skill.DEFENCE, 0.10f, 3),
 	COMBAT_POTION("Combat potion", ATTACK_POTION, STRENGTH_POTION, DEFENSE_POTION),
 
-	SUPER_ATTACK_POTION("Attack potion", Skill.ATTACK, 0.15f, 5),
-	SUPER_STRENGTH_POTION("Strength potion", Skill.STRENGTH, 0.15f, 5),
-	SUPER_DEFENSE_POTION("Defence potion", Skill.DEFENCE, 0.15f, 5),
-	SUPER_COMBAT_POTION("Combat potion", SUPER_ATTACK_POTION, SUPER_STRENGTH_POTION, SUPER_DEFENSE_POTION),
+	SUPER_ATTACK_POTION("Super attack potion", Skill.ATTACK, 0.15f, 5),
+	SUPER_STRENGTH_POTION("Super strength potion", Skill.STRENGTH, 0.15f, 5),
+	SUPER_DEFENSE_POTION("Super defence potion", Skill.DEFENCE, 0.15f, 5),
+	SUPER_COMBAT_POTION("Super combat potion", SUPER_ATTACK_POTION, SUPER_STRENGTH_POTION, SUPER_DEFENSE_POTION),
 
 	RANGING_POTION("Ranging potion", Skill.RANGED, 0.10f, 4),
 	SUPER_RANGING_POTION("Super ranging potion", Skill.RANGED, 0.15f, 5),
