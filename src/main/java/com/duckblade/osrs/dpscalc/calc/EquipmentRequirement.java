@@ -29,7 +29,7 @@ public enum EquipmentRequirement
 	TBOW(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{TWISTED_BOW}}),
 	LEAF_BLADED_MELEE(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{LEAFBLADED_BATTLEAXE, LEAFBLADED_SPEAR, LEAFBLADED_SWORD}}),
 	LEAF_BLADED_BAXE(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{LEAFBLADED_BATTLEAXE}}),
-	LEAF_BLADED_RANGED(new EquipmentInventorySlot[] {AMMO}, new int[][] {{BROAD_BOLTS, BROAD_ARROWS}}),
+	LEAF_BLADED_RANGED(new EquipmentInventorySlot[] {AMMO}, new int[][] {{BROAD_BOLTS, BROAD_ARROWS_4160}}),
 	OBSIDIAN_WEAPON(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{TOKTZXILEK, TOKTZXILAK, TOKTZXILAK_20554, TZHAARKETEM, TZHAARKETOM, TZHAARKETOM_T}}),
 	OBSIDIAN_ARMOUR(new EquipmentInventorySlot[] {HEAD, BODY, LEGS}, new int[][] {{OBSIDIAN_HELMET}, {OBSIDIAN_PLATEBODY}, {OBSIDIAN_PLATELEGS}}),
 	OBSIDIAN_NECKLACE(new EquipmentInventorySlot[] {AMULET}, new int[][] {{BERSERKER_NECKLACE, BERSERKER_NECKLACE_OR}}),
