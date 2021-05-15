@@ -17,13 +17,17 @@ import net.runelite.client.ui.FontManager;
 public class CalcResultPanel extends JPanel
 {
 
-	private static final DecimalFormat DPS_FORMAT = new DecimalFormat("#.###");
+	private static final DecimalFormat DPS_FORMAT = new DecimalFormat("'DPS:' #.###");
 	private static final DecimalFormat ROLL_FORMAT = new DecimalFormat("#,###");
 	private static final DecimalFormat HIT_CHANCE_FORMAT = new DecimalFormat("#.#%");
 	private static final DecimalFormat HIT_RATE_FORMAT = new DecimalFormat("#.# 'secs'");
+	private static String timeFormat(int seconds)
+	{
+		return seconds == -1 ? "N/A" : String.format("%02d:%02d", seconds / 60, seconds % 60);
+	}
 
 	private final JLabel dpsValue;
-	private static final String DPS_CALC_FAIL = "???";
+	private static final String DPS_CALC_FAIL = "DPS: ???";
 	
 	private final List<CalcResultLabel> resultLabels;
 
@@ -34,12 +38,6 @@ public class CalcResultPanel extends JPanel
 		
 		Font originalBold = FontManager.getRunescapeBoldFont();
 		Font dpsFont = originalBold.deriveFont(originalBold.getSize() * 2f);
-
-		JLabel dpsHeader = new JLabel("DPS:", JLabel.CENTER);
-		dpsHeader.setAlignmentX(CENTER_ALIGNMENT);
-		dpsHeader.setForeground(Color.white);
-		dpsHeader.setFont(dpsFont);
-		add(dpsHeader);
 
 		dpsValue = new JLabel(DPS_CALC_FAIL, JLabel.CENTER);
 		dpsValue.setAlignmentX(CENTER_ALIGNMENT);
@@ -54,16 +52,20 @@ public class CalcResultPanel extends JPanel
 				new CalcResultLabel("NPC Defense Roll:", r -> ROLL_FORMAT.format(r.getDefenseRoll())),
 				new CalcResultLabel("Max Hit:", r -> String.valueOf(r.getMaxHit())),
 				new CalcResultLabel("Hit Chance:", r -> HIT_CHANCE_FORMAT.format(r.getHitChance())),
+				
 				new CalcResultLabel("Attack Every:", r -> HIT_RATE_FORMAT.format(r.getHitRate())),
-				new CalcResultLabel("Prayer Lasts:", r ->
-				{
-					int seconds = r.getPrayerSeconds();
-					if (seconds == -1)
-						return "N/A"; //infinity
-					return String.format("%02d:%02d", seconds / 60, seconds % 60);
-				})
+				new CalcResultLabel("Avg TTK:", r -> timeFormat(r.getAvgTtk())),
+				
+				new CalcResultLabel("Prayer Lasts:", r -> timeFormat(r.getPrayerSeconds()))
 		);
-		resultLabels.forEach(this::add);
+		
+		resultLabels.subList(0, 4).forEach(this::add);
+		add(Box.createVerticalStrut(10));
+
+		resultLabels.subList(4, 6).forEach(this::add);
+		add(Box.createVerticalStrut(10));
+		
+		resultLabels.subList(6, 7).forEach(this::add);
 	}
 	
 	public void setValue(CalcResult newValue)

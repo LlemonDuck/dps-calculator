@@ -23,6 +23,7 @@ public abstract class AbstractCalc
 		float dps = (maxHit * hitChance) / (2f * weaponSpeed * SECONDS_PER_TICK);
 		
 		int prayerTime = prayerTimer(input);
+		int ttk = dps == 0 ? -1 : (int) Math.ceil((float) input.getNpcTarget().getLevelHp() / dps);
 		
 		return CalcResult.builder()
 				.attackRoll(attRoll)
@@ -32,6 +33,7 @@ public abstract class AbstractCalc
 				.hitRate(weaponSpeed * SECONDS_PER_TICK)
 				.dps(dps)
 				.prayerSeconds(prayerTime)
+				.avgTtk(ttk)
 				.build();
 	}
 
