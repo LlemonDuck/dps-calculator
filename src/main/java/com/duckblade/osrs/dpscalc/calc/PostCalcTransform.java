@@ -8,6 +8,17 @@ import static com.duckblade.osrs.dpscalc.calc.AbstractCalc.SECONDS_PER_TICK;
 public enum PostCalcTransform
 {
 
+	DHAROKS_SET_EFFECT(EquipmentRequirement.DHAROKS, (input, result) ->
+	{
+		int maxHp = input.getMaxHp();
+		int currentHp = input.getActiveHp();
+		
+		// wiki says "the following damage modifier is applied to a player's hit after the damage roll"
+		// but the operation is commutative with regular dps calculation
+		float dharokMod = 1 + ((maxHp - currentHp) / 100f) * (maxHp / 100f);
+		return result.withDps(result.getDps() * dharokMod)
+				.withMaxHit((int) (result.getMaxHit() * dharokMod));
+	}),
 	KARILS_SET_EFFECT(EquipmentRequirement.KARIL, (input, result) ->
 	{
 		if (!EquipmentRequirement.AMULET_DAMNED.isSatisfied(input))

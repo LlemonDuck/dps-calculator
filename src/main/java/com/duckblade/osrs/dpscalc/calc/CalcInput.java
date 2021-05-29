@@ -40,6 +40,10 @@ public class CalcInput
 
 	private final boolean onSlayerTask; // slayer helms
 	
+	// dharok's
+	private final int activeHp;
+	private final int maxHp;
+	
 	private final boolean usingCharge;
 
 }

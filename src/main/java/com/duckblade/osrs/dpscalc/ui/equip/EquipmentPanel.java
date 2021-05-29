@@ -10,8 +10,11 @@ import com.duckblade.osrs.dpscalc.model.WeaponMode;
 import com.duckblade.osrs.dpscalc.model.WeaponType;
 import com.duckblade.osrs.dpscalc.ui.util.CustomJCheckBox;
 import com.duckblade.osrs.dpscalc.ui.util.CustomJComboBox;
+import com.duckblade.osrs.dpscalc.ui.util.JTextFieldIntOnlyKeyAdapter;
+import com.duckblade.osrs.dpscalc.ui.util.SelectAllFocusListener;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +27,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
@@ -51,6 +55,10 @@ public class EquipmentPanel extends JPanel
 	private final CustomJComboBox<ItemStats> tbpDartSelectPanel;
 	private final CustomJComboBox<WeaponMode> weaponModeSelect;
 	private final CustomJComboBox<Spell> spellSelect;
+	
+	private final JPanel dharokPanel;
+	private final JTextField dharokHpField;
+	private final JTextField dharokMaxHpField;
 
 	private final JPanel totalsPanel;
 
@@ -98,6 +106,31 @@ public class EquipmentPanel extends JPanel
 		weaponSlot = slotPanels.get(EquipmentInventorySlot.WEAPON);
 
 		add(Box.createVerticalStrut(5));
+
+		dharokHpField = new JTextField("1", 3);
+		dharokHpField.setAlignmentX(Component.CENTER_ALIGNMENT); // of component
+		dharokHpField.setHorizontalAlignment(JTextField.CENTER); // of inner text
+		dharokHpField.addFocusListener(new SelectAllFocusListener(dharokHpField));
+		dharokHpField.addKeyListener(new JTextFieldIntOnlyKeyAdapter());
+
+		dharokMaxHpField = new JTextField("99", 3);
+		dharokMaxHpField.setAlignmentX(Component.CENTER_ALIGNMENT); // of component
+		dharokMaxHpField.setHorizontalAlignment(JTextField.CENTER); // of inner text
+		dharokMaxHpField.addFocusListener(new SelectAllFocusListener(dharokHpField));
+		dharokMaxHpField.addKeyListener(new JTextFieldIntOnlyKeyAdapter());
+		
+		dharokPanel = new JPanel();
+		dharokPanel.setMinimumSize(new Dimension(0, 70));
+		dharokPanel.setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH, 70));
+		dharokPanel.setLayout(new GridLayout(3, 2));
+		dharokPanel.setVisible(false);
+		add(dharokPanel);
+		
+		dharokPanel.add(new JLabel("Active HP"));
+		dharokPanel.add(new JLabel("Max HP"));
+		dharokPanel.add(dharokHpField);
+		dharokPanel.add(dharokMaxHpField);
+		dharokPanel.add(Box.createVerticalStrut(10));
 
 		tbpDartSelectPanel = new CustomJComboBox<>(itemDataManager.getAllDarts(), ItemStats::getName, "Blowpipe Darts");
 		tbpDartSelectPanel.setCallback(this::onEquipmentChanged);
@@ -170,6 +203,30 @@ public class EquipmentPanel extends JPanel
 		slayerCheck.setValue(newValue);
 		onEquipmentChanged();
 	}
+	
+	public int getActiveHp()
+	{
+		if (!dharokPanel.isVisible())
+			return 1;
+		
+		String content = dharokHpField.getText();
+		if (content.isEmpty())
+			return 1;
+		
+		return Integer.parseInt(content);
+	}
+	
+	public int getMaxHp()
+	{
+		if (!dharokPanel.isVisible())
+			return 99;
+
+		String content = dharokMaxHpField.getText();
+		if (content.isEmpty())
+			return 99;
+
+		return Integer.parseInt(content);
+	}
 
 	public ItemStats getTbpDarts()
 	{
@@ -221,6 +278,9 @@ public class EquipmentPanel extends JPanel
 
 			boolean dartSelectVisible = currentWeapon != null && currentWeapon.getItemId() == ItemID.TOXIC_BLOWPIPE;
 			tbpDartSelectPanel.setVisible(dartSelectVisible);
+			
+			boolean hpVisible = EquipmentRequirement.DHAROKS.isSatisfied(equipment);
+			dharokPanel.setVisible(hpVisible);
 
 			List<WeaponMode> modes = currentWeapon == null ? WeaponType.UNARMED.getWeaponModes() : currentWeapon.getWeaponType().getWeaponModes();
 			weaponModeSelect.setItems(modes);
