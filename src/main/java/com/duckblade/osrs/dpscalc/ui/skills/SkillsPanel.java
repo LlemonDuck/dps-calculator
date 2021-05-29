@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -25,7 +24,6 @@ import net.runelite.client.ui.PluginPanel;
 
 import static net.runelite.api.Skill.*;
 
-@Singleton
 public class SkillsPanel extends JPanel
 {
 
