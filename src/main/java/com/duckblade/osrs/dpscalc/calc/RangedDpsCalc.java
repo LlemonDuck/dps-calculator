@@ -64,6 +64,7 @@ public class RangedDpsCalc extends AbstractCalc
 		maxHit = (int) (maxHit * gearBonus(input));
 
 		maxHit = (int) (maxHit * leafyMod(input));
+		maxHit = (int) (maxHit * crystalStrMod(input));
 
 		NpcStats target = input.getNpcTarget();
 		if (target.getName() != null && target.getName().contains("Zulrah"))
@@ -94,6 +95,7 @@ public class RangedDpsCalc extends AbstractCalc
 			rngAttack = (int) (rngAttack * 1.3f);
 
 		rngAttack = (int) (rngAttack * leafyMod(input));
+		rngAttack = (int) (rngAttack * crystalAttMod(input));
 
 		return rngAttack;
 	}
