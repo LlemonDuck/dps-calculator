@@ -4,7 +4,7 @@ import net.runelite.api.Skill;
 
 public abstract class AbstractCalc
 {
-	private static final float SECONDS_PER_TICK = 0.6f;
+	public static final float SECONDS_PER_TICK = 0.6f;
 
 	abstract int attackRoll(CalcInput input);
 
@@ -23,9 +23,9 @@ public abstract class AbstractCalc
 		float dps = (maxHit * hitChance) / (2f * weaponSpeed * SECONDS_PER_TICK);
 		
 		int prayerTime = prayerTimer(input);
-		int ttk = dps == 0 ? -1 : (int) Math.ceil((float) input.getNpcTarget().getLevelHp() / dps);
 		
-		return CalcResult.builder()
+		// build intermediary result
+		CalcResult result = CalcResult.builder()
 				.attackRoll(attRoll)
 				.defenseRoll(defRoll)
 				.maxHit(maxHit)
@@ -33,8 +33,18 @@ public abstract class AbstractCalc
 				.hitRate(weaponSpeed * SECONDS_PER_TICK)
 				.dps(dps)
 				.prayerSeconds(prayerTime)
-				.avgTtk(ttk)
+				.avgTtk(0)
 				.build();
+		
+		// process post-calc effects like verac's and karil's
+		result = PostCalcTransform.processAll(input, result);
+		
+		// calculate ttk
+		dps = result.getDps();
+		int ttk = dps == 0 ? -1 : (int) Math.ceil((float) input.getNpcTarget().getLevelHp() / dps);
+		result = result.withAvgTtk(ttk);
+		
+		return result;
 	}
 
 	private float hitChance(int attRoll, int defRoll)

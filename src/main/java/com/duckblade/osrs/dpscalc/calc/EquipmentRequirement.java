@@ -22,7 +22,9 @@ public enum EquipmentRequirement
 	SALVE_MAGE_RANGED(new EquipmentInventorySlot[] {AMULET}, new int[][] {{SALVE_AMULETI, SALVE_AMULETEI}}),
 	AMULET_DAMNED(new EquipmentInventorySlot[] {AMULET}, new int[][] {{AMULET_OF_THE_DAMNED, AMULET_OF_THE_DAMNED_FULL}}),
 	SALVE_ENHANCED(new EquipmentInventorySlot[] {AMULET}, new int[][] {{SALVE_AMULET_E, SALVE_AMULETEI}}),
-	AHRIMS(new EquipmentInventorySlot[] {HEAD, BODY, LEGS}, new int[][] {{AHRIMS_HOOD}, {AHRIMS_ROBETOP}, {AHRIMS_ROBESKIRT}}),
+	AHRIMS(new EquipmentInventorySlot[] {HEAD, BODY, LEGS, WEAPON}, new int[][] {{AHRIMS_HOOD}, {AHRIMS_ROBETOP}, {AHRIMS_ROBESKIRT}, {AHRIMS_STAFF}}),
+	KARIL(new EquipmentInventorySlot[] {HEAD, BODY, LEGS, WEAPON}, new int[][] {{KARILS_COIF}, {KARILS_LEATHERTOP}, {KARILS_LEATHERSKIRT}, {KARILS_CROSSBOW}}),
+	VERACS(new EquipmentInventorySlot[] {HEAD, BODY, LEGS, WEAPON}, new int[][] {{VERACS_HELM}, {VERACS_BRASSARD}, {VERACS_PLATESKIRT}, {VERACS_FLAIL}}),
 	MAGE_CHAOS_GAUNTLETS(new EquipmentInventorySlot[] {GLOVES}, new int[][] {{CHAOS_GAUNTLETS}}),
 	FIRE_TOME(new EquipmentInventorySlot[] {SHIELD}, new int[][] {{TOME_OF_FIRE}}),
 	DRAGON_HUNTER(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{DRAGON_HUNTER_LANCE, DRAGON_HUNTER_CROSSBOW}}),
@@ -59,7 +61,7 @@ public enum EquipmentRequirement
 		Map<EquipmentInventorySlot, ItemStats> equipment = input.getPlayerEquipment();
 		return isSatisfied(equipment);
 	}
-	
+
 	public boolean isSatisfied(Map<EquipmentInventorySlot, ItemStats> equipment)
 	{
 		for (int i = 0; i < slots.length; i++)

@@ -1,5 +1,6 @@
 package com.duckblade.osrs.dpscalc.model;
 
+import com.duckblade.osrs.dpscalc.calc.EquipmentRequirement;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Data;
@@ -52,6 +53,9 @@ public class EquipmentStats
 		
 		if (weapon != null && weapon.getItemId() == ItemID.TOXIC_BLOWPIPE)
 			addValues(b, tbpDarts);
+		
+		if (EquipmentRequirement.AMULET_DAMNED.isSatisfied(slotMap) && EquipmentRequirement.VERACS.isSatisfied(slotMap))
+			b.prayer += 7;
 		
 		return b.build();
 	}
