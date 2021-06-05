@@ -31,10 +31,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.ItemID;
+import net.runelite.api.VarPlayer;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
@@ -240,7 +242,7 @@ public class EquipmentPanel extends JPanel
 
 	public void loadFromClient()
 	{
-		if (client == null || clientThread == null)
+		if (client == null || clientThread == null || client.getGameState() != GameState.LOGGED_IN)
 			return; // ui test, or not init yet somehow
 
 		clientThread.invokeLater(() ->
@@ -263,6 +265,17 @@ public class EquipmentPanel extends JPanel
 				panel.setValue(calcItem);
 			});
 			
+			// this is also done in onEquipmentChanged, but we trigger early so we can set value
+			ItemStats currentWeapon = weaponSlot.getValue();
+			List<WeaponMode> modes = currentWeapon == null ? WeaponType.UNARMED.getWeaponModes() : currentWeapon.getWeaponType().getWeaponModes();
+			weaponModeSelect.setItems(modes);
+
+			int weaponModeVarp = client.getVar(VarPlayer.ATTACK_STYLE);
+			modes.stream()
+					.filter(wm -> wm.getVarpValue() == weaponModeVarp)
+					.findAny()
+					.ifPresent(weaponModeSelect::setValue);
+
 			onEquipmentChanged();
 		});
 	}

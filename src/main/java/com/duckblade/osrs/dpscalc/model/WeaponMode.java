@@ -8,6 +8,9 @@ public class WeaponMode
 {
 	
 	@Getter
+	private final int varpValue;
+	
+	@Getter
 	private final String displayName;
 	
 	@Getter

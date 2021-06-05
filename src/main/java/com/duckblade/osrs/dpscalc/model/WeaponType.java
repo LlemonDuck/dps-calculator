@@ -11,140 +11,154 @@ import lombok.RequiredArgsConstructor;
 public enum WeaponType
 {
 
-	TWO_HANDED_SWORD(Arrays.asList(
-			new WeaponMode("Chop (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
-			new WeaponMode("Slash (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
-			new WeaponMode("Smash (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Block (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
+	TWO_HANDED_SWORD(10, Arrays.asList(
+			new WeaponMode(0, "Chop (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
+			new WeaponMode(1, "Slash (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
+			new WeaponMode(2, "Smash (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(3, "Block (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
 	)),
-	AXE(Arrays.asList(
-			new WeaponMode("Chop (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
-			new WeaponMode("Hack (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
-			new WeaponMode("Smash (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Block (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
+	AXE(1, Arrays.asList(
+			new WeaponMode(0, "Chop (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
+			new WeaponMode(1, "Hack (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
+			new WeaponMode(2, "Smash (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(3, "Block (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
 	)),
-	BANNER(Arrays.asList(
-			new WeaponMode("Lunge (Stab/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
-			new WeaponMode("Swipe (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
-			new WeaponMode("Pound (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Block (Stab/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.STAB)
+	BANNER(24, Arrays.asList(
+			new WeaponMode(0, "Lunge (Stab/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
+			new WeaponMode(1, "Swipe (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
+			new WeaponMode(2, "Pound (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(3, "Block (Stab/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.STAB)
 	)),
-	BLADED_STAFF(Arrays.asList(
-			new WeaponMode("Jab (Stab/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
-			new WeaponMode("Swipe (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
-			new WeaponMode("Fend (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Spell (Magic/Autocast)", CombatMode.MAGE, CombatFocus.AUTOCAST, null)
+	BLADED_STAFF(21, Arrays.asList(
+			new WeaponMode(0, "Jab (Stab/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
+			new WeaponMode(1, "Swipe (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
+			new WeaponMode(3, "Fend (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(4, "Spell (Magic/Autocast)", CombatMode.MAGE, CombatFocus.AUTOCAST, null)
 	)),
-	BLUDGEON(Arrays.asList(
-			new WeaponMode("Pound (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Pummel (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Smash (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH)
+	BLUDGEON(26, Arrays.asList(
+			new WeaponMode(0, "Pound (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(1, "Pummel (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(2, "Smash (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH)
 	)),
-	BLUNT(Arrays.asList(
-			new WeaponMode("Pound (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
-			new WeaponMode("Pummel (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Block (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH)
+	BLUNT(2, Arrays.asList(
+			new WeaponMode(0, "Pound (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
+			new WeaponMode(1, "Pummel (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(3, "Block (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH)
 	)),
-	BOW(Arrays.asList(
-			new WeaponMode("Accurate (Ranged/Accurate)", CombatMode.RANGED, CombatFocus.ACCURATE, null),
-			new WeaponMode("Rapid (Ranged/Rapid)", CombatMode.RANGED, CombatFocus.RAPID, null),
-			new WeaponMode("Longrange (Ranged/Longrange)", CombatMode.RANGED, CombatFocus.LONGRANGE, null)
+	BOW(3, Arrays.asList(
+			new WeaponMode(0, "Accurate (Ranged/Accurate)", CombatMode.RANGED, CombatFocus.ACCURATE, null),
+			new WeaponMode(1, "Rapid (Ranged/Rapid)", CombatMode.RANGED, CombatFocus.RAPID, null),
+			new WeaponMode(3, "Longrange (Ranged/Longrange)", CombatMode.RANGED, CombatFocus.LONGRANGE, null)
 	)),
-	BULWARK(Collections.singletonList(
-			new WeaponMode("Pummel (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH)
+	BULWARK(27, Collections.singletonList(
+			new WeaponMode(0, "Pummel (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH)
 	)),
-	CHINCHOMPAS(Collections.emptyList()),
-	CLAW(Arrays.asList(
-			new WeaponMode("Chop (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
-			new WeaponMode("Slash (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
-			new WeaponMode("Lunge (Stab/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.STAB),
-			new WeaponMode("Block (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
+	CHINCHOMPAS(7, Collections.emptyList()),
+	CLAW(4, Arrays.asList(
+			new WeaponMode(0, "Chop (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
+			new WeaponMode(1, "Slash (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
+			new WeaponMode(2, "Lunge (Stab/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.STAB),
+			new WeaponMode(3, "Block (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
 	)),
-	CROSSBOW(Arrays.asList(
-			new WeaponMode("Accurate (Ranged/Accurate)", CombatMode.RANGED, CombatFocus.ACCURATE, null),
-			new WeaponMode("Rapid (Ranged/Rapid)", CombatMode.RANGED, CombatFocus.RAPID, null),
-			new WeaponMode("Longrange (Ranged/Longrange)", CombatMode.RANGED, CombatFocus.LONGRANGE, null)
+	CROSSBOW(5, Arrays.asList(
+			new WeaponMode(0, "Accurate (Ranged/Accurate)", CombatMode.RANGED, CombatFocus.ACCURATE, null),
+			new WeaponMode(1, "Rapid (Ranged/Rapid)", CombatMode.RANGED, CombatFocus.RAPID, null),
+			new WeaponMode(3, "Longrange (Ranged/Longrange)", CombatMode.RANGED, CombatFocus.LONGRANGE, null)
 	)),
-	PICKAXE(Arrays.asList(
-			new WeaponMode("Spike (Stab/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
-			new WeaponMode("Impale (Stab/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.STAB),
-			new WeaponMode("Smash (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Block (Stab/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.STAB)
+	PICKAXE(11, Arrays.asList(
+			new WeaponMode(0, "Spike (Stab/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
+			new WeaponMode(1, "Impale (Stab/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.STAB),
+			new WeaponMode(2, "Smash (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(3, "Block (Stab/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.STAB)
 	)),
-	POLEARM(Arrays.asList(
-			new WeaponMode("Jab (Stab/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.STAB),
-			new WeaponMode("Swipe (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
-			new WeaponMode("Fend (Stab/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.STAB)
+	POLEARM(12, Arrays.asList(
+			new WeaponMode(0, "Jab (Stab/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.STAB),
+			new WeaponMode(1, "Swipe (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
+			new WeaponMode(3, "Fend (Stab/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.STAB)
 	)),
-	POLESTAFF(Arrays.asList(
-			new WeaponMode("Bash (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
-			new WeaponMode("Pound (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Block (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH)
+	POLESTAFF(18, Arrays.asList(
+			new WeaponMode(0, "Bash (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
+			new WeaponMode(1, "Pound (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(3, "Block (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH)
 	)),
-	POWERED_STAFF(Arrays.asList(
-			new WeaponMode("Accurate (Magic/Accurate)", CombatMode.MAGE, CombatFocus.ACCURATE, null),
-			new WeaponMode("Accurate (Magic/Accurate)", CombatMode.MAGE, CombatFocus.ACCURATE, null),
-			new WeaponMode("Longrange (Magic/Longrange)", CombatMode.MAGE, CombatFocus.LONGRANGE, null)
+	POWERED_STAFF(23, Arrays.asList(
+			new WeaponMode(0, "Accurate (Magic/Accurate)", CombatMode.MAGE, CombatFocus.ACCURATE, null),
+			new WeaponMode(1, "Accurate (Magic/Accurate)", CombatMode.MAGE, CombatFocus.ACCURATE, null),
+			new WeaponMode(3, "Longrange (Magic/Longrange)", CombatMode.MAGE, CombatFocus.LONGRANGE, null)
 	)),
-	SALAMANDER(Arrays.asList(
-			new WeaponMode("Scorch (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
-			new WeaponMode("Flare (Ranged/Accurate)", CombatMode.RANGED, CombatFocus.ACCURATE, null),
-			new WeaponMode("Blaze (Magic/Defensive)", CombatMode.MAGE, CombatFocus.DEFENSIVE, null)
+	SALAMANDER(6, Arrays.asList(
+			new WeaponMode(0, "Scorch (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
+			new WeaponMode(1, "Flare (Ranged/Accurate)", CombatMode.RANGED, CombatFocus.ACCURATE, null),
+			new WeaponMode(2, "Blaze (Magic/Defensive)", CombatMode.MAGE, CombatFocus.DEFENSIVE, null)
 	)),
-	SCYTHE(Arrays.asList(
-			new WeaponMode("Reap (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
-			new WeaponMode("Chop (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
-			new WeaponMode("Jab (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Block (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
+	SCYTHE(14, Arrays.asList(
+			new WeaponMode(0, "Reap (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
+			new WeaponMode(1, "Chop (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
+			new WeaponMode(2, "Jab (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(3, "Block (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
 	)),
-	SLASH_SWORD(Arrays.asList(
-			new WeaponMode("Chop (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
-			new WeaponMode("Slash (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
-			new WeaponMode("Lunge (Stab/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.STAB),
-			new WeaponMode("Block (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
+	SLASH_SWORD(9, Arrays.asList(
+			new WeaponMode(0, "Chop (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
+			new WeaponMode(1, "Slash (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
+			new WeaponMode(2, "Lunge (Stab/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.STAB),
+			new WeaponMode(3, "Block (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
 	)),
-	SPEAR(Arrays.asList(
-			new WeaponMode("Lunge (Stab/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.STAB),
-			new WeaponMode("Swipe (Slash/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.SLASH),
-			new WeaponMode("Pound (Crush/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.CRUSH),
-			new WeaponMode("Block (Stab/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.STAB)
+	SPEAR(15, Arrays.asList(
+			new WeaponMode(0, "Lunge (Stab/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.STAB),
+			new WeaponMode(1, "Swipe (Slash/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.SLASH),
+			new WeaponMode(2, "Pound (Crush/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.CRUSH),
+			new WeaponMode(3, "Block (Stab/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.STAB)
 	)),
-	SPIKED(Arrays.asList(
-			new WeaponMode("Pound (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
-			new WeaponMode("Pummel (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Spike (Stab/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.STAB),
-			new WeaponMode("Block (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH)
+	SPIKED(16, Arrays.asList(
+			new WeaponMode(0, "Pound (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
+			new WeaponMode(1, "Pummel (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(2, "Spike (Stab/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.STAB),
+			new WeaponMode(3, "Block (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH)
 	)),
-	STAB_SWORD(Arrays.asList(
-			new WeaponMode("Stab (Stab/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
-			new WeaponMode("Lunge (Stab/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.STAB),
-			new WeaponMode("Slash (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
-			new WeaponMode("Block (Stab/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.STAB)
+	STAB_SWORD(17, Arrays.asList(
+			new WeaponMode(0, "Stab (Stab/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
+			new WeaponMode(1, "Lunge (Stab/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.STAB),
+			new WeaponMode(2, "Slash (Slash/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.SLASH),
+			new WeaponMode(3, "Block (Stab/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.STAB)
 	)),
-	STAFF(Arrays.asList(
-			new WeaponMode("Bash (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
-			new WeaponMode("Pound (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Focus (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Spell (Magic/Autocast)", CombatMode.MAGE, CombatFocus.AUTOCAST, null)
+	STAFF(18, Arrays.asList(
+			new WeaponMode(0, "Bash (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
+			new WeaponMode(1, "Pound (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(3, "Focus (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(4, "Spell (Magic/Autocast)", CombatMode.MAGE, CombatFocus.AUTOCAST, null)
 	)),
-	THROWN(Arrays.asList(
-			new WeaponMode("Accurate (Ranged/Accurate)", CombatMode.RANGED, CombatFocus.ACCURATE, null),
-			new WeaponMode("Rapid (Ranged/Rapid)", CombatMode.RANGED, CombatFocus.RAPID, null),
-			new WeaponMode("Longrange (Ranged/Longrange)", CombatMode.RANGED, CombatFocus.LONGRANGE, null)
+	THROWN(19, Arrays.asList(
+			new WeaponMode(0, "Accurate (Ranged/Accurate)", CombatMode.RANGED, CombatFocus.ACCURATE, null),
+			new WeaponMode(1, "Rapid (Ranged/Rapid)", CombatMode.RANGED, CombatFocus.RAPID, null),
+			new WeaponMode(3, "Longrange (Ranged/Longrange)", CombatMode.RANGED, CombatFocus.LONGRANGE, null)
 	)),
-	UNARMED(Arrays.asList(
-			new WeaponMode("Punch (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
-			new WeaponMode("Kick (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
-			new WeaponMode("Block (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH)
+	UNARMED(0, Arrays.asList(
+			new WeaponMode(0, "Punch (Crush/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
+			new WeaponMode(1, "Kick (Crush/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.CRUSH),
+			new WeaponMode(3, "Block (Crush/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.CRUSH)
 	)),
-	WHIP(Arrays.asList(
-			new WeaponMode("Flick (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
-			new WeaponMode("Lash (Slash/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.SLASH),
-			new WeaponMode("Deflect (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
+	WHIP(20, Arrays.asList(
+			new WeaponMode(0, "Flick (Slash/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.SLASH),
+			new WeaponMode(1, "Lash (Slash/Controlled)", CombatMode.MELEE, CombatFocus.CONTROLLED, MeleeStyle.SLASH),
+			new WeaponMode(3, "Deflect (Slash/Defensive)", CombatMode.MELEE, CombatFocus.DEFENSIVE, MeleeStyle.SLASH)
 	)),
 	;
 
 	@Getter
+	private final int varbValue;
+	
+	@Getter
 	private final List<WeaponMode> weaponModes;
+	
+	public static WeaponType forVarb(int varbValue)
+	{
+		for (WeaponType type : values())
+		{
+			if (type.getVarbValue() == varbValue)
+				return type;
+		}
+		
+		return null;
+	}
 
 }
