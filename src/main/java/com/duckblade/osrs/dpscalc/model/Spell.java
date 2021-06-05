@@ -141,6 +141,7 @@ public enum Spell
 				return VOID_MACE;
 				
 			case ANCIENT_STAFF:
+			case ANCIENT_STAFF_20431:
 			case MASTER_WAND:
 			case KODAI_WAND:
 			case NIGHTMARE_STAFF:
