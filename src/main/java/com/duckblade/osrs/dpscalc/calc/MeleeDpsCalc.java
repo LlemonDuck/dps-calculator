@@ -2,6 +2,7 @@ package com.duckblade.osrs.dpscalc.calc;
 
 import com.duckblade.osrs.dpscalc.model.CombatFocus;
 import com.duckblade.osrs.dpscalc.model.Prayer;
+import java.util.Collection;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
@@ -28,9 +29,10 @@ public class MeleeDpsCalc extends AbstractCalc
 		int str = input.getPlayerSkills().get(Skill.STRENGTH);
 		str += input.getPlayerBoosts().get(Skill.STRENGTH);
 
-		Prayer offensivePrayer = input.getOffensivePrayer();
-		if (offensivePrayer != null)
-			str = (int) (str * offensivePrayer.getStrengthMod());
+		Collection<Prayer> selectedPrayers = input.getEnabledPrayers();
+		for (Prayer prayer : selectedPrayers)
+			if (prayer.getPrayerGroup() == Prayer.PrayerGroup.MELEE)
+				str = (int) (str * prayer.getStrengthMod());
 		
 		if (input.getWeaponMode().getCombatFocus() == CombatFocus.AGGRESSIVE)
 			str += 3;
@@ -68,9 +70,10 @@ public class MeleeDpsCalc extends AbstractCalc
 		int att = input.getPlayerSkills().get(Skill.ATTACK);
 		att += input.getPlayerBoosts().get(Skill.ATTACK);
 
-		Prayer offensivePrayer = input.getOffensivePrayer();
-		if (offensivePrayer != null)
-			att = (int) (att * offensivePrayer.getAttackMod());
+		Collection<Prayer> selectedPrayers = input.getEnabledPrayers();
+		for (Prayer prayer : selectedPrayers)
+			if (prayer.getPrayerGroup() == Prayer.PrayerGroup.MELEE)
+				att = (int) (att * prayer.getAttackMod());
 
 		if (input.getWeaponMode().getCombatFocus() == CombatFocus.ACCURATE)
 			att += 3;

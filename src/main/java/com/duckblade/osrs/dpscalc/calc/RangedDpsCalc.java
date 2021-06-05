@@ -3,6 +3,7 @@ package com.duckblade.osrs.dpscalc.calc;
 import com.duckblade.osrs.dpscalc.model.CombatFocus;
 import com.duckblade.osrs.dpscalc.model.NpcStats;
 import com.duckblade.osrs.dpscalc.model.Prayer;
+import java.util.Collection;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
@@ -29,9 +30,10 @@ public class RangedDpsCalc extends AbstractCalc
 	{
 		int rngStrength = input.getPlayerSkills().get(Skill.RANGED) + input.getPlayerBoosts().get(Skill.RANGED);
 
-		Prayer offensivePrayer = input.getOffensivePrayer();
-		if (offensivePrayer != null)
-			rngStrength = (int) (rngStrength * offensivePrayer.getStrengthMod());
+		Collection<Prayer> selectedPrayers = input.getEnabledPrayers();
+		for (Prayer prayer : selectedPrayers)
+			if (prayer.getPrayerGroup() == Prayer.PrayerGroup.RANGED)
+				rngStrength = (int) (rngStrength * prayer.getStrengthMod());
 
 		if (input.getWeaponMode().getCombatFocus() == CombatFocus.ACCURATE)
 			rngStrength += 3;
@@ -80,9 +82,10 @@ public class RangedDpsCalc extends AbstractCalc
 		// prayer boost for rigour will also be different when implemented
 		int rngAttack = input.getPlayerSkills().get(Skill.RANGED) + input.getPlayerBoosts().get(Skill.RANGED);
 
-		Prayer offensivePrayer = input.getOffensivePrayer();
-		if (offensivePrayer != null)
-			rngAttack = (int) (rngAttack * offensivePrayer.getAttackMod());
+		Collection<Prayer> selectedPrayers = input.getEnabledPrayers();
+		for (Prayer prayer : selectedPrayers)
+			if (prayer.getPrayerGroup() == Prayer.PrayerGroup.RANGED)
+				rngAttack = (int) (rngAttack * prayer.getStrengthMod());
 
 		if (input.getWeaponMode().getCombatFocus() == CombatFocus.ACCURATE)
 			rngAttack += 3;

@@ -7,6 +7,7 @@ import com.duckblade.osrs.dpscalc.model.NpcStats;
 import com.duckblade.osrs.dpscalc.model.Prayer;
 import com.duckblade.osrs.dpscalc.model.Spell;
 import com.duckblade.osrs.dpscalc.model.WeaponMode;
+import java.util.Collection;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +35,7 @@ public class CalcInput
 	
 	private final Spell spell;
 	
-	private final Prayer offensivePrayer;
+	private final Collection<Prayer> enabledPrayers;
 
 	private final int prayerDrain;
 

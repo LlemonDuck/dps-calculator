@@ -4,6 +4,7 @@ import com.duckblade.osrs.dpscalc.model.CombatFocus;
 import com.duckblade.osrs.dpscalc.model.NpcStats;
 import com.duckblade.osrs.dpscalc.model.Prayer;
 import com.duckblade.osrs.dpscalc.model.Spell;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -67,9 +68,10 @@ public class MageDpsCalc extends AbstractCalc
 	{
 		int effLvl = magicLevel(input);
 
-		Prayer offensivePrayer = input.getOffensivePrayer();
-		if (offensivePrayer != null)
-			effLvl = (int) (effLvl * offensivePrayer.getAttackMod());
+		Collection<Prayer> selectedPrayers = input.getEnabledPrayers();
+		for (Prayer prayer : selectedPrayers)
+			if (prayer.getPrayerGroup() == Prayer.PrayerGroup.MAGE)
+				effLvl = (int) (effLvl * prayer.getAttackMod());
 
 		// tridents
 		if (input.getWeaponMode().getCombatFocus() == CombatFocus.ACCURATE)

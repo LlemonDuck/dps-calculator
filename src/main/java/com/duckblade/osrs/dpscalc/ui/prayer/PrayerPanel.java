@@ -1,15 +1,13 @@
 package com.duckblade.osrs.dpscalc.ui.prayer;
 
 import com.duckblade.osrs.dpscalc.model.Prayer;
-import com.duckblade.osrs.dpscalc.ui.util.CustomJCheckBox;
-import com.duckblade.osrs.dpscalc.ui.util.CustomJComboBox;
 import com.google.common.collect.ImmutableMap;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,85 +16,73 @@ import net.runelite.client.ui.PluginPanel;
 public class PrayerPanel extends JPanel
 {
 
-	private final CustomJComboBox<Prayer> offensePrayerSelect;
-	private final Map<Prayer, CustomJCheckBox> otherPrayers;
+	private final JLabel drainLabel;
+	private final Map<Prayer, PrayerButton> prayerButtons;
 
 	@Inject
 	public PrayerPanel()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setMinimumSize(new Dimension(PluginPanel.PANEL_WIDTH, 0));
-		
-		offensePrayerSelect = new CustomJComboBox<>(Prayer.OFFENSE, Prayer::getDisplayName, "Offensive Prayer");
-		offensePrayerSelect.setPreferredSize(new Dimension(PluginPanel.PANEL_WIDTH - 25, 40));
-		offensePrayerSelect.setAlignmentX(LEFT_ALIGNMENT);
-		add(offensePrayerSelect);
 
-		add(Box.createVerticalStrut(10));
-		
-		add(new JLabel("Other Prayers"));
-		add(Box.createVerticalStrut(5));
-		
-		ImmutableMap.Builder<Prayer, CustomJCheckBox> builder = new ImmutableMap.Builder<>();
-		Prayer.UTILITY.forEach(prayer ->
+		drainLabel = new JLabel("Total Drain: 0");
+		drainLabel.setAlignmentX(CENTER_ALIGNMENT);
+		add(drainLabel);
+
+		JPanel prayerGrid = new JPanel(new GridLayout(6, 5, 1, 1));
+		prayerGrid.setMinimumSize(new Dimension(182, 219));
+		prayerGrid.setPreferredSize(new Dimension(182, 219));
+		prayerGrid.setMaximumSize(new Dimension(182, 219));
+		add(prayerGrid);
+
+		ImmutableMap.Builder<Prayer, PrayerButton> builder = new ImmutableMap.Builder<>();
+		for (Prayer p : Prayer.values())
 		{
-			CustomJCheckBox check = new CustomJCheckBox(prayer.getDisplayName());
-			check.setAlignmentX(LEFT_ALIGNMENT);
-			
-			add(check);
-			add(Box.createVerticalStrut(5));
-			builder.put(prayer, check);
-		});
-		otherPrayers = builder.build();
+			PrayerButton panel = new PrayerButton(p);
+			panel.setCallback(this::prayerCallback);
+			prayerGrid.add(panel);
+			builder.put(p, panel);
+		}
+		prayerButtons = builder.build();
 	}
 
-	public Prayer getOffensive()
+	private void prayerCallback(PrayerButton invoker)
 	{
-		return offensePrayerSelect.getValue();
+		// todo prayer conflicts?
+		updateDrainLabel();
 	}
 
-	public void setOffensive(Prayer newValue)
+	private void updateDrainLabel()
 	{
-		offensePrayerSelect.setValue(newValue);
+		drainLabel.setText("Total Drain: " + getDrain());
 	}
 
-	private List<Prayer> getOthers()
+	public List<Prayer> getSelected()
 	{
-		return otherPrayers.entrySet()
+		return prayerButtons.values()
 				.stream()
-				.filter(e -> e.getValue().getValue())
-				.map(Map.Entry::getKey)
+				.filter(PrayerButton::isSelected)
+				.map(PrayerButton::getPrayer)
 				.collect(Collectors.toList());
 	}
 
 	public int getDrain()
 	{
-		Prayer oPrayer = offensePrayerSelect.getValue();
-		int oDrain = oPrayer == null ? 0 : oPrayer.getDrainRate();
-		return oDrain +
-				getOthers().stream()
-						.mapToInt(Prayer::getDrainRate)
-						.sum();
+		return getSelected().stream()
+				.mapToInt(Prayer::getDrainRate)
+				.sum();
 	}
 
 	public String getSummary()
 	{
-		Prayer offense = getOffensive();
-		List<Prayer> enabledOthers = getOthers();
-		if (offense == null && enabledOthers.isEmpty())
+		List<Prayer> enabled = getSelected();
+		if (enabled.isEmpty())
 			return "None";
-	
-		boolean multipleOther = enabledOthers.size() != 1;
-		if (offense == null)
-		{
-			if (!multipleOther)
-				return enabledOthers.get(0).getDisplayName();
-			return enabledOthers.size() + " prayers";
-		}
-		else if (enabledOthers.isEmpty())
-			return offense.getDisplayName();
+
+		if (enabled.size() == 1)
+			return enabled.get(0).getDisplayName();
 		else
-			return offense.getDisplayName() + " + " + enabledOthers.size() + " other" + (multipleOther ? "s" : "");
+			return enabled.size() + " Selected";
 	}
 
 }
