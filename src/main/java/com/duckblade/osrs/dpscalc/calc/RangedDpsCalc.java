@@ -85,7 +85,7 @@ public class RangedDpsCalc extends AbstractCalc
 		Collection<Prayer> selectedPrayers = input.getEnabledPrayers();
 		for (Prayer prayer : selectedPrayers)
 			if (prayer.getPrayerGroup() == Prayer.PrayerGroup.RANGED)
-				rngAttack = (int) (rngAttack * prayer.getStrengthMod());
+				rngAttack = (int) (rngAttack * prayer.getAttackMod());
 
 		if (input.getWeaponMode().getCombatFocus() == CombatFocus.ACCURATE)
 			rngAttack += 3;
