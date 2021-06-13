@@ -58,3 +58,5 @@ and you can select any other prayers.
 Note that the non-offensive prayers
 will only be used to calculate 
 how long your prayers will remain active.
+
+![prayer.png](img/prayer.png)
