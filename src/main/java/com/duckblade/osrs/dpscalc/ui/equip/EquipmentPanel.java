@@ -151,7 +151,6 @@ public class EquipmentPanel extends JPanel
 		spellSelect.setCallback(this::onEquipmentChanged);
 		spellSelect.setAlignmentX(CENTER_ALIGNMENT);
 		spellSelect.setVisible(false);
-		spellSelect.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 		add(spellSelect);
 
 		add(Box.createVerticalStrut(10));
@@ -242,6 +241,8 @@ public class EquipmentPanel extends JPanel
 
 	public void loadFromClient()
 	{
+		// this method could maybe be refactored to not nest as much but meh 
+		
 		if (client == null || clientThread == null || client.getGameState() != GameState.LOGGED_IN)
 			return; // ui test, or not init yet somehow
 
@@ -267,17 +268,45 @@ public class EquipmentPanel extends JPanel
 			
 			// this is also done in onEquipmentChanged, but we trigger early so we can set value
 			ItemStats currentWeapon = weaponSlot.getValue();
-			List<WeaponMode> modes = currentWeapon == null ? WeaponType.UNARMED.getWeaponModes() : currentWeapon.getWeaponType().getWeaponModes();
-			weaponModeSelect.setItems(modes);
+			List<WeaponMode> modes = updateWeaponModeComboBox(currentWeapon);
 
 			int weaponModeVarp = client.getVar(VarPlayer.ATTACK_STYLE);
 			modes.stream()
 					.filter(wm -> wm.getVarpValue() == weaponModeVarp)
 					.findAny()
-					.ifPresent(weaponModeSelect::setValue);
+					.ifPresent(wm ->
+					{
+						weaponModeSelect.setValue(wm);
+						
+						if (wm.getMode() == CombatMode.MAGE)
+						{
+							List<Spell> availableSpells = updateSpellComboBox(currentWeapon, getEquipment());
+							int spellVarb = client.getVarbitValue(Spell.SPELL_SELECTED_VARBIT);
+							availableSpells.stream()
+									.filter(s -> s.getVarbValue() == spellVarb)
+									.findFirst()
+									.ifPresent(spellSelect::setValue);
+						}
+					});
 
 			onEquipmentChanged();
 		});
+	}
+	
+	private List<WeaponMode> updateWeaponModeComboBox(ItemStats currentWeapon)
+	{
+		List<WeaponMode> modes = currentWeapon == null ? WeaponType.UNARMED.getWeaponModes() : currentWeapon.getWeaponType().getWeaponModes();
+		weaponModeSelect.setItems(modes);
+		return modes;
+	}
+	
+	private List<Spell> updateSpellComboBox(ItemStats currentWeapon, Map<EquipmentInventorySlot, ItemStats> equipment)
+	{
+		assert currentWeapon != null;
+		boolean ahrimsDamned = EquipmentRequirement.AHRIMS.isSatisfied(equipment) && EquipmentRequirement.AMULET_DAMNED.isSatisfied(equipment);
+		List<Spell> availableSpells = Spell.forWeapon(currentWeapon.getItemId(), ahrimsDamned);
+		spellSelect.setItems(availableSpells);
+		return availableSpells;
 	}
 
 	public void onEquipmentChanged()
@@ -295,16 +324,13 @@ public class EquipmentPanel extends JPanel
 			boolean hpVisible = EquipmentRequirement.DHAROKS.isSatisfied(equipment);
 			dharokPanel.setVisible(hpVisible);
 
-			List<WeaponMode> modes = currentWeapon == null ? WeaponType.UNARMED.getWeaponModes() : currentWeapon.getWeaponType().getWeaponModes();
-			weaponModeSelect.setItems(modes);
+			updateWeaponModeComboBox(currentWeapon);
 
 			WeaponMode weaponMode = getWeaponMode();
 			if (weaponMode != null && weaponMode.getMode() == CombatMode.MAGE)
 			{
 				assert currentWeapon != null;
-				boolean ahrimsDamned = EquipmentRequirement.AHRIMS.isSatisfied(equipment) && EquipmentRequirement.AMULET_DAMNED.isSatisfied(equipment);
-				List<Spell> availableSpells = Spell.forWeapon(currentWeapon.getItemId(), ahrimsDamned);
-				spellSelect.setItems(availableSpells);
+				List<Spell> availableSpells = updateSpellComboBox(currentWeapon, equipment);
 				if (availableSpells.size() == 1)
 				{
 					// don't prompt for a spell if there's only one available (powered staves/salamanders)
