@@ -98,46 +98,22 @@ public class CalcUtil
 		}
 	}
 	
-	private static int crystalLevels(CalcInput input)
-	{
-		if (!CRYSTAL_BOW.isSatisfied(input))
-			return 0;
-
-		int levels = 0;
-		levels += CRYSTAL_HEAD.isSatisfied(input) ? 1 : 0;
-		levels += CRYSTAL_BODY.isSatisfied(input) ? 1 : 0;
-		levels += CRYSTAL_LEGS.isSatisfied(input) ? 1 : 0;
-		return levels;
-	}
-	
 	public static float crystalAttMod(CalcInput input)
 	{
-		switch (crystalLevels(input))
-		{
-			case 3:
-				return 1.3f;
-			case 2:
-				return 1.12f;
-			case 1:
-				return 1.06f;
-			default:
-				return 1f;
-		}
+		if (!CRYSTAL_BOW.isSatisfied(input))
+			return 1f;
+
+		float mod = 1f;
+		mod += CRYSTAL_HEAD.isSatisfied(input) ? 0.025f : 0f;
+		mod += CRYSTAL_BODY.isSatisfied(input) ? 0.075f : 0f;
+		mod += CRYSTAL_LEGS.isSatisfied(input) ? 0.05f  : 0f;
+		return mod;
 	}
 	
 	public static float crystalStrMod(CalcInput input)
 	{
-		switch (crystalLevels(input))
-		{
-			case 3:
-				return 1.15f;
-			case 2:
-				return 1.06f;
-			case 1:
-				return 1.03f;
-			default:
-				return 1f;
-		}
+		float attMod = crystalAttMod(input);
+		return attMod == 1f ? 1f : 2f * attMod;
 	}
 	
 	public static boolean obsidianArmour(CalcInput input)

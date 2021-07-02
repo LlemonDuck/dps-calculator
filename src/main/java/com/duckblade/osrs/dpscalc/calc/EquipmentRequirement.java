@@ -54,7 +54,7 @@ public enum EquipmentRequirement
 	DEMONBANE_DARKLIGHT(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{DARKLIGHT}}),
 	DEMONBANE_ARCLIGHT(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{ARCLIGHT}}),
 	
-	CRYSTAL_BOW(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{ItemID.CRYSTAL_BOW}}),
+	CRYSTAL_BOW(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{ItemID.CRYSTAL_BOW, BOW_OF_FAERDHINEN, BOW_OF_FAERDHINEN_C, BOW_OF_FAERDHINEN_C_25869, BOW_OF_FAERDHINEN_C_25884, BOW_OF_FAERDHINEN_C_25886, BOW_OF_FAERDHINEN_C_25888, BOW_OF_FAERDHINEN_C_25890, BOW_OF_FAERDHINEN_C_25892, BOW_OF_FAERDHINEN_C_25894, BOW_OF_FAERDHINEN_C_25896}}),
 	CRYSTAL_HEAD(new EquipmentInventorySlot[] {HEAD}, new int[][] {{ItemID.CRYSTAL_HELM}}),
 	CRYSTAL_BODY(new EquipmentInventorySlot[] {BODY}, new int[][] {{ItemID.CRYSTAL_BODY}}),
 	CRYSTAL_LEGS(new EquipmentInventorySlot[] {LEGS}, new int[][] {{ItemID.CRYSTAL_LEGS}}),
