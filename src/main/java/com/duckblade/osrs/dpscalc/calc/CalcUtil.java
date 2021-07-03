@@ -112,8 +112,7 @@ public class CalcUtil
 	
 	public static float crystalStrMod(CalcInput input)
 	{
-		float attMod = crystalAttMod(input);
-		return attMod == 1f ? 1f : 2f * attMod;
+		return 2f * (crystalAttMod(input) - 1f) + 1f;
 	}
 	
 	public static boolean obsidianArmour(CalcInput input)
