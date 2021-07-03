@@ -98,7 +98,7 @@ public class CalcUtil
 		}
 	}
 	
-	public static float crystalAttMod(CalcInput input)
+	public static float crystalStrMod(CalcInput input)
 	{
 		if (!CRYSTAL_BOW.isSatisfied(input))
 			return 1f;
@@ -110,9 +110,9 @@ public class CalcUtil
 		return mod;
 	}
 	
-	public static float crystalStrMod(CalcInput input)
+	public static float crystalAttMod(CalcInput input)
 	{
-		return 2f * (crystalAttMod(input) - 1f) + 1f;
+		return 2f * (crystalStrMod(input) - 1f) + 1f;
 	}
 	
 	public static boolean obsidianArmour(CalcInput input)
