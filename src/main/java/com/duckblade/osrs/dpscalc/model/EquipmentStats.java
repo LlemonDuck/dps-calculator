@@ -23,7 +23,7 @@ public class EquipmentStats
 
 	private final int strengthMelee;
 	private final int strengthRanged;
-	private final int strengthMagic;
+	private final float strengthMagic;
 
 	private final int prayer;
 	private final int speed;

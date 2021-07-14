@@ -361,6 +361,14 @@ public class EquipmentPanel extends JPanel
 		return label;
 	}
 
+	private JLabel buildStatLabel(String statName, float stat)
+	{
+		JLabel label = new JLabel(statName + ": " + stat + "%");
+		label.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
+		label.setAlignmentX(Component.LEFT_ALIGNMENT);
+		return label;
+	}
+
 	private void rebuildTotals()
 	{
 		totalsPanel.removeAll();
@@ -378,7 +386,7 @@ public class EquipmentPanel extends JPanel
 
 		totalsPanel.add(buildStatLabel("Melee Strength", stats.getStrengthMelee()));
 		totalsPanel.add(buildStatLabel("Ranged Strength", stats.getStrengthRanged()));
-		totalsPanel.add(buildStatLabel("Magic Strength", stats.getStrengthMagic()));
+		totalsPanel.add(buildStatLabel("Magic Damage", stats.getStrengthMagic()));
 
 		totalsPanel.add(Box.createVerticalStrut(10));
 
