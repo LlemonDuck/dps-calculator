@@ -43,7 +43,7 @@ public class RangedDpsCalc extends AbstractCalc
 		if (voidLevel == 2)
 			rngStrength = (int) (rngStrength * 1.125f);
 		else if (voidLevel == 1)
-			rngStrength = (int) (rngStrength * 1.125f);
+			rngStrength = (int) (rngStrength * 1.1f);
 
 		if (dragonHunter(input))
 			rngStrength = (int) (rngStrength * 1.3f);

@@ -80,7 +80,7 @@ public class MageDpsCalc extends AbstractCalc
 			effLvl += 1;
 
 		if (voidLevel(input) != 0)
-			effLvl = (int) (effLvl * 1.145);
+			effLvl = (int) (effLvl * 1.45);
 		
 		return effLvl;
 	}
@@ -112,12 +112,12 @@ public class MageDpsCalc extends AbstractCalc
 		Function<CalcInput, Integer> bonusProvider = MAX_HIT_BONUS_PROVIDERS.get(spell);
 		if (bonusProvider != null)
 			maxHit += bonusProvider.apply(input);
-		
+
 		float magDmgBonus = input.getEquipmentStats().getStrengthMagic() / 100f + 1f;
 		maxHit = (int) (maxHit * magDmgBonus);
 		
 		if (salveLevel(input) == 2)
-			maxHit = (int) (maxHit * (6f / 5f));
+			maxHit = (int) (maxHit * (1.2f));
 		else if (salveLevel(input) == 1 || blackMask(input))
 			maxHit = (int) (maxHit * 1.15f);
 		
