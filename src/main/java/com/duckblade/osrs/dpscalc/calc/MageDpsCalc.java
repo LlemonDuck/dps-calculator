@@ -117,7 +117,7 @@ public class MageDpsCalc extends AbstractCalc
 		maxHit = (int) (maxHit * magDmgBonus);
 		
 		if (salveLevel(input) == 2)
-			maxHit = (int) (maxHit * (1.2f));
+			maxHit = (int) (maxHit * (6f / 5f));
 		else if (salveLevel(input) == 1 || blackMask(input))
 			maxHit = (int) (maxHit * 1.15f);
 		

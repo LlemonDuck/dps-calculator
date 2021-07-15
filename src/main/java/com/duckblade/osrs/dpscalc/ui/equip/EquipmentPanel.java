@@ -15,6 +15,7 @@ import com.duckblade.osrs.dpscalc.ui.util.SelectAllFocusListener;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -363,7 +364,8 @@ public class EquipmentPanel extends JPanel
 
 	private JLabel buildStatLabel(String statName, float stat)
 	{
-		JLabel label = new JLabel(statName + ": " + stat + "%");
+		DecimalFormat decFormat = new DecimalFormat("#.#");
+		JLabel label = new JLabel(statName + ": " + decFormat.format(stat) + "%");
 		label.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
 		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 		return label;
@@ -386,7 +388,7 @@ public class EquipmentPanel extends JPanel
 
 		totalsPanel.add(buildStatLabel("Melee Strength", stats.getStrengthMelee()));
 		totalsPanel.add(buildStatLabel("Ranged Strength", stats.getStrengthRanged()));
-		totalsPanel.add(buildStatLabel("Magic Damage", stats.getStrengthMagic()));
+		totalsPanel.add(buildStatLabel("Magic Damage Bonus", stats.getStrengthMagic()));
 
 		totalsPanel.add(Box.createVerticalStrut(10));
 
