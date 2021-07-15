@@ -45,6 +45,8 @@ import net.runelite.client.ui.PluginPanel;
 
 public class EquipmentPanel extends JPanel
 {
+	
+	private static final DecimalFormat STAT_LABEL_FORMAT = new DecimalFormat(": #.#");
 
 	private final Client client;
 	private final ClientThread clientThread;
@@ -353,22 +355,23 @@ public class EquipmentPanel extends JPanel
 			repaint();
 		});
 	}
-
-	private JLabel buildStatLabel(String statName, int stat)
+	
+	private JLabel buildStatLabel(String text)
 	{
-		JLabel label = new JLabel(statName + ": " + stat);
+		JLabel label = new JLabel(text);
 		label.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
 		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 		return label;
 	}
 
+	private JLabel buildStatLabel(String statName, int stat)
+	{
+		return buildStatLabel(statName + ": " + stat);
+	}
+
 	private JLabel buildStatLabel(String statName, float stat)
 	{
-		DecimalFormat decFormat = new DecimalFormat("#.#");
-		JLabel label = new JLabel(statName + ": " + decFormat.format(stat) + "%");
-		label.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
-		label.setAlignmentX(Component.LEFT_ALIGNMENT);
-		return label;
+		return buildStatLabel(statName + STAT_LABEL_FORMAT.format(stat));
 	}
 
 	private void rebuildTotals()
