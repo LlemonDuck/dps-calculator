@@ -28,7 +28,7 @@ public class ItemStats
 	@SerializedName("rstr")
 	private int strengthRanged;
 	@SerializedName("mdmg")
-	private int strengthMagic;
+	private float strengthMagic;
 
 	@SerializedName(value = "speed", alternate = {"aspeed"})
 	private int speed;

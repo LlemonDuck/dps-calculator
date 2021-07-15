@@ -7,6 +7,9 @@ import lombok.Data;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.ItemID;
 
+import static com.duckblade.osrs.dpscalc.calc.EquipmentRequirement.VOID_ELITE;
+import static com.duckblade.osrs.dpscalc.calc.EquipmentRequirement.VOID_MAGE;
+
 @Data
 @Builder
 public class EquipmentStats
@@ -20,7 +23,7 @@ public class EquipmentStats
 
 	private final int strengthMelee;
 	private final int strengthRanged;
-	private final int strengthMagic;
+	private final float strengthMagic;
 
 	private final int prayer;
 	private final int speed;
@@ -56,6 +59,9 @@ public class EquipmentStats
 		
 		if (EquipmentRequirement.AMULET_DAMNED.isSatisfied(slotMap) && EquipmentRequirement.VERACS.isSatisfied(slotMap))
 			b.prayer += 7;
+
+		if (VOID_MAGE.isSatisfied(slotMap) && VOID_ELITE.isSatisfied(slotMap))
+			b.strengthMagic += 2.5f;
 		
 		return b.build();
 	}

@@ -15,6 +15,7 @@ import com.duckblade.osrs.dpscalc.ui.util.SelectAllFocusListener;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,8 @@ import net.runelite.client.ui.PluginPanel;
 
 public class EquipmentPanel extends JPanel
 {
+	
+	private static final DecimalFormat STAT_LABEL_FORMAT = new DecimalFormat(": #.#");
 
 	private final Client client;
 	private final ClientThread clientThread;
@@ -352,13 +355,23 @@ public class EquipmentPanel extends JPanel
 			repaint();
 		});
 	}
-
-	private JLabel buildStatLabel(String statName, int stat)
+	
+	private JLabel buildStatLabel(String text)
 	{
-		JLabel label = new JLabel(statName + ": " + stat);
+		JLabel label = new JLabel(text);
 		label.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
 		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 		return label;
+	}
+
+	private JLabel buildStatLabel(String statName, int stat)
+	{
+		return buildStatLabel(statName + ": " + stat);
+	}
+
+	private JLabel buildStatLabel(String statName, float stat)
+	{
+		return buildStatLabel(statName + STAT_LABEL_FORMAT.format(stat));
 	}
 
 	private void rebuildTotals()
@@ -378,7 +391,7 @@ public class EquipmentPanel extends JPanel
 
 		totalsPanel.add(buildStatLabel("Melee Strength", stats.getStrengthMelee()));
 		totalsPanel.add(buildStatLabel("Ranged Strength", stats.getStrengthRanged()));
-		totalsPanel.add(buildStatLabel("Magic Strength", stats.getStrengthMagic()));
+		totalsPanel.add(buildStatLabel("Magic Damage Bonus", stats.getStrengthMagic()));
 
 		totalsPanel.add(Box.createVerticalStrut(10));
 
