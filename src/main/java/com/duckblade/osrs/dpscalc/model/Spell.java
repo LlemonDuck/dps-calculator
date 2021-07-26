@@ -25,6 +25,9 @@ public enum Spell
 	SANGUINESTI(-1, "Sanguinesti Staff", 24, Spellbook.POWERED_STAVES),
 	SWAMP(-1, "Trident of the Swamp", 23, Spellbook.POWERED_STAVES),
 	SEAS(-1, "Trident of the Seas", 20, Spellbook.POWERED_STAVES),
+	GAUNTLET_1(-1, "Crystal Staff (basic)", 23, Spellbook.POWERED_STAVES),
+	GAUNTLET_2(-1, "Crystal Staff (attuned)", 31, Spellbook.POWERED_STAVES),
+	GAUNTLET_3(-1, "Crystal Staff (perfected)", 39, Spellbook.POWERED_STAVES),
 	
 	// ancient spells
 	ICE_BARRAGE(46, "Ice Barrage", 30, Spellbook.ANCIENT),
@@ -119,6 +122,18 @@ public enum Spell
 			case TRIDENT_OF_THE_SWAMP:
 			case TRIDENT_OF_THE_SWAMP_E:
 				return Collections.singletonList(SWAMP);
+				
+			case CRYSTAL_STAFF_BASIC:
+			case CORRUPTED_STAFF_BASIC:
+				return Collections.singletonList(GAUNTLET_1);
+				
+			case CRYSTAL_STAFF_ATTUNED:
+			case CORRUPTED_STAFF_ATTUNED:
+				return Collections.singletonList(GAUNTLET_2);
+				
+			case CRYSTAL_STAFF_PERFECTED:
+			case CORRUPTED_STAFF_PERFECTED:
+				return Collections.singletonList(GAUNTLET_3);
 				
 			case SANGUINESTI_STAFF:
 				return Collections.singletonList(SANGUINESTI);
