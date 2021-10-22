@@ -32,7 +32,7 @@ dependencies {
 }
 
 group = 'com.duckblade.osrs'
-version = '1.4'
+version = '1.4.1'
 sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
