@@ -15,7 +15,7 @@ public class CalcUtil
 			return false;
 
 		if (input.getCombatMode() == CombatMode.MELEE)
-			return BLACK_MASK_MELEE.isSatisfied(input);
+			return BLACK_MASK_MELEE.isSatisfied(input) || BLACK_MASK_MAGE_RANGED.isSatisfied(input);
 		
 		return BLACK_MASK_MAGE_RANGED.isSatisfied(input);
 	}

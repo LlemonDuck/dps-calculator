@@ -317,7 +317,7 @@ public class EquipmentPanel extends JPanel
 		SwingUtilities.invokeLater(() ->
 		{
 			Map<EquipmentInventorySlot, ItemStats> equipment = getEquipment();
-			slayerCheck.setVisible(EquipmentRequirement.BLACK_MASK_MELEE.isSatisfied(equipment));
+			slayerCheck.setVisible(EquipmentRequirement.BLACK_MASK_MELEE.isSatisfied(equipment) || EquipmentRequirement.BLACK_MASK_MAGE_RANGED.isSatisfied(equipment));
 
 			ItemStats currentWeapon = weaponSlot.getValue();
 
