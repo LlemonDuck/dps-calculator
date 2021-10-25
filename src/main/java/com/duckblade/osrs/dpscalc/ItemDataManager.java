@@ -48,7 +48,7 @@ public class ItemDataManager
 		}
 
 		// for tbp selection
-		int[] DART_IDS = {DRAGON_DART, RUNE_DART, ADAMANT_DART, MITHRIL_DART, BLACK_DART, STEEL_DART, IRON_DART, BRONZE_DART};
+		int[] DART_IDS = {DRAGON_DART, AMETHYST_DART, RUNE_DART, ADAMANT_DART, MITHRIL_DART, BLACK_DART, STEEL_DART, IRON_DART, BRONZE_DART};
 		DARTS = IntStream.of(DART_IDS)
 				.mapToObj(ITEMS_BY_ID::get)
 				.collect(Collectors.toList());
