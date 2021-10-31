@@ -74,7 +74,7 @@ public enum SkillBoostPreset
 		int magDrain = (int) (lvls.get(Skill.MAGIC).getValue() * 0.10f);
 		boosts.get(Skill.MAGIC).setValue(-magDrain);
 
-		int strBoost = attDrain + defDrain + rngDrain + magDrain;
+		int strBoost = 10 + (attDrain + defDrain + rngDrain + magDrain) / 4;
 		boosts.get(Skill.STRENGTH).setValue(strBoost);
 	}),
 	;
