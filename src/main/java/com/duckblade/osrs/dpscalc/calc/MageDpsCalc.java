@@ -95,6 +95,9 @@ public class MageDpsCalc extends AbstractCalc
 		else if (salveLevel(input) == 1 || blackMask(input))
 			attRoll = (int) (attRoll * 1.15f);
 		
+		if (DEMONBANE_SPELLS.contains(input.getSpell()))
+			attRoll = (int) (attRoll * (input.isUsingMarkOfDarkness() ? 1.4f : 1.2f));
+		
 		return attRoll;
 	}
 
@@ -112,9 +115,19 @@ public class MageDpsCalc extends AbstractCalc
 		Function<CalcInput, Integer> bonusProvider = MAX_HIT_BONUS_PROVIDERS.get(spell);
 		if (bonusProvider != null)
 			maxHit += bonusProvider.apply(input);
+		
+		float demonbaneBonus = 0f;
+		if (DEMONBANE_SPELLS.contains(input.getSpell()))
+		{
+			if (input.isUsingMarkOfDarkness())
+				demonbaneBonus = 0.25f;
+			
+			if (!input.getNpcTarget().isDemon())
+				maxHit = 0; // demonbane can't be used against non-demons
+		}
 
 		float magDmgBonus = input.getEquipmentStats().getStrengthMagic() / 100f + 1f;
-		maxHit = (int) (maxHit * magDmgBonus);
+		maxHit = (int) (maxHit * (magDmgBonus + demonbaneBonus));
 		
 		if (salveLevel(input) == 2)
 			maxHit = (int) (maxHit * (6f / 5f));

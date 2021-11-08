@@ -68,12 +68,21 @@ public enum Spell
 	EARTH_STRIKE(3, "Earth Strike", 6, Spellbook.STANDARD),
 	WATER_STRIKE(2, "Water Strike", 4, Spellbook.STANDARD),
 	WIND_STRIKE(1, "Wind Strike", 2, Spellbook.STANDARD),
+	
+	// arceuus
+	INFERIOR_DEMONBANE(53, "Inferior Demonbane", 16, Spellbook.ARCEUUS),
+	SUPERIOR_DEMONBANE(54, "Superior Demonbane", 23, Spellbook.ARCEUUS),
+	DARK_DEMONBANE(55, "Dark Demonbane", 30, Spellbook.ARCEUUS),
+	GHOSTLY_GRASP(56, "Ghostly Grasp", 12, Spellbook.ARCEUUS),
+	SKELETAL_GRASP(57, "Skeletal Grasp", 17, Spellbook.ARCEUUS),
+	UNDEAD_GRASP(58, "Undead Grasp", 24, Spellbook.ARCEUUS),
 	;
 
 	public enum Spellbook
 	{
 		STANDARD,
 		ANCIENT,
+		ARCEUUS,
 		POWERED_STAVES,
 		;
 	}
@@ -90,6 +99,12 @@ public enum Spell
 	private final int baseMaxHit;
 
 	private final Spellbook spellbook;
+	
+	public static final List<Spell> DEMONBANE_SPELLS = Arrays.asList(
+		INFERIOR_DEMONBANE,
+		SUPERIOR_DEMONBANE,
+		DARK_DEMONBANE
+	);
 
 	private static final List<Spell> STANDARD_SPELLS =
 			Arrays.stream(values())
@@ -98,17 +113,30 @@ public enum Spell
 
 	private static final List<Spell> STANDARD_AND_ANCIENT_SPELLS = // there are no staves that can do ancient but not standard
 			Arrays.stream(values())
-					.filter(s -> s.spellbook != Spellbook.POWERED_STAVES)
+					.filter(s -> s.spellbook == Spellbook.STANDARD || s.spellbook == Spellbook.ANCIENT)
 					.collect(Collectors.toList());
+	
+	private static final List<Spell> ARCEUUS_SPELLS =
+		Arrays.stream(values())
+			.filter(s -> s.spellbook == Spellbook.ARCEUUS)
+			.collect(Collectors.toList());
+	
+	private static final List<Spell> ALL_SPELLBOOKS =
+		Arrays.stream(values())
+			.filter(s -> s.spellbook != Spellbook.POWERED_STAVES)
+			.collect(Collectors.toList());
 
 	private static final List<Spell> WAVE_AND_SURGE = Arrays.asList(
 			WIND_WAVE, WATER_WAVE, EARTH_WAVE, FIRE_WAVE, WIND_SURGE, WATER_SURGE, EARTH_SURGE, FIRE_SURGE, CRUMBLE_UNDEAD
 	);
-	private static final List<Spell> SLAYER_STAFF = Stream.concat(WAVE_AND_SURGE.stream(), Stream.of(MAGIC_DART)).collect(Collectors.toList());
-	private static final List<Spell> GUTHIX_STAFF = Stream.concat(SLAYER_STAFF.stream(), Stream.of(CLAWS_OF_GUTHIX)).collect(Collectors.toList());
-	private static final List<Spell> SARA_STAFF = Stream.concat(SLAYER_STAFF.stream(), Stream.of(SARADOMIN_STRIKE)).collect(Collectors.toList());
-	private static final List<Spell> ZAM_STAFF = Stream.concat(SLAYER_STAFF.stream(), Stream.of(FLAMES_OF_ZAMORAK)).collect(Collectors.toList());
-	private static final List<Spell> VOID_MACE = Stream.concat(WAVE_AND_SURGE.stream(), Stream.of(CLAWS_OF_GUTHIX)).collect(Collectors.toList());
+	private static final List<Spell> SLAYER_STAFF = Stream.concat(WAVE_AND_SURGE.stream(), Stream.of(MAGIC_DART, CRUMBLE_UNDEAD)).collect(Collectors.toList());
+	private static final List<Spell> VOID_MACE = Stream.concat(WAVE_AND_SURGE.stream(), Stream.of(CLAWS_OF_GUTHIX, CRUMBLE_UNDEAD)).collect(Collectors.toList());
+	private static final List<Spell> GUTHIX_STAFF = Stream.of(MAGIC_DART, CLAWS_OF_GUTHIX, CRUMBLE_UNDEAD).collect(Collectors.toList());
+	private static final List<Spell> SARA_STAFF = Stream.of(MAGIC_DART, SARADOMIN_STRIKE, CRUMBLE_UNDEAD).collect(Collectors.toList());
+	private static final List<Spell> ZAM_STAFF = Stream.concat(
+		Stream.of(MAGIC_DART, FLAMES_OF_ZAMORAK, CRUMBLE_UNDEAD),
+		ARCEUUS_SPELLS.stream()
+	).collect(Collectors.toList());
 
 	public static List<Spell> forWeapon(int staffId, boolean ahrimsDamned)
 	{
@@ -136,6 +164,7 @@ public enum Spell
 				return Collections.singletonList(GAUNTLET_3);
 				
 			case SANGUINESTI_STAFF:
+			case HOLY_SANGUINESTI_STAFF:
 				return Collections.singletonList(SANGUINESTI);
 				
 			case IBANS_STAFF:
@@ -162,18 +191,26 @@ public enum Spell
 				
 			case ANCIENT_STAFF:
 			case ANCIENT_STAFF_20431:
-			case MASTER_WAND:
-			case KODAI_WAND:
 			case NIGHTMARE_STAFF:
 			case ELDRITCH_NIGHTMARE_STAFF:
 			case VOLATILE_NIGHTMARE_STAFF:
 				return STANDARD_AND_ANCIENT_SPELLS;
+				
+			case MASTER_WAND:
+			case KODAI_WAND:
+				return ALL_SPELLBOOKS;
 				
 			case SWAMP_LIZARD:
 			case ORANGE_SALAMANDER:
 			case RED_SALAMANDER:
 			case BLACK_SALAMANDER:
 				return Collections.singletonList(SALAMANDER_BLAZE);
+				
+			case SKULL_SCEPTRE:
+				return ARCEUUS_SPELLS;
+				
+			case SKULL_SCEPTRE_I:
+				return Stream.concat(ARCEUUS_SPELLS.stream(), Stream.of(CRUMBLE_UNDEAD)).collect(Collectors.toList());
 
 			case AHRIMS_STAFF:
 			case AHRIMS_STAFF_0:
@@ -182,9 +219,9 @@ public enum Spell
 			case AHRIMS_STAFF_75:
 			case AHRIMS_STAFF_100:
 				if (ahrimsDamned)
-					return STANDARD_AND_ANCIENT_SPELLS;
+					return ALL_SPELLBOOKS;
 				else
-					return STANDARD_SPELLS;
+					return Stream.concat(STANDARD_SPELLS.stream(), ARCEUUS_SPELLS.stream()).collect(Collectors.toList());
 				
 			default:
 				return STANDARD_SPELLS;

@@ -46,5 +46,6 @@ public class CalcInput
 	private final int maxHp;
 	
 	private final boolean usingCharge;
+	private final boolean usingMarkOfDarkness;
 
 }

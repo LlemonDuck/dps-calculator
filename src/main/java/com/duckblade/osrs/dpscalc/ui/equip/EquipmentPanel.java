@@ -60,6 +60,7 @@ public class EquipmentPanel extends JPanel
 	private final CustomJComboBox<ItemStats> tbpDartSelectPanel;
 	private final CustomJComboBox<WeaponMode> weaponModeSelect;
 	private final CustomJComboBox<Spell> spellSelect;
+	private final CustomJCheckBox markOfDarkness;
 	
 	private final JPanel dharokPanel;
 	private final JTextField dharokHpField;
@@ -157,6 +158,13 @@ public class EquipmentPanel extends JPanel
 		add(spellSelect);
 
 		add(Box.createVerticalStrut(10));
+		
+		markOfDarkness = new CustomJCheckBox("Mark of Darkness");
+		markOfDarkness.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+		markOfDarkness.setValue(false);
+		markOfDarkness.setEditable(true);
+		markOfDarkness.setVisible(false);
+		add(markOfDarkness);
 
 		totalsPanel = new JPanel();
 		totalsPanel.setMinimumSize(new Dimension(PluginPanel.PANEL_WIDTH, 0));
@@ -205,6 +213,17 @@ public class EquipmentPanel extends JPanel
 	public void setOnSlayerTask(boolean newValue)
 	{
 		slayerCheck.setValue(newValue);
+		onEquipmentChanged();
+	}
+
+	public boolean isUsingMarkOfDarkness()
+	{
+		return markOfDarkness.getValue();
+	}
+
+	public void setUsingMarkOfDarkness(boolean newValue)
+	{
+		markOfDarkness.setValue(newValue);
 		onEquipmentChanged();
 	}
 	
@@ -349,6 +368,9 @@ public class EquipmentPanel extends JPanel
 			{
 				spellSelect.setVisible(false);
 			}
+			
+			boolean usingDemonbane = spellSelect.isVisible() && Spell.DEMONBANE_SPELLS.contains(spellSelect.getValue());
+			markOfDarkness.setVisible(usingDemonbane);
 
 			rebuildTotals();
 			revalidate();
