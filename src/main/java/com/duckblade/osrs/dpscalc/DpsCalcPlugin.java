@@ -148,13 +148,12 @@ public class DpsCalcPlugin extends Plugin
 	{
 		if (!config.enableAutoSync()) return;
 
-		if (
-				statChanged.getSkill() == Skill.ATTACK ||
-				statChanged.getSkill() == Skill.STRENGTH ||
-				statChanged.getSkill() == Skill.DEFENCE ||
-				statChanged.getSkill() == Skill.MAGIC ||
-				statChanged.getSkill() == Skill.RANGED ||
-				statChanged.getSkill() == Skill.PRAYER
+		if (statChanged.getSkill() == Skill.ATTACK ||
+			statChanged.getSkill() == Skill.STRENGTH ||
+			statChanged.getSkill() == Skill.DEFENCE ||
+			statChanged.getSkill() == Skill.MAGIC ||
+			statChanged.getSkill() == Skill.RANGED ||
+			statChanged.getSkill() == Skill.PRAYER
 		) {
 			panel.onStatChanged();
 		}

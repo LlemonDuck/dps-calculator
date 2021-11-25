@@ -2,7 +2,6 @@ package com.duckblade.osrs.dpscalc.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.runelite.api.Varbits;
 
 @RequiredArgsConstructor
 @Getter
