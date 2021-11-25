@@ -16,4 +16,14 @@ public interface DpsCalcConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+			keyName = "enableAutoSync",
+			name = "Enable Auto Sync",
+			description = "Automatically sync game state to the panel as it changes"
+	)
+	default boolean enableAutoSync()
+	{
+		return false;
+	}
 }

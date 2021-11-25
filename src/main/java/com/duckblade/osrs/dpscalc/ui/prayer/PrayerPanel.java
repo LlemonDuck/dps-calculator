@@ -11,17 +11,26 @@ import javax.inject.Inject;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import lombok.Setter;
+import net.runelite.api.Client;
 import net.runelite.client.ui.PluginPanel;
 
 public class PrayerPanel extends JPanel
 {
+	private final Client client;
 
 	private final JLabel drainLabel;
 	private final Map<Prayer, PrayerButton> prayerButtons;
 
+	@Setter
+	private Runnable onUpdated;
+
 	@Inject
-	public PrayerPanel()
+	public PrayerPanel(Client client)
 	{
+		this.client = client;
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setMinimumSize(new Dimension(PluginPanel.PANEL_WIDTH, 0));
 
@@ -55,6 +64,14 @@ public class PrayerPanel extends JPanel
 	private void updateDrainLabel()
 	{
 		drainLabel.setText("Total Drain: " + getDrain());
+		onUpdated.run();
+	}
+
+	public void loadFromClient() {
+		for (Prayer p: Prayer.values()) {
+			prayerButtons.get(p).setSelected(client.isPrayerActive(net.runelite.api.Prayer.valueOf(p.toString())));
+		}
+		updateDrainLabel();
 	}
 
 	public List<Prayer> getSelected()

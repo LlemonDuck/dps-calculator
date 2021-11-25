@@ -22,6 +22,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+
+import net.runelite.api.NPC;
 import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
@@ -119,4 +121,23 @@ public class DpsPluginPanel extends PluginPanel
 		currentPanel.openNpcStats(preload);
 	}
 
+	public void onEquipmentChanged()
+	{
+		inputPanels.forEach(DpsCalcPanel::onEquipmentChanged);
+	}
+
+	public void onPrayersChanged()
+	{
+		inputPanels.forEach(DpsCalcPanel::onPrayersChanged);
+	}
+
+	public void onStatChanged()
+	{
+		inputPanels.forEach(DpsCalcPanel::onStatChanged);
+	}
+
+	public void onTargetChanged(NpcStats target)
+	{
+		inputPanels.forEach(p -> p.onTargetChanged(target));
+	}
 }

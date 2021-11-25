@@ -12,10 +12,14 @@ import javax.inject.Inject;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+
+import lombok.Setter;
+import net.runelite.api.Client;
 import net.runelite.client.ui.PluginPanel;
 
 public class NpcStatsPanel extends JPanel
 {
+	private final Client client;
 
 	private final CustomJCheckBox manualEntry;
 	private final CustomJComboBox<NpcStats> npcSelect;
@@ -23,9 +27,13 @@ public class NpcStatsPanel extends JPanel
 	private final List<NpcStatBox> statBoxes;
 	private final List<NpcCheckBox> flagChecks;
 
+	@Setter
+	private Runnable onUpdated;
+
 	@Inject
-	public NpcStatsPanel(NpcDataManager npcDataManager)
+	public NpcStatsPanel(Client client, NpcDataManager npcDataManager)
 	{
+		this.client = client;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		manualEntry = new CustomJCheckBox("Manual Entry Mode");
@@ -121,6 +129,8 @@ public class NpcStatsPanel extends JPanel
 	{
 		statBoxes.forEach(sb -> sb.setValue(stats));
 		flagChecks.forEach(fc -> fc.setValue(stats));
+
+		onUpdated.run();
 	}
 
 	private void setAllEditable(boolean editable)

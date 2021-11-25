@@ -22,14 +22,9 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+
+import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.GameState;
@@ -67,6 +62,9 @@ public class EquipmentPanel extends JPanel
 	private final JTextField dharokMaxHpField;
 
 	private final JPanel totalsPanel;
+
+	@Setter
+	private Runnable onUpdated;
 
 	@Inject
 	public EquipmentPanel(@Nullable Client client, @Nullable ClientThread clientThread, @Nullable ItemManager rlItemManager, ItemDataManager itemDataManager)
@@ -375,6 +373,7 @@ public class EquipmentPanel extends JPanel
 			rebuildTotals();
 			revalidate();
 			repaint();
+			onUpdated.run();
 		});
 	}
 	

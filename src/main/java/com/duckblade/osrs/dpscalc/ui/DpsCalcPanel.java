@@ -62,6 +62,11 @@ public class DpsCalcPanel extends JPanel
 		this.prayerPanel = prayerPanel;
 		this.resultPanel = resultPanel;
 
+		this.npcStatsPanel.setOnUpdated(this::updateNav);
+		this.equipmentPanel.setOnUpdated(this::updateNav);
+		this.skillsPanel.setOnUpdated(this::updateNav);
+		this.prayerPanel.setOnUpdated(this::updateNav);
+
 		this.panelId = Integer.toString(panelIdGenerator.getAndIncrement());
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -80,6 +85,7 @@ public class DpsCalcPanel extends JPanel
 		equipmentNav = new MenuPanelNavEntry("Equipment", "Not Set", this::openEquipment);
 		menuPanel.add(equipmentNav);
 		menuPanel.add(Box.createVerticalStrut(5));
+
 
 		skillsNav = new MenuPanelNavEntry("Skills", "Not Set", this::openSkills);
 		menuPanel.add(skillsNav);
@@ -189,4 +195,36 @@ public class DpsCalcPanel extends JPanel
 		});
 	}
 
+	public void onEquipmentChanged()
+	{
+		equipmentPanel.loadFromClient();
+	}
+	public void onPrayersChanged()
+	{
+		prayerPanel.loadFromClient();
+	}
+
+	public void onStatChanged()
+	{
+		skillsPanel.loadFromClient();
+	}
+
+
+	public void onTargetChanged(NpcStats stats)
+	{
+		npcStatsPanel.loadNpcStats(stats);
+	}
+
+	public void updateNav() {
+		SwingUtilities.invokeLater(() ->
+		{
+			npcStatsNav.setDescription(npcStatsPanel.getSummary());
+			equipmentNav.setDescription(equipmentPanel.getSummary());
+			skillsNav.setDescription(skillsPanel.getSummary());
+			prayerNav.setDescription(prayerPanel.getSummary());
+			calculateDps();
+			revalidate();
+			repaint();
+		});
+	}
 }

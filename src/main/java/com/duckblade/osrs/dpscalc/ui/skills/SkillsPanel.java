@@ -12,10 +12,9 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.*;
+
+import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
@@ -32,6 +31,9 @@ public class SkillsPanel extends JPanel
 
 	private final Map<Skill, StatBox> statBoxes;
 	private final Map<Skill, StatBox> boostBoxes;
+
+	@Setter
+	private Runnable onUpdated;
 
 	@Inject
 	public SkillsPanel(@Nullable Client client, @Nullable ClientThread clientThread)
@@ -90,7 +92,7 @@ public class SkillsPanel extends JPanel
 		add(applyPresetButton);
 	}
 
-	private void loadFromClient()
+	public void loadFromClient()
 	{
 		if (client == null || clientThread == null)
 			return; // ui test
@@ -102,6 +104,9 @@ public class SkillsPanel extends JPanel
 				return;
 
 			statBoxes.forEach((skill, box) -> box.setValue(client.getRealSkillLevel(skill)));
+			boostBoxes.forEach((skill, box) -> box.setValue(client.getBoostedSkillLevel(skill) - client.getRealSkillLevel(skill)));
+
+			onUpdated.run();
 		});
 	}
 
@@ -135,7 +140,7 @@ public class SkillsPanel extends JPanel
 	public Map<Skill, Integer> getBoosts()
 	{
 
-		Map<Skill, Integer> results = new HashMap<>(6);
+		Map<Skill, Integer> results = new HashMap<>(5);
 		boostBoxes.forEach((k, v) -> results.put(k, v.getValue()));
 		return results;
 	}

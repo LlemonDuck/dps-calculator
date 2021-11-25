@@ -2,12 +2,12 @@ package com.duckblade.osrs.dpscalc.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.runelite.api.Varbits;
 
 @RequiredArgsConstructor
 @Getter
 public enum Prayer
 {
-
 	THICK_SKIN("Thick Skin", PrayerGroup.UTILITY, 1f, 1f, 3),
 	BURST_OF_STRENGTH("Burst of Strength", PrayerGroup.MELEE, 1f, 1.05f, 3),
 	CLARITY_OF_THOUGHT("Clarity of Thought", PrayerGroup.MELEE, 1.05f, 1f, 3),
@@ -25,7 +25,7 @@ public enum Prayer
 	ULTIMATE_STRENGTH("Ultimate Strength", PrayerGroup.MELEE, 1f, 1.15f, 12),
 	INCREDIBLE_REFLEXES("Incredible Reflexes", PrayerGroup.MELEE, 1.15f, 1f, 12),
 	PROTECT_FROM_MAGIC("Protect from Magic", PrayerGroup.UTILITY, 1f, 1.05f, 12),
-	PROTECT_FROM_RANGED("Protect from Missiles", PrayerGroup.UTILITY, 1f, 1.05f, 12),
+	PROTECT_FROM_MISSILES("Protect from Missiles", PrayerGroup.UTILITY, 1f, 1.05f, 12),
 	PROTECT_FROM_MELEE("Protect from Melee", PrayerGroup.UTILITY, 1f, 1.05f, 12),
 	EAGLE_EYE("Eagle Eye", PrayerGroup.RANGED, 1.15f, 1f, 12),
 	MYSTIC_MIGHT("Mystic Might", PrayerGroup.MAGE, 1.15f, 1f, 12),

@@ -6,12 +6,8 @@ import com.google.inject.Provides;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.MenuAction;
-import net.runelite.api.MenuEntry;
-import net.runelite.api.NPC;
-import net.runelite.api.events.MenuEntryAdded;
-import net.runelite.api.events.MenuOptionClicked;
+import net.runelite.api.*;
+import net.runelite.api.events.*;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -19,6 +15,8 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.util.ImageUtil;
+
+import java.util.Objects;
 
 @Slf4j
 @Singleton
@@ -117,9 +115,113 @@ public class DpsCalcPlugin extends Plugin
 			navButton.getOnSelect().run();
 	}
 
+	// subscribe to equipment changes
+	@Subscribe
+	public void onItemContainerChanged(ItemContainerChanged event)
+	{
+		if (!config.enableAutoSync()) return;
+
+		if (event.getContainerId() == InventoryID.EQUIPMENT.getId()) {
+			panel.onEquipmentChanged();
+		}
+	}
+
+	// subscribe to attack style changes
+	@Subscribe
+	public void onVarbitChanged(VarbitChanged event)
+	{
+		if (!config.enableAutoSync()) return;
+
+		if (event.getIndex() == VarPlayer.ATTACK_STYLE.getId()) {
+			panel.onEquipmentChanged();
+		}
+
+		if (event.getIndex() == 83) {
+			panel.onPrayersChanged();
+		}
+	}
+
+	// listen for updates to combat skills
+	@Subscribe
+	public void onStatChanged(StatChanged statChanged)
+	{
+		if (!config.enableAutoSync()) return;
+
+		if (
+				statChanged.getSkill() == Skill.ATTACK ||
+				statChanged.getSkill() == Skill.STRENGTH ||
+				statChanged.getSkill() == Skill.DEFENCE ||
+				statChanged.getSkill() == Skill.MAGIC ||
+				statChanged.getSkill() == Skill.RANGED ||
+				statChanged.getSkill() == Skill.PRAYER
+		) {
+			panel.onStatChanged();
+		}
+	}
+
+
+	// listen for changes to the users targeted
+	@Subscribe
+	public void onInteractingChanged(InteractingChanged interactingChanged)
+	{
+		if (!config.enableAutoSync()) return;
+
+		Player player = client.getLocalPlayer();
+		if (player == null) return;
+
+		Actor source = interactingChanged.getSource();
+		if (source == null) return;
+
+		Actor target = interactingChanged.getTarget();
+		if (target == null) return;
+
+		// if the source is the current player, and there is a target
+		if (Objects.equals(player.getName(), source.getName()) && target instanceof NPC) {
+			NPC npc = (NPC) target;
+			int npcId = npc.getId();
+			NpcStats stats = npcDataManager.getNpcStatsById(npcId);
+			if (stats == null) return;
+
+			panel.onTargetChanged(stats);
+		}
+	}
+
 	@Provides
 	DpsCalcConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(DpsCalcConfig.class);
+	}
+
+	public boolean prayerVarbitChanged(int varbit) {
+		return varbit == Varbits.QUICK_PRAYER.getId() ||
+			varbit == Varbits.PRAYER_THICK_SKIN.getId() ||
+			varbit == Varbits.PRAYER_BURST_OF_STRENGTH.getId() ||
+			varbit == Varbits.PRAYER_CLARITY_OF_THOUGHT.getId() ||
+			varbit == Varbits.PRAYER_SHARP_EYE.getId() ||
+			varbit == Varbits.PRAYER_MYSTIC_WILL.getId() ||
+			varbit == Varbits.PRAYER_ROCK_SKIN.getId() ||
+			varbit == Varbits.PRAYER_SUPERHUMAN_STRENGTH.getId() ||
+			varbit == Varbits.PRAYER_IMPROVED_REFLEXES.getId() ||
+			varbit == Varbits.PRAYER_RAPID_RESTORE.getId() ||
+			varbit == Varbits.PRAYER_RAPID_HEAL.getId() ||
+			varbit == Varbits.PRAYER_PROTECT_ITEM.getId() ||
+			varbit == Varbits.PRAYER_HAWK_EYE.getId() ||
+			varbit == Varbits.PRAYER_MYSTIC_LORE.getId() ||
+			varbit == Varbits.PRAYER_STEEL_SKIN.getId() ||
+			varbit == Varbits.PRAYER_ULTIMATE_STRENGTH.getId() ||
+			varbit == Varbits.PRAYER_INCREDIBLE_REFLEXES.getId() ||
+			varbit == Varbits.PRAYER_PROTECT_FROM_MAGIC.getId() ||
+			varbit == Varbits.PRAYER_PROTECT_FROM_MISSILES.getId() ||
+			varbit == Varbits.PRAYER_PROTECT_FROM_MELEE.getId() ||
+			varbit == Varbits.PRAYER_EAGLE_EYE.getId() ||
+			varbit == Varbits.PRAYER_MYSTIC_MIGHT.getId() ||
+			varbit == Varbits.PRAYER_RETRIBUTION.getId() ||
+			varbit == Varbits.PRAYER_REDEMPTION.getId() ||
+			varbit == Varbits.PRAYER_SMITE.getId() ||
+			varbit == Varbits.PRAYER_CHIVALRY.getId() ||
+			varbit == Varbits.PRAYER_PIETY.getId() ||
+			varbit == Varbits.PRAYER_PRESERVE.getId() ||
+			varbit == Varbits.PRAYER_RIGOUR.getId() ||
+			varbit == Varbits.PRAYER_AUGURY.getId();
 	}
 }
