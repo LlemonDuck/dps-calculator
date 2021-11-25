@@ -136,6 +136,7 @@ public class DpsCalcPlugin extends Plugin
 			panel.onEquipmentChanged();
 		}
 
+		// Unsure which varbit this actually is, or if its even defined anywhere
 		if (event.getIndex() == 83) {
 			panel.onPrayersChanged();
 		}
@@ -190,38 +191,5 @@ public class DpsCalcPlugin extends Plugin
 	DpsCalcConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(DpsCalcConfig.class);
-	}
-
-	public boolean prayerVarbitChanged(int varbit) {
-		return varbit == Varbits.QUICK_PRAYER.getId() ||
-			varbit == Varbits.PRAYER_THICK_SKIN.getId() ||
-			varbit == Varbits.PRAYER_BURST_OF_STRENGTH.getId() ||
-			varbit == Varbits.PRAYER_CLARITY_OF_THOUGHT.getId() ||
-			varbit == Varbits.PRAYER_SHARP_EYE.getId() ||
-			varbit == Varbits.PRAYER_MYSTIC_WILL.getId() ||
-			varbit == Varbits.PRAYER_ROCK_SKIN.getId() ||
-			varbit == Varbits.PRAYER_SUPERHUMAN_STRENGTH.getId() ||
-			varbit == Varbits.PRAYER_IMPROVED_REFLEXES.getId() ||
-			varbit == Varbits.PRAYER_RAPID_RESTORE.getId() ||
-			varbit == Varbits.PRAYER_RAPID_HEAL.getId() ||
-			varbit == Varbits.PRAYER_PROTECT_ITEM.getId() ||
-			varbit == Varbits.PRAYER_HAWK_EYE.getId() ||
-			varbit == Varbits.PRAYER_MYSTIC_LORE.getId() ||
-			varbit == Varbits.PRAYER_STEEL_SKIN.getId() ||
-			varbit == Varbits.PRAYER_ULTIMATE_STRENGTH.getId() ||
-			varbit == Varbits.PRAYER_INCREDIBLE_REFLEXES.getId() ||
-			varbit == Varbits.PRAYER_PROTECT_FROM_MAGIC.getId() ||
-			varbit == Varbits.PRAYER_PROTECT_FROM_MISSILES.getId() ||
-			varbit == Varbits.PRAYER_PROTECT_FROM_MELEE.getId() ||
-			varbit == Varbits.PRAYER_EAGLE_EYE.getId() ||
-			varbit == Varbits.PRAYER_MYSTIC_MIGHT.getId() ||
-			varbit == Varbits.PRAYER_RETRIBUTION.getId() ||
-			varbit == Varbits.PRAYER_REDEMPTION.getId() ||
-			varbit == Varbits.PRAYER_SMITE.getId() ||
-			varbit == Varbits.PRAYER_CHIVALRY.getId() ||
-			varbit == Varbits.PRAYER_PIETY.getId() ||
-			varbit == Varbits.PRAYER_PRESERVE.getId() ||
-			varbit == Varbits.PRAYER_RIGOUR.getId() ||
-			varbit == Varbits.PRAYER_AUGURY.getId();
 	}
 }

@@ -140,7 +140,7 @@ public class SkillsPanel extends JPanel
 	public Map<Skill, Integer> getBoosts()
 	{
 
-		Map<Skill, Integer> results = new HashMap<>(5);
+		Map<Skill, Integer> results = new HashMap<>(6);
 		boostBoxes.forEach((k, v) -> results.put(k, v.getValue()));
 		return results;
 	}

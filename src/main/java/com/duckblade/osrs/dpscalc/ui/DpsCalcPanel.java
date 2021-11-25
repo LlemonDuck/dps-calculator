@@ -86,7 +86,6 @@ public class DpsCalcPanel extends JPanel
 		menuPanel.add(equipmentNav);
 		menuPanel.add(Box.createVerticalStrut(5));
 
-
 		skillsNav = new MenuPanelNavEntry("Skills", "Not Set", this::openSkills);
 		menuPanel.add(skillsNav);
 		menuPanel.add(Box.createVerticalStrut(5));
@@ -208,7 +207,6 @@ public class DpsCalcPanel extends JPanel
 	{
 		skillsPanel.loadFromClient();
 	}
-
 
 	public void onTargetChanged(NpcStats stats)
 	{
