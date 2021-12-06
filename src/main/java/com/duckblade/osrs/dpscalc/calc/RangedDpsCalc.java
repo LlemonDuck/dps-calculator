@@ -48,11 +48,6 @@ public class RangedDpsCalc extends AbstractCalc
 		if (dragonHunter(input))
 			rngStrength = (int) (rngStrength * 1.3f);
 
-		// unsure whether this should be here or in effectiveRangedStrength
-		// unlike tbow accuracy, this one could make a difference
-		if (EquipmentRequirement.TBOW.isSatisfied(input))
-			rngStrength = (int) (rngStrength * tbowDmgModifier(input));
-
 		return rngStrength;
 	}
 
@@ -67,6 +62,9 @@ public class RangedDpsCalc extends AbstractCalc
 
 		maxHit = (int) (maxHit * leafyMod(input));
 		maxHit = (int) (maxHit * crystalStrMod(input));
+
+		if (EquipmentRequirement.TBOW.isSatisfied(input))
+			maxHit = (int) (maxHit * tbowDmgModifier(input));
 
 		NpcStats target = input.getNpcTarget();
 		if (target.getName() != null && target.getName().contains("Zulrah"))

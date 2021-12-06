@@ -64,8 +64,10 @@ public class CalcUtil
 		int magic = Math.max(input.getNpcTarget().getMagicAccuracy(), input.getNpcTarget().getLevelMagic()); // todo cox detection?
 		magic = Math.min(250, magic);
 		
-		float mod = 140f + (magic - 10f) / 100f - (float) Math.pow(magic / 10f - 100f, 2) / 100f; // in %
-		return mod / 100f; // to multiplier
+		float t1 = 140f;
+		float t2 = ((10f * 3f * magic) / 10f - 10f) / 100f;
+		float t3 = (float) Math.pow(3f * magic / 10f - 100f, 2f) / 100f;
+		return (t1 + t2 - t3) / 100f; // to multiplier
 	}
 
 	public static float tbowDmgModifier(CalcInput input)
@@ -73,11 +75,10 @@ public class CalcUtil
 		int magic = Math.max(input.getNpcTarget().getMagicAccuracy(), input.getNpcTarget().getLevelMagic()); // todo cox detection?
 		magic = Math.min(250, magic);
 
-		int t1 = 250;
-		int t2 = (10 * 3 * magic / 10 - 14) / 100;
-		int t3 = ((3 * magic / 10 - 140) * (3 * magic / 10 - 140)) / 100;
-		int mod = Math.min(250, t1 + t2 - t3); // in %
-		return mod / 100f; // to multiplier
+		float t1 = 250f;
+		float t2 = (10f * 3f * magic / 10f - 14f) / 100f;
+		float t3 = (float) Math.pow(3f * magic / 10f - 140f, 2f) / 100f;
+		return (t1 + t2 - t3) / 100f; // to multiplier
 	}
 	
 	public static float leafyMod(CalcInput input)
