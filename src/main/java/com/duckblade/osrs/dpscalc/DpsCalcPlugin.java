@@ -5,13 +5,13 @@ import com.duckblade.osrs.dpscalc.ui.DpsPluginPanel;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.SwingUtilities;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.NPC;
 import net.runelite.api.events.MenuEntryAdded;
-import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -82,30 +82,24 @@ public class DpsCalcPlugin extends Plugin
 			NpcStats stats = npcDataManager.getNpcStatsById(npcId);
 			if (stats != null)
 			{
-				MenuEntry loadToDpsPanelEntry = new MenuEntry();
-				loadToDpsPanelEntry.setOption(ACTION_DPS_NPC);
-				loadToDpsPanelEntry.setTarget(event.getTarget());
-				loadToDpsPanelEntry.setType(MenuAction.RUNELITE.getId());
-				loadToDpsPanelEntry.setParam0(event.getActionParam0());
-				loadToDpsPanelEntry.setParam1(event.getActionParam1());
-				loadToDpsPanelEntry.setIdentifier(event.getIdentifier());
-
-				MenuEntry[] currentEntries = client.getMenuEntries();
-				MenuEntry[] newEntries = new MenuEntry[currentEntries.length + 1];
-				System.arraycopy(currentEntries, 0, newEntries, 0, currentEntries.length);
-				newEntries[newEntries.length - 1] = loadToDpsPanelEntry;
-				client.setMenuEntries(newEntries);
+				client.createMenuEntry(-1)
+					.setOption(ACTION_DPS_NPC)
+					.setTarget(event.getTarget())
+					.setType(MenuAction.RUNELITE)
+					.setParam0(event.getActionParam0())
+					.setParam1(event.getActionParam1())
+					.setIdentifier(event.getIdentifier())
+					.onClick(this::onMenuOptionClicked);
 			}
 		}
 	}
 
-	@Subscribe
-	public void onMenuOptionClicked(MenuOptionClicked event)
+	public void onMenuOptionClicked(MenuEntry event)
 	{
-		if (event.getMenuAction() != MenuAction.RUNELITE || !event.getMenuOption().equals(ACTION_DPS_NPC))
+		if (event.getType() != MenuAction.RUNELITE || !event.getOption().equals(ACTION_DPS_NPC))
 			return;
 
-		NPC npc = client.getCachedNPCs()[event.getId()];
+		NPC npc = client.getCachedNPCs()[event.getIdentifier()];
 		int npcId = npc.getId();
 		NpcStats stats = npcDataManager.getNpcStatsById(npcId);
 		if (stats == null)
@@ -113,8 +107,7 @@ public class DpsCalcPlugin extends Plugin
 
 		panel.openNpcStats(stats);
 
-		if (!navButton.isSelected())
-			navButton.getOnSelect().run();
+		SwingUtilities.invokeLater(() -> navButton.getOnSelect().run());
 	}
 
 	@Provides
