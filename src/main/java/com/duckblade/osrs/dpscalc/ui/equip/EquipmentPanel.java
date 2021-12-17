@@ -325,8 +325,20 @@ public class EquipmentPanel extends JPanel
 	private List<Spell> updateSpellComboBox(ItemStats currentWeapon, Map<EquipmentInventorySlot, ItemStats> equipment)
 	{
 		assert currentWeapon != null;
-		boolean ahrimsDamned = EquipmentRequirement.AHRIMS.isSatisfied(equipment) && EquipmentRequirement.AMULET_DAMNED.isSatisfied(equipment);
-		List<Spell> availableSpells = Spell.forWeapon(currentWeapon.getItemId(), ahrimsDamned);
+		
+		WeaponMode weaponMode = weaponModeSelect.getValue();
+		List<Spell> availableSpells;
+		if (weaponMode != null && weaponMode.isManualCast())
+		{
+			availableSpells = Spell.ALL_SPELLBOOKS;
+			spellSelect.setItems(Spell.ALL_SPELLBOOKS);
+		}
+		else
+		{
+			boolean ahrimsDamned = EquipmentRequirement.AHRIMS.isSatisfied(equipment) && EquipmentRequirement.AMULET_DAMNED.isSatisfied(equipment);
+			availableSpells = Spell.forWeapon(currentWeapon.getItemId(), ahrimsDamned);
+		}
+		
 		spellSelect.setItems(availableSpells);
 		return availableSpells;
 	}

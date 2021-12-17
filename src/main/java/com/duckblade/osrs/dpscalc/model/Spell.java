@@ -126,7 +126,7 @@ public enum Spell
 			.filter(s -> s.spellbook == Spellbook.ARCEUUS)
 			.collect(Collectors.toList());
 	
-	private static final List<Spell> ALL_SPELLBOOKS =
+	public static final List<Spell> ALL_SPELLBOOKS =
 		Arrays.stream(values())
 			.filter(s -> s.spellbook != Spellbook.POWERED_STAVES)
 			.collect(Collectors.toList());
@@ -134,6 +134,7 @@ public enum Spell
 	private static final List<Spell> WAVE_AND_SURGE = Arrays.asList(
 			WIND_WAVE, WATER_WAVE, EARTH_WAVE, FIRE_WAVE, WIND_SURGE, WATER_SURGE, EARTH_SURGE, FIRE_SURGE, CRUMBLE_UNDEAD
 	);
+	
 	private static final List<Spell> GOD_STAFF_BASE = Stream.concat(
 		STANDARD_SPELLS.stream(),
 		Stream.of(CRUMBLE_UNDEAD, MAGIC_DART)

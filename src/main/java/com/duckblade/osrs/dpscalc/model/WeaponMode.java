@@ -21,5 +21,11 @@ public class WeaponMode
 	
 	@Getter
 	private final MeleeStyle meleeStyle;
+
+	public static final int MOCK_VARP_MANUAL_CAST = -500;
+	public boolean isManualCast()
+	{
+		return varpValue == MOCK_VARP_MANUAL_CAST;
+	}
 	
 }
