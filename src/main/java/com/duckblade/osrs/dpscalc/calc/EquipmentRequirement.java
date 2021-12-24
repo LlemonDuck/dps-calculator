@@ -36,6 +36,7 @@ public enum EquipmentRequirement
 	
 	DRAGON_HUNTER(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{DRAGON_HUNTER_LANCE, DRAGON_HUNTER_CROSSBOW}}),
 	TBOW(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{TWISTED_BOW}}),
+	SCYTHE(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{SCYTHE_OF_VITUR, HOLY_SCYTHE_OF_VITUR, SANGUINE_SCYTHE_OF_VITUR}}),
 	
 	LEAF_BLADED_MELEE(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{LEAFBLADED_BATTLEAXE, LEAFBLADED_SPEAR, LEAFBLADED_SWORD}}),
 	LEAF_BLADED_BAXE(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{LEAFBLADED_BATTLEAXE}}),

@@ -32,6 +32,7 @@ public class NpcStats
 	private int defenseRanged;
 
 	private int combatLevel;
+	private int size;
 
 	private boolean isDemon;
 	private boolean isDragon;

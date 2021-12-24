@@ -38,6 +38,27 @@ public enum PostCalcTransform
 
 		return result.withDps(combinedDps);
 	}),
+	SCYTHE(EquipmentRequirement.SCYTHE, (input, result) ->
+	{
+		if (input.getNpcTarget().getSize() < 2)
+		{
+			return result;
+		}
+		
+		float oldDps = result.getDps();
+		float weaponSpeed = input.getEquipmentStats().getSpeed();
+
+		// bonus 50% hitsplat on size 2+, another bonus 25% hitsplat on size 3+, all roll independently
+		int secondMaxHit = result.getMaxHit() / 2;
+		float secondHitDps = (secondMaxHit * result.getHitChance()) / (2f * weaponSpeed * SECONDS_PER_TICK);
+		int thirdMaxHit = result.getMaxHit() / 4;
+		float thirdHitDps = (thirdMaxHit * result.getHitChance()) / (2f * weaponSpeed * SECONDS_PER_TICK);
+		
+		boolean thirdHit = input.getNpcTarget().getSize() > 2;
+		float bonusDps = secondHitDps + (thirdHit ? thirdHitDps : 0);
+		
+		return result.withDps(oldDps + bonusDps);
+	})
 	;
 
 	private final BiFunction<CalcInput, CalcResult, CalcResult> mapper;
