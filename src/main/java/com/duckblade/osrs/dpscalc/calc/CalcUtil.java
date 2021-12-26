@@ -159,4 +159,46 @@ public class CalcUtil
 			return 0;
 	}
 	
+	public static float wildyAttackBonus(CalcInput input)
+	{
+		if (!input.isInWilderness())
+		{
+			return 1f;
+		}
+		
+		switch (input.getCombatMode())
+		{
+			default:
+			case MELEE:
+				return WILDY_MELEE.isSatisfied(input) ? 1.5f : 1f;
+				
+			case RANGED:
+				return WILDY_RANGED.isSatisfied(input) ? 1.5f : 1f;
+				
+			case MAGE:
+				return WILDY_MAGIC.isSatisfied(input) ? 2f : 1f;
+		}
+	}
+	
+	public static float wildyDamageBonus(CalcInput input)
+	{
+		if (!input.isInWilderness())
+		{
+			return 1f;
+		}
+		
+		switch (input.getCombatMode())
+		{
+			default:
+			case MELEE:
+				return WILDY_MELEE.isSatisfied(input) ? 1.5f : 1f;
+				
+			case RANGED:
+				return WILDY_RANGED.isSatisfied(input) ? 1.5f : 1f;
+				
+			case MAGE:
+				return WILDY_MAGIC.isSatisfied(input) ? 1.25f : 1f;
+		}
+	}
+	
 }

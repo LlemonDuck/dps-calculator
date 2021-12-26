@@ -59,6 +59,10 @@ public enum EquipmentRequirement
 	CRYSTAL_HEAD(new EquipmentInventorySlot[] {HEAD}, new int[][] {{ItemID.CRYSTAL_HELM}}),
 	CRYSTAL_BODY(new EquipmentInventorySlot[] {BODY}, new int[][] {{ItemID.CRYSTAL_BODY}}),
 	CRYSTAL_LEGS(new EquipmentInventorySlot[] {LEGS}, new int[][] {{ItemID.CRYSTAL_LEGS}}),
+	
+	WILDY_MELEE(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{VIGGORAS_CHAINMACE}}),
+	WILDY_RANGED(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{CRAWS_BOW}}),
+	WILDY_MAGIC(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{THAMMARONS_SCEPTRE}}),
 	;
 
 	private final EquipmentInventorySlot[] slots;

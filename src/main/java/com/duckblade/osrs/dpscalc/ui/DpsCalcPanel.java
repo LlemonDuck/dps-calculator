@@ -115,6 +115,7 @@ public class DpsCalcPanel extends JPanel
 					.playerBoosts(skillsPanel.getBoosts())
 					.spell(equipmentPanel.getSpell())
 					.onSlayerTask(equipmentPanel.isOnSlayerTask())
+					.inWilderness(equipmentPanel.isInWilderness())
 					.activeHp(equipmentPanel.getActiveHp())
 					.maxHp(equipmentPanel.getMaxHp())
 					.usingMarkOfDarkness(equipmentPanel.isUsingMarkOfDarkness())

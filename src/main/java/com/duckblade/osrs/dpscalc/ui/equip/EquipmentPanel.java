@@ -56,6 +56,7 @@ public class EquipmentPanel extends JPanel
 	private final Map<EquipmentInventorySlot, EquipmentSlotPanel> slotPanels;
 	private final CustomJCheckBox slayerCheck;
 	private final EquipmentSlotPanel weaponSlot;
+	private final CustomJCheckBox inWilderness;
 
 	private final CustomJComboBox<ItemStats> tbpDartSelectPanel;
 	private final CustomJComboBox<WeaponMode> weaponModeSelect;
@@ -99,6 +100,12 @@ public class EquipmentPanel extends JPanel
 		slayerCheck.setEditable(true);
 		slayerCheck.setVisible(false);
 
+		inWilderness = new CustomJCheckBox("In Wilderness");
+		inWilderness.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+		inWilderness.setValue(false);
+		inWilderness.setEditable(true);
+		inWilderness.setVisible(false);
+
 		for (EquipmentInventorySlot slot : EquipmentInventorySlot.values())
 		{
 			EquipmentSlotPanel innerPanel = new EquipmentSlotPanel(this.rlItemManager, this.itemDataManager, slot, this::onEquipmentChanged);
@@ -108,6 +115,11 @@ public class EquipmentPanel extends JPanel
 
 			if (slot == EquipmentInventorySlot.HEAD)
 				slotPanel.add(slayerCheck);
+
+			if (slot == EquipmentInventorySlot.WEAPON)
+			{
+				slotPanel.add(inWilderness);
+			}
 		}
 		weaponSlot = slotPanels.get(EquipmentInventorySlot.WEAPON);
 
@@ -213,6 +225,17 @@ public class EquipmentPanel extends JPanel
 	public void setOnSlayerTask(boolean newValue)
 	{
 		slayerCheck.setValue(newValue);
+		onEquipmentChanged();
+	}
+	
+	public boolean isInWilderness()
+	{
+		return inWilderness.getValue();
+	}
+	
+	public void setInWilderness(boolean inWildy)
+	{
+		inWilderness.setValue(inWildy);
 		onEquipmentChanged();
 	}
 
@@ -357,6 +380,13 @@ public class EquipmentPanel extends JPanel
 			
 			boolean hpVisible = EquipmentRequirement.DHAROKS.isSatisfied(equipment);
 			dharokPanel.setVisible(hpVisible);
+			
+			boolean inWildyVisible = currentWeapon != null && (
+				EquipmentRequirement.WILDY_MELEE.isSatisfied(equipment) ||
+				EquipmentRequirement.WILDY_MAGIC.isSatisfied(equipment) ||
+				EquipmentRequirement.WILDY_RANGED.isSatisfied(equipment)
+			);
+			inWilderness.setVisible(inWildyVisible);
 
 			updateWeaponModeComboBox(currentWeapon);
 

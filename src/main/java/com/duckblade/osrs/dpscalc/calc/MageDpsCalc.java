@@ -97,6 +97,8 @@ public class MageDpsCalc extends AbstractCalc
 		
 		if (DEMONBANE_SPELLS.contains(input.getSpell()))
 			attRoll = (int) (attRoll * (input.isUsingMarkOfDarkness() ? 1.4f : 1.2f));
+
+		attRoll *= wildyAttackBonus(input);
 		
 		return attRoll;
 	}
@@ -138,6 +140,7 @@ public class MageDpsCalc extends AbstractCalc
 			maxHit = (int) (maxHit * 1.5f);
 		
 		maxHit *= leafyMod(input);
+		maxHit *= wildyDamageBonus(input);
 
 		NpcStats target = input.getNpcTarget();
 		if (target.getName() != null && target.getName().contains("Zulrah"))

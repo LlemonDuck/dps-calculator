@@ -58,10 +58,11 @@ public class RangedDpsCalc extends AbstractCalc
 		maxHit += 320;
 		maxHit /= 640;
 
-		maxHit = (int) (maxHit * gearBonus(input));
+		maxHit *= gearBonus(input);
 
-		maxHit = (int) (maxHit * leafyMod(input));
-		maxHit = (int) (maxHit * crystalStrMod(input));
+		maxHit *= leafyMod(input);
+		maxHit *= crystalStrMod(input);
+		maxHit *= wildyDamageBonus(input);
 
 		if (EquipmentRequirement.TBOW.isSatisfied(input))
 			maxHit = (int) (maxHit * tbowDmgModifier(input));
@@ -95,8 +96,9 @@ public class RangedDpsCalc extends AbstractCalc
 		if (dragonHunter(input))
 			rngAttack = (int) (rngAttack * 1.3f);
 
-		rngAttack = (int) (rngAttack * leafyMod(input));
-		rngAttack = (int) (rngAttack * crystalAttMod(input));
+		rngAttack *= leafyMod(input);
+		rngAttack *= crystalAttMod(input);
+		rngAttack *= wildyAttackBonus(input);
 
 		return rngAttack;
 	}

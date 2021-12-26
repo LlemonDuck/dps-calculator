@@ -47,5 +47,8 @@ public class CalcInput
 	
 	private final boolean usingCharge;
 	private final boolean usingMarkOfDarkness;
+	
+	// viggora's / craw's / thammaron's
+	private final boolean inWilderness;
 
 }

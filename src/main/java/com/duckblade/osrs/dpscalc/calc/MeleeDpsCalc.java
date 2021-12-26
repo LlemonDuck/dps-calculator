@@ -46,7 +46,8 @@ public class MeleeDpsCalc extends AbstractCalc
 		if (dragonHunter(input))
 			str = (int) (str * 1.2f);
 
-		str = (int) (str * leafyMod(input));
+		str *= leafyMod(input);
+		str *= wildyDamageBonus(input);
 
 		if (obsidianArmour(input))
 			str = (int) (str * 1.1f);
@@ -87,7 +88,8 @@ public class MeleeDpsCalc extends AbstractCalc
 		if (dragonHunter(input))
 			att = (int) (att * 1.2f);
 
-		att = (int) (att * leafyMod(input));
+		att *= leafyMod(input);
+		att *= wildyAttackBonus(input);
 
 		if (obsidianArmour(input))
 			att = (int) (att * 1.1f); // no necklace, accuracy penalty is done in item stats
