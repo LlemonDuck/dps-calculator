@@ -20,44 +20,46 @@ public enum SkillBoostPreset
 	SUPER_COMBAT_POTION("Super combat potion", SUPER_ATTACK_POTION, SUPER_STRENGTH_POTION, SUPER_DEFENSE_POTION),
 
 	RANGING_POTION("Ranging potion", Skill.RANGED, 0.10f, 4),
-	SUPER_RANGING_POTION("Super ranging potion", Skill.RANGED, 0.15f, 5),
+	SUPER_RANGING_POTION("Super ranging potion (NMZ)", Skill.RANGED, 0.15f, 5),
 	BASTION_POTION("Bastion potion", SUPER_DEFENSE_POTION, RANGING_POTION),
-	
+
+	ANCIENT_BREW("Ancient brew", Skill.MAGIC, 0.05f, 2),
 	MAGIC_POTION("Magic potion", Skill.MAGIC, 0f, 4),
+	SUPER_MAGIC_POTION("Super magic potion (NMZ)", Skill.MAGIC, 0.15f, 5),
 	BATTLEMAGE_POTION("Battlemage potion", MAGIC_POTION, SUPER_DEFENSE_POTION),
-	
+
 	IMBUED_HEART("Imbued Heart", Skill.MAGIC, 0.10f, 1),
 
 	COX_OVERLOAD_MINUS("Overload (-)",
-			new Skill[] {Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
-			new float[] {0.10f, 0.10f, 0.10f, 0.10f, 0.10f},
-			new int[] {4, 4, 4, 4, 4}
+		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
+		new float[]{0.10f, 0.10f, 0.10f, 0.10f, 0.10f},
+		new int[]{4, 4, 4, 4, 4}
 	),
 	COX_OVERLOAD("Overload",
-			new Skill[] {Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
-			new float[] {0.13f, 0.13f, 0.13f, 0.13f, 0.13f},
-			new int[] {5, 5, 5, 5, 5}
+		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
+		new float[]{0.13f, 0.13f, 0.13f, 0.13f, 0.13f},
+		new int[]{5, 5, 5, 5, 5}
 	),
 	COX_OVERLOAD_PLUS("Overload (+)",
-			new Skill[] {Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
-			new float[] {0.16f, 0.16f, 0.16f, 0.16f, 0.16f},
-			new int[] {6, 6, 6, 6, 6}
+		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
+		new float[]{0.16f, 0.16f, 0.16f, 0.16f, 0.16f},
+		new int[]{6, 6, 6, 6, 6}
 	),
 	NMZ_OVERLOAD("Overload (NMZ)",
-			new Skill[] {Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
-			new float[] {0.15f, 0.15f, 0.15f, 0.15f, 0.15f},
-			new int[] {5, 5, 5, 5, 5}
+		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
+		new float[]{0.15f, 0.15f, 0.15f, 0.15f, 0.15f},
+		new int[]{5, 5, 5, 5, 5}
 	),
 
 	SARADOMIN_BREW("Saradomin brew",
-			new Skill[] {Skill.DEFENCE, Skill.ATTACK, Skill.STRENGTH, Skill.RANGED, Skill.MAGIC},
-			new float[] {0.20f, -0.10f, -0.10f, -0.10f, -0.10f},
-			new int[] {2, -2, -2, -2, -2}
+		new Skill[]{Skill.DEFENCE, Skill.ATTACK, Skill.STRENGTH, Skill.RANGED, Skill.MAGIC},
+		new float[]{0.20f, -0.10f, -0.10f, -0.10f, -0.10f},
+		new int[]{2, -2, -2, -2, -2}
 	),
 	ZAMORAK_BREW("Zamorak brew",
-			new Skill[] {Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE},
-			new float[] {0.20f, 0.12f, -0.10f},
-			new int[] {2, 2, -2}
+		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE},
+		new float[]{0.20f, 0.12f, -0.10f},
+		new int[]{2, 2, -2}
 	),
 
 	D_BAXE_SPEC("Dragon battleaxe spec", (lvls, boosts) ->
