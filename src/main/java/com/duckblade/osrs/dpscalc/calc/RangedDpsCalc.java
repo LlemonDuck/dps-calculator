@@ -4,6 +4,7 @@ import com.duckblade.osrs.dpscalc.model.CombatFocus;
 import com.duckblade.osrs.dpscalc.model.NpcStats;
 import com.duckblade.osrs.dpscalc.model.Prayer;
 import java.util.Collection;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
@@ -13,6 +14,12 @@ import static com.duckblade.osrs.dpscalc.calc.CalcUtil.*;
 // https://oldschool.runescape.wiki/w/Damage_per_second/Ranged
 public class RangedDpsCalc extends AbstractCalc
 {
+
+	@Inject
+	public RangedDpsCalc(AttackSpeedProvider attackSpeedProvider)
+	{
+		super(attackSpeedProvider);
+	}
 
 	private float gearBonus(CalcInput input)
 	{

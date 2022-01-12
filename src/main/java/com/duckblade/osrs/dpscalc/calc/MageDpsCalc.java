@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.ItemID;
@@ -20,6 +21,12 @@ import static com.duckblade.osrs.dpscalc.model.Spell.*;
 // https://oldschool.runescape.wiki/w/Damage_per_second/Magic
 public class MageDpsCalc extends AbstractCalc
 {
+
+	@Inject
+	public MageDpsCalc(AttackSpeedProvider attackSpeedProvider)
+	{
+		super(attackSpeedProvider);
+	}
 
 	private static final Map<Spell, Function<CalcInput, Integer>> MAX_HIT_BONUS_PROVIDERS = new HashMap<>();
 

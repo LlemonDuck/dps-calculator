@@ -98,6 +98,7 @@ public enum Spell
 	@Getter
 	private final int baseMaxHit;
 
+	@Getter
 	private final Spellbook spellbook;
 	
 	public static final List<Spell> DEMONBANE_SPELLS = Arrays.asList(

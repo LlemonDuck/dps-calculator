@@ -63,6 +63,8 @@ public enum EquipmentRequirement
 	WILDY_MELEE(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{VIGGORAS_CHAINMACE}}),
 	WILDY_RANGED(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{CRAWS_BOW}}),
 	WILDY_MAGIC(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{THAMMARONS_SCEPTRE}}),
+	
+	HARM_STAFF(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{HARMONISED_NIGHTMARE_STAFF}}),
 	;
 
 	private final EquipmentInventorySlot[] slots;
