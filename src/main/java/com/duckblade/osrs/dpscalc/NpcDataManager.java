@@ -3,16 +3,14 @@ package com.duckblade.osrs.dpscalc;
 import com.duckblade.osrs.dpscalc.model.NpcStats;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Singleton
@@ -22,42 +20,37 @@ public class NpcDataManager
 
 	private static final Gson GSON = new Gson();
 
-	private final Map<Integer, NpcStats> NPC_MAP;
-	private final Map<Integer, Integer> ID_MERGE_MAP;
+	@Getter
+	private boolean loaded;
+	private Map<Integer, NpcStats> npcStatsMap;
+	private Map<Integer, Integer> npcBaseIdsMap;
 
-	@Inject
-	public NpcDataManager()
+	public void initStats(Reader reader)
 	{
-		try (InputStream fsNpcData = getClass().getResourceAsStream("npcs.min.json"); InputStreamReader readerNpcData = new InputStreamReader(fsNpcData); InputStream fsIdMap = getClass().getResourceAsStream("npc-base-ids.min.json"); InputStreamReader readerIdMap = new InputStreamReader(fsIdMap);
-		)
+		npcStatsMap = GSON.fromJson(reader, new TypeToken<HashMap<Integer, NpcStats>>()
 		{
-			NPC_MAP = GSON.fromJson(readerNpcData, new TypeToken<HashMap<Integer, NpcStats>>()
-			{
-			}.getType());
+		}.getType());
+	}
 
-			ID_MERGE_MAP = GSON.fromJson(readerIdMap, new TypeToken<HashMap<Integer, Integer>>()
-			{
-			}.getType());
-		}
-		catch (IOException e)
+	public void initBaseIds(Reader reader)
+	{
+		npcBaseIdsMap = GSON.fromJson(reader, new TypeToken<HashMap<Integer, Integer>>()
 		{
-			log.error("Failed to load NPC data", e);
-			throw new IllegalStateException(e);
-		}
+		}.getType());
 	}
 
 	public List<NpcStats> getAll()
 	{
-		return NPC_MAP.values()
-				.stream()
-				.sorted(Comparator.comparing(NpcStats::getName))
-				.collect(Collectors.toList());
+		return npcStatsMap.values()
+			.stream()
+			.sorted(Comparator.comparing(NpcStats::getName))
+			.collect(Collectors.toList());
 	}
 
 	public NpcStats getNpcStatsById(int npcId)
 	{
-		int baseId = ID_MERGE_MAP.getOrDefault(npcId, npcId);
-		return NPC_MAP.get(baseId);
+		int baseId = npcBaseIdsMap.getOrDefault(npcId, npcId);
+		return npcStatsMap.get(baseId);
 	}
 
 }

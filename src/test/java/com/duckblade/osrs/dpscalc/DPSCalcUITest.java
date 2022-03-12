@@ -5,16 +5,20 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.util.Providers;
 import java.awt.Cursor;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import net.runelite.api.Client;
+import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ContainableFrame;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.skin.SubstanceRuneLiteLookAndFeel;
 import net.runelite.client.util.SwingUtil;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 
 public class DPSCalcUITest
 {
@@ -26,6 +30,9 @@ public class DPSCalcUITest
 			i.bind(Client.class).toProvider(Providers.of(null));
 			i.bind(ItemManager.class).toProvider(Providers.of(null));
 			i.bind(ClientThread.class).toProvider(Providers.of(null));
+			i.bind(OkHttpClient.class).toInstance(new OkHttpClient.Builder()
+				.cache(new Cache(new File(RuneLite.CACHE_DIR, "okhttp"), 20 * 1024 * 1024))
+				.build());
 		});
 
 		SwingUtilities.invokeAndWait(() ->
@@ -38,6 +45,7 @@ public class DPSCalcUITest
 			ContainableFrame frame = new ContainableFrame();
 			frame.getLayeredPane().setCursor(Cursor.getDefaultCursor());
 
+			testInjector.getInstance(WikiDataLoader.class).load();
 			DpsPluginPanel pluginPanel = testInjector.getInstance(DpsPluginPanel.class);
 
 //			NpcDataManager npcDataManager = new NpcDataManager();

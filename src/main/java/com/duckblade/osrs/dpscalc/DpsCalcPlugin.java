@@ -16,6 +16,8 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.PluginInstantiationException;
+import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.util.ImageUtil;
@@ -23,7 +25,7 @@ import net.runelite.client.util.ImageUtil;
 @Slf4j
 @Singleton
 @PluginDescriptor(
-		name = "DPS Calculator"
+	name = "DPS Calculator"
 )
 public class DpsCalcPlugin extends Plugin
 {
@@ -34,7 +36,13 @@ public class DpsCalcPlugin extends Plugin
 	private ClientToolbar toolbar;
 
 	@Inject
+	private PluginManager pluginManager;
+
+	@Inject
 	private DpsCalcConfig config;
+
+	@Inject
+	private WikiDataLoader wikiDataLoader;
 
 	@Inject
 	private NpcDataManager npcDataManager;
@@ -46,26 +54,28 @@ public class DpsCalcPlugin extends Plugin
 	private static final String ACTION_DPS_NPC = "DPS";
 
 	@Override
-	protected void startUp()
+	protected void startUp() throws PluginInstantiationException
 	{
+		if (!wikiDataLoader.load())
+		{
+			pluginManager.stopPlugin(this);
+		}
+		
 		panel = injector.getInstance(DpsPluginPanel.class);
 
 		navButton = NavigationButton.builder()
-				.priority(5)
-				.icon(ImageUtil.loadImageResource(getClass(), "ui/equip/slot_0.png"))
-				.tooltip("DPS Calculator")
-				.panel(panel)
-				.build();
+			.priority(5)
+			.icon(ImageUtil.loadImageResource(getClass(), "ui/equip/slot_0.png"))
+			.tooltip("DPS Calculator")
+			.panel(panel)
+			.build();
 		toolbar.addNavigation(navButton);
-
-		log.info("DPS Calculator started!");
 	}
 
 	@Override
 	protected void shutDown()
 	{
 		toolbar.removeNavigation(navButton);
-
 		log.info("DPS Calculator stopped!");
 	}
 
@@ -73,7 +83,9 @@ public class DpsCalcPlugin extends Plugin
 	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
 		if (!config.showMinimenuEntry())
+		{
 			return;
+		}
 
 		if (MenuAction.of(event.getType()) == MenuAction.EXAMINE_NPC)
 		{
@@ -97,17 +109,24 @@ public class DpsCalcPlugin extends Plugin
 	public void onMenuOptionClicked(MenuEntry event)
 	{
 		if (event.getType() != MenuAction.RUNELITE || !event.getOption().equals(ACTION_DPS_NPC))
+		{
 			return;
+		}
 
 		NPC npc = client.getCachedNPCs()[event.getIdentifier()];
 		int npcId = npc.getId();
 		NpcStats stats = npcDataManager.getNpcStatsById(npcId);
 		if (stats == null)
+		{
 			return;
+		}
 
 		panel.openNpcStats(stats);
 
-		SwingUtilities.invokeLater(() -> navButton.getOnSelect().run());
+		if (!navButton.isSelected())
+		{
+			SwingUtilities.invokeLater(() -> navButton.getOnSelect().run());
+		}
 	}
 
 	@Provides

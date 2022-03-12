@@ -3,9 +3,7 @@ package com.duckblade.osrs.dpscalc;
 import com.duckblade.osrs.dpscalc.model.ItemStats;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,63 +13,65 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static net.runelite.api.ItemID.ADAMANT_DART;
+import static net.runelite.api.ItemID.AMETHYST_DART;
+import static net.runelite.api.ItemID.BLACK_DART;
+import static net.runelite.api.ItemID.BRONZE_DART;
+import static net.runelite.api.ItemID.DRAGON_DART;
+import static net.runelite.api.ItemID.IRON_DART;
+import static net.runelite.api.ItemID.MITHRIL_DART;
+import static net.runelite.api.ItemID.RUNE_DART;
+import static net.runelite.api.ItemID.STEEL_DART;
 
-import static net.runelite.api.ItemID.*;
-
-@Slf4j
 @Singleton
+@Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class ItemDataManager
 {
 
 	private static final Gson GSON = new Gson();
 
-	private final Map<Integer, ItemStats> ITEMS_BY_ID;
+	@Getter
+	private boolean loaded;
 
-	private final List<ItemStats> DARTS;
+	private Map<Integer, ItemStats> itemStatsMap;
+	private List<ItemStats> darts;
 
-	@Inject
-	public ItemDataManager()
+	public void init(Reader reader)
 	{
-		try (InputStream fileStream = getClass().getResourceAsStream("items-dps-calc.min.json"); InputStreamReader reader = new InputStreamReader(fileStream))
+		itemStatsMap = GSON.fromJson(reader, new TypeToken<HashMap<Integer, ItemStats>>()
 		{
-			ITEMS_BY_ID = GSON.fromJson(reader, new TypeToken<HashMap<Integer, ItemStats>>()
-			{
-			}.getType());
-			
-			ITEMS_BY_ID.forEach((id, stats) -> stats.setItemId(id));
-		}
-		catch (IOException e)
-		{
-			log.error("Failed to load item data", e);
-			throw new IllegalStateException(e);
-		}
+		}.getType());
 
-		// for tbp selection
+		itemStatsMap.forEach((id, stats) -> stats.setItemId(id));
+
 		int[] DART_IDS = {DRAGON_DART, AMETHYST_DART, RUNE_DART, ADAMANT_DART, MITHRIL_DART, BLACK_DART, STEEL_DART, IRON_DART, BRONZE_DART};
-		DARTS = IntStream.of(DART_IDS)
-				.mapToObj(ITEMS_BY_ID::get)
-				.collect(Collectors.toList());
+		darts = IntStream.of(DART_IDS)
+			.mapToObj(itemStatsMap::get)
+			.collect(Collectors.toList());
 	}
 
 	public List<ItemStats> getAllDarts()
 	{
-		return Collections.unmodifiableList(DARTS);
+		return Collections.unmodifiableList(darts);
 	}
 
 	public List<ItemStats> getBySlot(final int targetSlot)
 	{
-		return ITEMS_BY_ID.values()
-				.stream()
-				.filter(is -> is.getSlot() == targetSlot)
-				.sorted(Comparator.comparing(ItemStats::getName))
-				.distinct()
-				.collect(Collectors.toList());
+		return itemStatsMap.values()
+			.stream()
+			.filter(is -> is.getSlot() == targetSlot)
+			.sorted(Comparator.comparing(ItemStats::getName))
+			.distinct()
+			.collect(Collectors.toList());
 	}
 
 	public ItemStats getItemStatsById(int npcId)
 	{
-		return ITEMS_BY_ID.get(npcId);
+		return itemStatsMap.get(npcId);
 	}
 
 }
