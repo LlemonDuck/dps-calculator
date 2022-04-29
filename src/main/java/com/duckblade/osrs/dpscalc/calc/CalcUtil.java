@@ -59,6 +59,14 @@ public class CalcUtil
 		return DRAGON_HUNTER.isSatisfied(input);
 	}
 	
+	public static boolean keris(CalcInput input)
+	{
+		if (!input.getNpcTarget().isKalphite())
+			return false;
+		
+		return KERIS.isSatisfied(input);
+	}
+	
 	public static float tbowAttModifier(CalcInput input)
 	{
 		int magic = Math.max(input.getNpcTarget().getMagicAccuracy(), input.getNpcTarget().getLevelMagic()); // todo cox detection?

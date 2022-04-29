@@ -58,6 +58,20 @@ public enum PostCalcTransform
 		float bonusDps = secondHitDps + (thirdHit ? thirdHitDps : 0);
 		
 		return result.withDps(oldDps + bonusDps);
+	}),
+	KERIS_TRIPLE_HIT(EquipmentRequirement.KERIS, (input, result) ->
+	{
+		if (!input.getNpcTarget().isKalphite())
+		{
+			return result;
+		}
+		
+		// 1/51 chance to deal triple damage
+		float weaponSpeed = input.getEquipmentStats().getSpeed();
+		float tripleDamageMaxHit = result.getMaxHit() * 3;
+		float tripleDamageDps = (tripleDamageMaxHit * result.getHitChance()) / (2f * weaponSpeed * SECONDS_PER_TICK);
+		
+		return result.withDps((50f / 51f) * result.getDps() + (1f / 51f) * tripleDamageDps);
 	})
 	;
 

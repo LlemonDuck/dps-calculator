@@ -52,6 +52,9 @@ public class MeleeDpsCalc extends AbstractCalc
 
 		if (dragonHunter(input))
 			str = (int) (str * 1.2f);
+		
+		if (keris(input))
+			str = (int) (str * 1.33f);
 
 		str *= leafyMod(input);
 		str *= wildyDamageBonus(input);

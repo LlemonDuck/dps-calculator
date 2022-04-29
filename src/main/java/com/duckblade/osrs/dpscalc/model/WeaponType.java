@@ -77,6 +77,13 @@ public enum WeaponType
 		new WeaponMode(3, "Longrange (Ranged/Longrange)", CombatMode.RANGED, CombatFocus.LONGRANGE, null),
 		new WeaponMode(MOCK_VARP_MANUAL_CAST, "Manual Cast (Magic)", CombatMode.MAGE, CombatFocus.AUTOCAST, null)
 	)),
+	PARTISAN(29, Arrays.asList(
+		new WeaponMode(0, "Stab (Accurate/Stab)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
+		new WeaponMode(0, "Lunge (Aggressive/Stab)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
+		new WeaponMode(0, "Pound (Aggressive/Crush)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.CRUSH),
+		new WeaponMode(0, "Block (Defensive/Stab)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
+		new WeaponMode(MOCK_VARP_MANUAL_CAST, "Manual Cast (Magic)", CombatMode.MAGE, CombatFocus.AUTOCAST, null)
+	)),
 	PICKAXE(11, Arrays.asList(
 		new WeaponMode(0, "Spike (Stab/Accurate)", CombatMode.MELEE, CombatFocus.ACCURATE, MeleeStyle.STAB),
 		new WeaponMode(1, "Impale (Stab/Aggressive)", CombatMode.MELEE, CombatFocus.AGGRESSIVE, MeleeStyle.STAB),

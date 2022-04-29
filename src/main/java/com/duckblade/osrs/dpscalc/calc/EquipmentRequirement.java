@@ -35,6 +35,7 @@ public enum EquipmentRequirement
 	FIRE_TOME(new EquipmentInventorySlot[] {SHIELD}, new int[][] {{TOME_OF_FIRE}}),
 	
 	DRAGON_HUNTER(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{DRAGON_HUNTER_LANCE, DRAGON_HUNTER_CROSSBOW}}),
+	KERIS(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{ItemID.KERIS, KERISP, KERISP_10583, KERISP_10584, KERIS_PARTISAN, KERIS_PARTISAN_OF_BREACHING}}),
 	TBOW(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{TWISTED_BOW}}),
 	SCYTHE(new EquipmentInventorySlot[] {WEAPON}, new int[][] {{SCYTHE_OF_VITUR, HOLY_SCYTHE_OF_VITUR, SANGUINE_SCYTHE_OF_VITUR}}),
 	
