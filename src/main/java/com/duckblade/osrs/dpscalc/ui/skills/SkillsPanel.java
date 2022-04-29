@@ -4,6 +4,7 @@ import com.duckblade.osrs.dpscalc.ui.util.CustomJComboBox;
 import com.google.common.collect.ImmutableMap;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -72,6 +73,16 @@ public class SkillsPanel extends JPanel
 		
 		add(Box.createVerticalStrut(10));
 
+		JPanel commonBoostsPanel = new JPanel();
+		commonBoostsPanel.setMaximumSize(new Dimension(200, 40));
+		commonBoostsPanel.setLayout(new GridLayout(1, 3));
+		commonBoostsPanel.add(new SkillBoostPresetButton(this, SkillBoostPreset.SUPER_COMBAT_POTION, "boost_super_combat_potion.png"));
+		commonBoostsPanel.add(new SkillBoostPresetButton(this, SkillBoostPreset.RANGING_POTION, "boost_ranging_potion.png"));
+		commonBoostsPanel.add(new SkillBoostPresetButton(this, SkillBoostPreset.IMBUED_HEART, "boost_imbued_heart.png"));
+		add(commonBoostsPanel);
+		
+		add(Box.createVerticalStrut(10));
+
 		List<SkillBoostPreset> presets = Arrays.asList(SkillBoostPreset.values());
 		presets.sort(Comparator.comparing(SkillBoostPreset::getDisplayName));
 		CustomJComboBox<SkillBoostPreset> presetSelect = new CustomJComboBox<>(presets, SkillBoostPreset::getDisplayName, null);
@@ -84,8 +95,7 @@ public class SkillsPanel extends JPanel
 		applyPresetButton.addActionListener(e ->
 		{
 			SkillBoostPreset preset = presetSelect.getValue();
-			if (preset != null)
-				preset.apply(statBoxes, boostBoxes);
+			applyBoostPreset(preset);
 		});
 		add(applyPresetButton);
 	}
@@ -143,5 +153,11 @@ public class SkillsPanel extends JPanel
 	public void setBoosts(Map<Skill, Integer> newSkills)
 	{
 		newSkills.forEach((s, v) -> boostBoxes.get(s).setValue(v));
+	}
+	
+	public void applyBoostPreset(SkillBoostPreset boostPreset)
+	{
+		if (boostPreset != null)
+			boostPreset.apply(statBoxes, boostBoxes);
 	}
 }
