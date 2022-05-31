@@ -1,4 +1,8 @@
 # DPS Calculator
+
+![Build and Test](https://github.com/LlemonDuck/dps-calculator/actions/workflows/build_and_test.yml/badge.svg)
+[![codecov](https://codecov.io/gh/LlemonDuck/dps-calculator/branch/master/graph/badge.svg)](https://codecov.io/gh/LlemonDuck/dps-calculator)
+
 A side-panel plugin for RuneLite
 that can display your current gear's
 damage per second (DPS)
