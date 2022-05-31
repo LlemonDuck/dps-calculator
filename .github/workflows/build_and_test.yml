@@ -1,8 +1,8 @@
 name: Build and Test
 
 on:
-  - push
-  - pull_request
+  push:
+  pull_request:
 
 jobs:
   build:
@@ -21,3 +21,5 @@ jobs:
         uses: gradle/gradle-build-action@992ccebeea5b9d410b9429b47ae411e22297daa7
         with:
           arguments: build
+      - name: Upload Coverage
+        uses: codecov/codecov-action@a2d3766e6042439a2b570118c95505d1de223b66
