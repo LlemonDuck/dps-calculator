@@ -1,5 +1,6 @@
 package com.duckblade.osrs.dpscalc;
 
+import com.duckblade.osrs.dpscalc.plugin.DpsCalcPlugin;
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 
