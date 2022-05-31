@@ -2,10 +2,7 @@ plugins {
 	id 'java'
     id 'idea'
     id 'checkstyle'
-}
-
-checkstyle {
-    configDirectory
+    id 'jacoco'
 }
 
 idea {
@@ -26,13 +23,21 @@ repositories {
 def runeLiteVersion = '1.8.18.4'
 
 dependencies {
-	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
+    compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
+    compileOnly group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5'
+    compileOnly group: 'com.google.inject.extensions', name: 'guice-multibindings', version: '4.1.0'
 
-	compileOnly 'org.projectlombok:lombok:1.18.4'
-	annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-	testImplementation group: 'net.runelite', name:'client', version: runeLiteVersion
-	testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
+    testImplementation group: 'com.google.inject.extensions', name: 'guice-grapher', version: '4.1.0'
+
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.5.1'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.2'
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.2'
+
+    testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion
+    testImplementation group: 'net.runelite', name: 'jshell', version: runeLiteVersion
 }
 
 group = 'com.duckblade.osrs'
@@ -41,4 +46,31 @@ sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
+}
+
+jacoco {
+    toolVersion = "0.8.6"
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = false
+        csv.required = false
+        html.required = true
+    }
+    afterEvaluate {
+        classDirectories.from = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/com/duckblade/osrs/dpscalc/plugin/**',
+                    '**/com/duckblade/osrs/dpscalc/calc/model/**',
+                    '**/com/duckblade/osrs/dpscalc/calc/DpsComputeModule**',
+            ])
+        })
+    }
 }
