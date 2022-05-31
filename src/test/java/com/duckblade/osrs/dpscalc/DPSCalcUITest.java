@@ -1,11 +1,17 @@
 package com.duckblade.osrs.dpscalc;
 
-import com.duckblade.osrs.dpscalc.ui.DpsPluginPanel;
+import com.duckblade.osrs.dpscalc.calc.DpsComputeModule;
+import com.duckblade.osrs.dpscalc.plugin.config.DpsCalcConfig;
+import com.duckblade.osrs.dpscalc.plugin.module.DpsPluginModule;
+import com.duckblade.osrs.dpscalc.plugin.osdata.ItemStatsProvider;
+import com.duckblade.osrs.dpscalc.plugin.osdata.NpcDataProvider;
+import com.duckblade.osrs.dpscalc.plugin.ui.DpsPluginPanel;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.util.Providers;
 import java.awt.Cursor;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
@@ -33,6 +39,11 @@ public class DPSCalcUITest
 			i.bind(OkHttpClient.class).toInstance(new OkHttpClient.Builder()
 				.cache(new Cache(new File(RuneLite.CACHE_DIR, "okhttp"), 20 * 1024 * 1024))
 				.build());
+			i.bind(DpsCalcConfig.class).toInstance(new DpsCalcConfig()
+			{
+			});
+			i.install(new DpsComputeModule());
+			i.install(new DpsPluginModule());
 		});
 
 		SwingUtilities.invokeAndWait(() ->
@@ -45,7 +56,15 @@ public class DPSCalcUITest
 			ContainableFrame frame = new ContainableFrame();
 			frame.getLayeredPane().setCursor(Cursor.getDefaultCursor());
 
-			testInjector.getInstance(WikiDataLoader.class).load();
+			try
+			{
+				testInjector.getInstance(ItemStatsProvider.class).load();
+				testInjector.getInstance(NpcDataProvider.class).load();
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException(e);
+			}
 			DpsPluginPanel pluginPanel = testInjector.getInstance(DpsPluginPanel.class);
 
 //			NpcDataManager npcDataManager = new NpcDataManager();

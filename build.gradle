@@ -1,5 +1,5 @@
 plugins {
-	id 'java'
+    id 'java'
     id 'idea'
     id 'checkstyle'
     id 'jacoco'
@@ -13,14 +13,14 @@ idea {
 }
 
 repositories {
-	mavenLocal()
-	maven {
-		url = 'https://repo.runelite.net'
-	}
-	mavenCentral()
+    mavenLocal()
+    maven {
+        url = 'https://repo.runelite.net'
+    }
+    mavenCentral()
 }
 
-def runeLiteVersion = '1.8.18.4'
+def runeLiteVersion = '1.8.21'
 
 dependencies {
     compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
@@ -45,7 +45,11 @@ version = '1.5.2'
 sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 jacoco {
