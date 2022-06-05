@@ -14,6 +14,7 @@ import com.duckblade.osrs.dpscalc.calc.gearbonus.MageDemonbaneGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.MeleeDemonbaneGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.RevenantWeaponGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.SalveAmuletGearBonus;
+import com.duckblade.osrs.dpscalc.calc.gearbonus.SmokeBattlestaffGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.TbowGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.TomesGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.VoidGearBonus;
@@ -50,6 +51,7 @@ public class DpsComputeModule extends AbstractModule
 		gearBonusComputables.addBinding().to(MeleeDemonbaneGearBonus.class);
 		gearBonusComputables.addBinding().to(RevenantWeaponGearBonus.class);
 		gearBonusComputables.addBinding().to(SalveAmuletGearBonus.class);
+		gearBonusComputables.addBinding().to(SmokeBattlestaffGearBonus.class);
 		gearBonusComputables.addBinding().to(TbowGearBonus.class);
 		gearBonusComputables.addBinding().to(TomesGearBonus.class);
 		gearBonusComputables.addBinding().to(VoidGearBonus.class);
