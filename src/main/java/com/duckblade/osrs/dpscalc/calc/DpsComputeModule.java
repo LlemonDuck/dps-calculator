@@ -52,10 +52,10 @@ public class DpsComputeModule extends AbstractModule
 		gearBonusComputables.addBinding().to(MeleeDemonbaneGearBonus.class);
 		gearBonusComputables.addBinding().to(RevenantWeaponGearBonus.class);
 		gearBonusComputables.addBinding().to(SalveAmuletGearBonus.class);
-		gearBonusComputables.addBinding().to(VampyreGearBonus.class);
 		gearBonusComputables.addBinding().to(SmokeBattlestaffGearBonus.class);
 		gearBonusComputables.addBinding().to(TbowGearBonus.class);
 		gearBonusComputables.addBinding().to(TomesGearBonus.class);
+		gearBonusComputables.addBinding().to(VampyreGearBonus.class);
 		gearBonusComputables.addBinding().to(VoidGearBonus.class);
 
 		Multibinder<MaxHitLimiter> maxHitLimiters = Multibinder.newSetBinder(binder(), MaxHitLimiter.class);
