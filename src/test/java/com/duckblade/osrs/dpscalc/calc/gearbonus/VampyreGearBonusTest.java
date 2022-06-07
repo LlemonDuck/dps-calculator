@@ -4,30 +4,23 @@ import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
-import com.duckblade.osrs.dpscalc.calc.model.ItemStats;
-import com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil;
 import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
-
-import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
-import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.DRAGON;
-import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.VAMPYRE;
-import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import net.runelite.api.EquipmentInventorySlot;
+import com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil;
 import net.runelite.api.ItemID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
+import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
+import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.VAMPYRE;
+import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class VampyreGearBonusTest

@@ -36,7 +36,8 @@ public class VampyreGearBonus implements GearBonusComputable
 			return false;
 		}
 
-		if (!context.get(ATTACK_STYLE).getAttackType().isMelee()) {
+		if (!context.get(ATTACK_STYLE).getAttackType().isMelee())
+		{
 			return false;
 		}
 
