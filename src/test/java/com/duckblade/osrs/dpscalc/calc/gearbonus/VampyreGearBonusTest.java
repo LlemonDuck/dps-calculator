@@ -61,7 +61,7 @@ class VampyreGearBonusTest
 	}
 
 	@Test
-	void isNotApplicableForMage()
+	void isNotApplicableWhenNotUsingMelee()
 	{
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.VAMPYRE);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
