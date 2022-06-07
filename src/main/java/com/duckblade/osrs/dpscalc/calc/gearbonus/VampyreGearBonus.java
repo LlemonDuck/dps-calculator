@@ -1,11 +1,23 @@
 package com.duckblade.osrs.dpscalc.calc.gearbonus;
 
+import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
+import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.ItemID;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs.ATTACK_STYLE;
 
 // TODO
 @Singleton
@@ -13,21 +25,40 @@ import lombok.RequiredArgsConstructor;
 public class VampyreGearBonus implements GearBonusComputable
 {
 
+	private static final Map<Integer, GearBonuses> weaponToBonus = ImmutableMap.of(
+			ItemID.BLISTERWOOD_FLAIL, GearBonuses.of(1.05, 1.25),
+			ItemID.IVANDIS_FLAIL, GearBonuses.of(1, 1.20)
+	);
+
+	private final WeaponComputable weaponComputable;
+
 	@Override
 	public boolean isApplicable(ComputeContext context)
 	{
-		if (context.get(ComputeInputs.DEFENDER_ATTRIBUTES).isVampyre())
+		DefenderAttributes attributes = context.get(ComputeInputs.DEFENDER_ATTRIBUTES);
+		if (!attributes.isVampyre())
 		{
-			context.warn("Bonuses for vampyre immunities / vampyrebane is not yet implemented.");
-			return true;
+			return false;
 		}
 
-		return false;
+		if (!context.get(ATTACK_STYLE).getAttackType().isMelee()) {
+			return false;
+		}
+
+		int weapon = context.get(weaponComputable).getItemId();
+		return weaponToBonus.containsKey(weapon);
 	}
 
 	@Override
 	public GearBonuses compute(ComputeContext context)
 	{
-		return GearBonuses.EMPTY;
+		DefenderAttributes attributes = context.get(ComputeInputs.DEFENDER_ATTRIBUTES);
+		if (!attributes.isVampyre())
+		{
+			context.warn("Blisterwood/Ivandis weapons against a non-vampyre target provides no bonuses.");
+			return GearBonuses.EMPTY;
+		}
+		int weapon = context.get(weaponComputable).getItemId();
+		return weaponToBonus.getOrDefault(weapon, GearBonuses.EMPTY);
 	}
 }
