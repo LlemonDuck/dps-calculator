@@ -88,20 +88,17 @@ class VampyreGearBonusTest
 	}
 
 	@Test
-	void providesCorrectBonusForIvandis()
+	void providesAppropriateBonuses()
 	{
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(VAMPYRE);
-		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.IVANDIS_FLAIL));
+		when(context.get(weaponComputable)).thenReturn(
+				ofItemId(ItemID.IVANDIS_FLAIL),
+				ofItemId(ItemID.BLISTERWOOD_SICKLE),
+				ofItemId(ItemID.BLISTERWOOD_FLAIL)
+		);
 
 		assertEquals(GearBonuses.of(1, 1.20), vampyreGearBonus.compute(context));
-	}
-
-	@Test
-	void providesCorrectBonusForBlisterwood()
-	{
-		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(VAMPYRE);
-		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.BLISTERWOOD_FLAIL));
-
+		assertEquals(GearBonuses.of(1.05, 1.15), vampyreGearBonus.compute(context));
 		assertEquals(GearBonuses.of(1.05, 1.25), vampyreGearBonus.compute(context));
 	}
 
