@@ -3,23 +3,18 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
-import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.ItemID;
 
-import java.util.HashMap;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Map;
 
 import static com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs.ATTACK_STYLE;
 
-// TODO
 @Singleton
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class VampyreGearBonus implements GearBonusComputable
