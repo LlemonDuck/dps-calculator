@@ -22,7 +22,8 @@ public class VampyreGearBonus implements GearBonusComputable
 
 	private static final Map<Integer, GearBonuses> weaponToBonus = ImmutableMap.of(
 			ItemID.BLISTERWOOD_FLAIL, GearBonuses.of(1.05, 1.25),
-			ItemID.IVANDIS_FLAIL, GearBonuses.of(1, 1.20)
+			ItemID.IVANDIS_FLAIL, GearBonuses.of(1, 1.20),
+			ItemID.BLISTERWOOD_SICKLE, GearBonuses.of(1.05, 1.15)
 	);
 
 	private final WeaponComputable weaponComputable;
