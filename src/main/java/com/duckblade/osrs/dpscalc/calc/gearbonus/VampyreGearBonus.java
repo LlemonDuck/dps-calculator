@@ -30,8 +30,7 @@ public class VampyreGearBonus implements GearBonusComputable
 	@Override
 	public boolean isApplicable(ComputeContext context)
 	{
-		DefenderAttributes attributes = context.get(ComputeInputs.DEFENDER_ATTRIBUTES);
-		if (!attributes.isVampyre())
+		if (!context.get(ComputeInputs.DEFENDER_ATTRIBUTES).isVampyre())
 		{
 			return false;
 		}
