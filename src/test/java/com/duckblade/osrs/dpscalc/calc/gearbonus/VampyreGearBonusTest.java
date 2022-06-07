@@ -35,22 +35,18 @@ class VampyreGearBonusTest
 	private VampyreGearBonus vampyreGearBonus;
 
 	@Test
-	void isApplicableWhenWearingIvandis()
+	void isApplicableWhenUsingVampyrebaneAgainstVampyres()
 	{
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.VAMPYRE);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.CRUSH));
-		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.IVANDIS_FLAIL));
+		when(context.get(weaponComputable)).thenReturn(
+				ofItemId(ItemID.IVANDIS_FLAIL),
+				ofItemId(ItemID.BLISTERWOOD_SICKLE),
+				ofItemId(ItemID.BLISTERWOOD_FLAIL)
+		);
 
 		assertTrue(vampyreGearBonus.isApplicable(context));
-	}
-
-	@Test
-	void isApplicableWhenWearingBlisterwood()
-	{
-		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.VAMPYRE);
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.CRUSH));
-		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.BLISTERWOOD_FLAIL));
-
+		assertTrue(vampyreGearBonus.isApplicable(context));
 		assertTrue(vampyreGearBonus.isApplicable(context));
 	}
 
