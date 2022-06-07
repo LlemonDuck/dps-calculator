@@ -51,7 +51,7 @@ public class VampyreGearBonus implements GearBonusComputable
 		DefenderAttributes attributes = context.get(ComputeInputs.DEFENDER_ATTRIBUTES);
 		if (!attributes.isVampyre())
 		{
-			context.warn("Blisterwood/Ivandis weapons against a non-vampyre target provides no bonuses.");
+			context.warn("Vampyrebane weapons against a non-vampyre target provides no bonuses.");
 			return GearBonuses.EMPTY;
 		}
 		int weapon = context.get(weaponComputable).getItemId();
