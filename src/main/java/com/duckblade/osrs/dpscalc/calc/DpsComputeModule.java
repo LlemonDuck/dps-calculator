@@ -4,6 +4,7 @@ import com.duckblade.osrs.dpscalc.calc.ammo.AmmoItemStatsComputable;
 import com.duckblade.osrs.dpscalc.calc.ammo.AmmolessRangedAmmoItemStatsComputable;
 import com.duckblade.osrs.dpscalc.calc.ammo.BlowpipeDartsItemStatsComputable;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.BlackMaskGearBonus;
+import com.duckblade.osrs.dpscalc.calc.gearbonus.ChinchompaDistanceGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.CrystalGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.DragonHunterGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.GearBonusComputable;
@@ -42,6 +43,7 @@ public class DpsComputeModule extends AbstractModule
 
 		Multibinder<GearBonusComputable> gearBonusComputables = Multibinder.newSetBinder(binder(), GearBonusComputable.class);
 		gearBonusComputables.addBinding().to(BlackMaskGearBonus.class);
+		gearBonusComputables.addBinding().to(ChinchompaDistanceGearBonus.class);
 		gearBonusComputables.addBinding().to(CrystalGearBonus.class);
 		gearBonusComputables.addBinding().to(MageDemonbaneGearBonus.class);
 		gearBonusComputables.addBinding().to(DragonHunterGearBonus.class);

@@ -53,7 +53,11 @@ public enum WeaponCategory
 	BULWARK(27, Collections.singletonList(
 		new AttackStyle(0, "Pummel (Crush/Accurate)", AttackType.CRUSH, CombatStyle.ACCURATE, false)
 	)),
-	CHINCHOMPAS(7, Collections.emptyList()),
+	CHINCHOMPAS(7, Arrays.asList(
+		new AttackStyle(0, "Short fuse (Ranged/Accurate)", AttackType.RANGED, CombatStyle.ACCURATE, false),
+		new AttackStyle(1, "Medium fuse (Ranged/Rapid)", AttackType.RANGED, CombatStyle.RAPID, false),
+		new AttackStyle(3, "Long fuse (Ranged/Longrange)", AttackType.RANGED, CombatStyle.LONGRANGE, false)
+	)),
 	CLAW(4, Arrays.asList(
 		new AttackStyle(0, "Chop (Slash/Accurate)", AttackType.SLASH, CombatStyle.ACCURATE, false),
 		new AttackStyle(1, "Slash (Slash/Aggressive)", AttackType.SLASH, CombatStyle.AGGRESSIVE, false),

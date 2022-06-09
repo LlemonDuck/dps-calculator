@@ -37,6 +37,9 @@ public class ComputeInput
 	@Builder.Default
 	private final ItemStats blowpipeDarts = ItemStats.EMPTY;
 
+	@Builder.Default
+	private final int attackerDistance = 1;
+
 	// defender
 	@Builder.Default
 	private final Skills defenderSkills = Skills.EMPTY;
