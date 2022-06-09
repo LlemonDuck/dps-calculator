@@ -7,6 +7,7 @@ import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateVisibleComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
+import com.duckblade.osrs.dpscalc.plugin.ui.util.FocusLostAdapter;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.JTextFieldIntOnlyKeyAdapter;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.SelectAllFocusListener;
 import com.google.common.base.Strings;
@@ -49,6 +50,7 @@ public class DharokHpPanel extends JPanel implements StateBoundComponent, StateV
 		currentHpField.setHorizontalAlignment(JTextField.CENTER); // of inner text
 		currentHpField.addFocusListener(new SelectAllFocusListener(currentHpField));
 		currentHpField.addKeyListener(new JTextFieldIntOnlyKeyAdapter());
+		currentHpField.addFocusListener(new FocusLostAdapter(e -> toState()));
 		currentHpField.addActionListener(e -> toState());
 
 		maxHpField = new JTextField("99", 3);
@@ -56,6 +58,7 @@ public class DharokHpPanel extends JPanel implements StateBoundComponent, StateV
 		maxHpField.setHorizontalAlignment(JTextField.CENTER); // of inner text
 		maxHpField.addFocusListener(new SelectAllFocusListener(maxHpField));
 		maxHpField.addKeyListener(new JTextFieldIntOnlyKeyAdapter());
+		maxHpField.addFocusListener(new FocusLostAdapter(e -> toState()));
 		maxHpField.addActionListener(e -> toState());
 
 		add(new JLabel("Curr. HP"));

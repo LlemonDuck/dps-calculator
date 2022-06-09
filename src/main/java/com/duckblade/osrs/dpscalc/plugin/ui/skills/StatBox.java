@@ -1,10 +1,9 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.skills;
 
+import com.duckblade.osrs.dpscalc.plugin.ui.util.FocusLostAdapter;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.JTextFieldIntOnlyKeyAdapter;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.SelectAllFocusListener;
 import java.awt.Component;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +50,7 @@ public class StatBox extends JPanel
 		valueField.addFocusListener(new SelectAllFocusListener(valueField));
 		valueField.addKeyListener(new JTextFieldIntOnlyKeyAdapter());
 		valueField.setEditable(editable);
-		valueField.addFocusListener(new FocusAdapter()
-		{
-			@Override
-			public void focusLost(FocusEvent e)
-			{
-				callbacks.forEach(Runnable::run);
-			}
-		});
+		valueField.addFocusListener(new FocusLostAdapter(e -> callbacks.forEach(Runnable::run)));
 
 		add(valueField);
 	}
