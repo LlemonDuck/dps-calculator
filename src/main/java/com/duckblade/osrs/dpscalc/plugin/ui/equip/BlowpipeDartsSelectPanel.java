@@ -46,6 +46,7 @@ public class BlowpipeDartsSelectPanel extends StateBoundJComboBox<ItemStats> imp
 
 		setAlignmentX(CENTER_ALIGNMENT);
 		setVisible(false);
+		addBottomPadding(10);
 	}
 
 	public void updateVisibility()

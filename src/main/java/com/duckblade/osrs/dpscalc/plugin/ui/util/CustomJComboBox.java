@@ -5,10 +5,10 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import net.runelite.client.ui.PluginPanel;
 
 public class CustomJComboBox<T> extends JPanel
@@ -25,6 +25,7 @@ public class CustomJComboBox<T> extends JPanel
 	private boolean allowNull = true;
 	private boolean nullLast = false;
 	private String nullText = "";
+	private int bottomPadding;
 
 	private boolean callbackEnabled = true; // disables callback when programmatically setting combobox value
 
@@ -33,12 +34,11 @@ public class CustomJComboBox<T> extends JPanel
 	public CustomJComboBox(List<T> items, Function<T, String> displayMapper, String title)
 	{
 		this.displayMapper = displayMapper;
-		setMinimumSize(new Dimension(0, title != null ? HEIGHT_WITH_TITLE : HEIGHT_WITHOUT_TITLE));
-		setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH, title != null ? HEIGHT_WITH_TITLE : HEIGHT_WITHOUT_TITLE));
 		setLayout(new BorderLayout());
 
 		titleLabel = new JLabel();
 		titleLabel.setVisible(false);
+		add(titleLabel, BorderLayout.NORTH);
 		setTitle(title);
 
 		comboBox = new JComboBox<>();
@@ -53,26 +53,22 @@ public class CustomJComboBox<T> extends JPanel
 		this.items = items;
 		updateInternalComboBox();
 		add(comboBox, BorderLayout.CENTER);
+
+		updateSizes();
 	}
 
 	public void setTitle(String title)
 	{
-		SwingUtilities.invokeLater(() ->
+		if (title != null)
 		{
-			boolean alreadyVisible = titleLabel.isVisible();
 			titleLabel.setText(title);
-			titleLabel.setVisible(title != null);
-			setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH, title != null ? HEIGHT_WITH_TITLE : HEIGHT_WITHOUT_TITLE));
-
-			if (!alreadyVisible && titleLabel.isVisible())
-			{
-				add(titleLabel, BorderLayout.NORTH);
-			}
-			else if (alreadyVisible && !titleLabel.isVisible())
-			{
-				remove(titleLabel);
-			}
-		});
+			titleLabel.setVisible(true);
+		}
+		else
+		{
+			titleLabel.setVisible(false);
+		}
+		updateSizes();
 	}
 
 	public void setItems(List<T> newItems)
@@ -173,6 +169,20 @@ public class CustomJComboBox<T> extends JPanel
 			comboBox.setSelectedIndex(items.indexOf(newValue) + nullOffset);
 		}
 		callbackEnabled = true;
+	}
+
+	public void addBottomPadding(int height)
+	{
+		bottomPadding = height;
+		add(Box.createVerticalStrut(height), BorderLayout.SOUTH);
+		updateSizes();
+	}
+
+	private void updateSizes()
+	{
+		int height = bottomPadding + (titleLabel.isVisible() ? HEIGHT_WITH_TITLE : HEIGHT_WITHOUT_TITLE);
+		setMinimumSize(new Dimension(0, height));
+		setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH, height));
 	}
 
 	public void addCallback(Runnable r)

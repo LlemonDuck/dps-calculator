@@ -98,15 +98,12 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 
 		addPanel(blowpipeDartsSelectPanel);
 		blowpipeDartsSelectPanel.addCallback(this::fromState);
-		blowpipeDartsSelectPanel.add(Box.createVerticalStrut(10));
 
 		addPanel(attackStyleSelectPanel);
 		attackStyleSelectPanel.addCallback(this::fromState);
-		addPanel(Box.createVerticalStrut(10));
 
 		addPanel(spellSelectPanel);
 		spellSelectPanel.addCallback(this::fromState);
-		spellSelectPanel.add(Box.createVerticalStrut(10));
 
 		addPanel(usingMarkOfDarknessCheckBox);
 		usingMarkOfDarknessCheckBox.add(Box.createVerticalStrut(10));

@@ -29,14 +29,16 @@ public class SpellSelectPanel extends StateBoundJComboBox<Spell> implements Stat
 
 		setAlignmentX(CENTER_ALIGNMENT);
 		setVisible(false);
+		addBottomPadding(10);
 	}
 
 	@Override
 	public void updateVisibility()
 	{
 		AttackStyle style = getState().getAttackStyle();
-		setVisible(style != null && style.getAttackType() == AttackType.MAGIC);
-		if (!isVisible())
+		boolean visible = style != null && style.getAttackType() == AttackType.MAGIC;
+		setVisible(visible);
+		if (!visible)
 		{
 			setValue(null);
 		}
