@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -47,6 +48,7 @@ public class PrayerPanel extends JPanel implements StateBoundComponent
 		loadFromClientButton.addActionListener(e -> loadFromClient());
 		loadFromClientButton.setAlignmentX(CENTER_ALIGNMENT);
 		add(loadFromClientButton);
+		add(Box.createVerticalStrut(10));
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setMinimumSize(new Dimension(PluginPanel.PANEL_WIDTH, 0));
@@ -72,7 +74,7 @@ public class PrayerPanel extends JPanel implements StateBoundComponent
 		prayerButtons = builder.build();
 	}
 
-	private void loadFromClient()
+	public void loadFromClient()
 	{
 		clientDataProviderThreadProxy.tryAcquire(clientDataProvider ->
 		{

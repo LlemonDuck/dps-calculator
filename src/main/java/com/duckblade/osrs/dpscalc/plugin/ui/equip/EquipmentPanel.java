@@ -114,7 +114,7 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 		addPanel(equipmentTotalsPanel);
 	}
 
-	private void loadFromClient()
+	public void loadFromClient()
 	{
 		clientDataProviderThreadProxy.tryAcquire(clientDataProvider ->
 		{

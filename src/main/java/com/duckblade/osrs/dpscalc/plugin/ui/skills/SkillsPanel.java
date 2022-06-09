@@ -66,6 +66,7 @@ public class SkillsPanel extends JPanel implements StateBoundComponent
 		loadFromClientButton.addActionListener(e -> loadFromClient());
 		loadFromClientButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(loadFromClientButton);
+		add(Box.createVerticalStrut(10));
 
 		statBoxes = Arrays.asList(
 			new StateBoundStatBox(manager, "att", "Attack", true, writer(PanelState::getAttackerSkills, ATTACK), reader(PanelState::getAttackerSkills, ATTACK)),
@@ -118,7 +119,7 @@ public class SkillsPanel extends JPanel implements StateBoundComponent
 		add(applyPresetButton);
 	}
 
-	private void loadFromClient()
+	public void loadFromClient()
 	{
 		clientDataProviderThreadProxy.tryAcquire(clientDataProvider ->
 		{
