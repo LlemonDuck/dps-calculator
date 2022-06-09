@@ -120,6 +120,8 @@ public class PanelState
 
 	private ItemStats blowpipeDarts = null;
 
+	private int attackerDistance = 1;
+
 	// defender
 	private Map<Skill, Integer> defenderSkills = new HashMap<>();
 
@@ -164,6 +166,7 @@ public class PanelState
 			.attackStyle(attackStyle.toBuilder().build())
 			.spell(spell)
 			.blowpipeDarts(blowpipeDarts)
+			.attackerDistance(attackerDistance)
 			.defenderSkills(Skills.builder()
 				.levels(new HashMap<>(defenderSkills))
 				.build())
