@@ -26,10 +26,6 @@ public class DeleteSetButton extends JButton
 			if (confirmResult == JOptionPane.YES_OPTION)
 			{
 				manager.deleteSet(manager.currentSet());
-				if (manager.getInputSets().isEmpty())
-				{
-					manager.createNewSet();
-				}
 			}
 		});
 	}

@@ -3,7 +3,6 @@ package com.duckblade.osrs.dpscalc.plugin.ui.state;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -11,8 +10,6 @@ import lombok.Getter;
 @Singleton
 public class PanelStateManager
 {
-
-	private static final AtomicInteger PANEL_NAME_GENERATOR = new AtomicInteger(1);
 
 	private final List<PanelInputSet> sets;
 
@@ -25,12 +22,7 @@ public class PanelStateManager
 	public PanelStateManager()
 	{
 		sets = new ArrayList<>();
-		createNewSet();
-	}
-
-	public void createNewSet()
-	{
-		createNewSet("Set " + PANEL_NAME_GENERATOR.getAndIncrement());
+		createNewSet("Set 1");
 	}
 
 	public void createNewSet(String name)
@@ -67,6 +59,14 @@ public class PanelStateManager
 	public void deleteSet(PanelInputSet set)
 	{
 		sets.remove(set);
+		if (sets.isEmpty())
+		{
+			createNewSet("Set 1");
+		}
+		else
+		{
+			selectSet(sets.get(0));
+		}
 	}
 
 	private void invokeCallbacks()
