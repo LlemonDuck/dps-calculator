@@ -45,7 +45,8 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 		EquipmentTotalsPanel equipmentTotalsPanel, AttackStyleSelectPanel attackStyleSelectPanel,
 		InWildernessCheckBox inWildernessCheckBox, OnSlayerTaskCheckBox onSlayerTaskCheckBox,
 		UsingChargeCheckBox usingChargeCheckBox, UsingMarkOfDarknessCheckBox usingMarkOfDarknessCheckBox,
-		BlowpipeDartsSelectPanel blowpipeDartsSelectPanel, DharokHpPanel dharokHpPanel, SpellSelectPanel spellSelectPanel
+		BlowpipeDartsSelectPanel blowpipeDartsSelectPanel, DharokHpPanel dharokHpPanel,
+		ChinchompaDistancePanel chinchompaDistancePanel, SpellSelectPanel spellSelectPanel
 	)
 	{
 		this.manager = manager;
@@ -91,6 +92,9 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 
 		addPanel(dharokHpPanel);
 		dharokHpPanel.add(Box.createVerticalStrut(10));
+
+		addPanel(chinchompaDistancePanel);
+		chinchompaDistancePanel.add(Box.createVerticalStrut(10));
 
 		addPanel(blowpipeDartsSelectPanel);
 		blowpipeDartsSelectPanel.addCallback(this::fromState);
