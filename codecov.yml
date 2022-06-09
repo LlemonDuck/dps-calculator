@@ -1,2 +1,7 @@
 comment:
-  require_changes: false
+  require_changes: true
+
+coverage: 
+  precision: 0
+  round: nearest
+  range: "95...100"
