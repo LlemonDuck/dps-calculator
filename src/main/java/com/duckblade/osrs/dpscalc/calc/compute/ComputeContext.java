@@ -30,6 +30,7 @@ public class ComputeContext
 		this.put(ComputeInputs.ATTACK_STYLE, input.getAttackStyle());
 		this.put(ComputeInputs.SPELL, input.getSpell());
 		this.put(ComputeInputs.BLOWPIPE_DARTS, input.getBlowpipeDarts());
+		this.put(ComputeInputs.ATTACK_DISTANCE, input.getAttackerDistance());
 		this.put(ComputeInputs.DEFENDER_SKILLS, input.getDefenderSkills());
 		this.put(ComputeInputs.DEFENDER_BONUSES, input.getDefenderBonuses());
 		this.put(ComputeInputs.DEFENDER_ATTRIBUTES, input.getDefenderAttributes());

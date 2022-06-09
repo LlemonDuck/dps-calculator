@@ -27,6 +27,7 @@ public class ComputeInputs<T> implements Computable<T>
 	public static ComputeInputs<AttackStyle> ATTACK_STYLE = ComputeInputs.of("AttackStyle");
 	public static ComputeInputs<Spell> SPELL = ComputeInputs.of("InputSpell");
 	public static ComputeInputs<ItemStats> BLOWPIPE_DARTS = ComputeInputs.of("TbpDarts");
+	public static ComputeInputs<Integer> ATTACK_DISTANCE = ComputeInputs.of("AttackDistance");
 
 	// defender
 	public static ComputeInputs<Skills> DEFENDER_SKILLS = ComputeInputs.of("DefenderSkills");
