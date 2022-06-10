@@ -6,24 +6,24 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
+import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil;
+import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
 import net.runelite.api.ItemID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
-import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class VampyreBaneGearBonusTest
 {
+
 	@Mock
 	private WeaponComputable weaponComputable;
 
@@ -36,13 +36,13 @@ class VampyreBaneGearBonusTest
 	@Test
 	void isApplicableWhenUsingVampyrebaneAgainstVampyres()
 	{
+		when(context.get(weaponComputable)).thenReturn(
+			ofItemId(ItemID.IVANDIS_FLAIL),
+			ofItemId(ItemID.BLISTERWOOD_SICKLE),
+			ofItemId(ItemID.BLISTERWOOD_FLAIL)
+		);
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.VAMPYRE);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.CRUSH));
-		when(context.get(weaponComputable)).thenReturn(
-				ofItemId(ItemID.IVANDIS_FLAIL),
-				ofItemId(ItemID.BLISTERWOOD_SICKLE),
-				ofItemId(ItemID.BLISTERWOOD_FLAIL)
-		);
 
 		assertTrue(vampyreBaneGearBonus.isApplicable(context));
 		assertTrue(vampyreBaneGearBonus.isApplicable(context));
@@ -50,9 +50,18 @@ class VampyreBaneGearBonusTest
 	}
 
 	@Test
-	void isNotApplicableForMeleeWithWrongWeapon()
+	void isNotApplicableWhenNotUsingVampyrebane()
 	{
 		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.SCYTHE_OF_VITUR));
+
+		assertFalse(vampyreBaneGearBonus.isApplicable(context));
+	}
+
+	@Test
+	void isNotApplicableAgainstNonVampyres()
+	{
+		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.BLISTERWOOD_FLAIL));
+		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributes.EMPTY);
 
 		assertFalse(vampyreBaneGearBonus.isApplicable(context));
 	}
@@ -68,21 +77,12 @@ class VampyreBaneGearBonusTest
 	}
 
 	@Test
-	void isNotApplicableAgainstNonVampyres()
-	{
-		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.BLISTERWOOD_FLAIL));
-		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributes.EMPTY);
-
-		assertFalse(vampyreBaneGearBonus.isApplicable(context));
-	}
-
-	@Test
 	void providesAppropriateBonuses()
 	{
 		when(context.get(weaponComputable)).thenReturn(
-				ofItemId(ItemID.IVANDIS_FLAIL),
-				ofItemId(ItemID.BLISTERWOOD_SICKLE),
-				ofItemId(ItemID.BLISTERWOOD_FLAIL)
+			ofItemId(ItemID.IVANDIS_FLAIL),
+			ofItemId(ItemID.BLISTERWOOD_SICKLE),
+			ofItemId(ItemID.BLISTERWOOD_FLAIL)
 		);
 
 		assertEquals(GearBonuses.of(1, 1.20), vampyreBaneGearBonus.compute(context));

@@ -5,14 +5,11 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
 import com.google.common.collect.ImmutableMap;
-import lombok.RequiredArgsConstructor;
-import net.runelite.api.ItemID;
-
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
-
-import static com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs.ATTACK_STYLE;
+import lombok.RequiredArgsConstructor;
+import net.runelite.api.ItemID;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -20,9 +17,9 @@ public class VampyreBaneGearBonus implements GearBonusComputable
 {
 
 	private static final Map<Integer, GearBonuses> weaponToBonus = ImmutableMap.of(
-			ItemID.IVANDIS_FLAIL, GearBonuses.of(1, 1.20),
-			ItemID.BLISTERWOOD_SICKLE, GearBonuses.of(1.05, 1.15),
-			ItemID.BLISTERWOOD_FLAIL, GearBonuses.of(1.05, 1.25)
+		ItemID.IVANDIS_FLAIL, GearBonuses.of(1, 1.20),
+		ItemID.BLISTERWOOD_SICKLE, GearBonuses.of(1.05, 1.15),
+		ItemID.BLISTERWOOD_FLAIL, GearBonuses.of(1.05, 1.25)
 	);
 
 	private final WeaponComputable weaponComputable;
@@ -42,7 +39,7 @@ public class VampyreBaneGearBonus implements GearBonusComputable
 			return false;
 		}
 
-		return context.get(ATTACK_STYLE).getAttackType().isMelee();
+		return context.get(ComputeInputs.ATTACK_STYLE).getAttackType().isMelee();
 	}
 
 	@Override
