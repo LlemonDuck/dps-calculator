@@ -16,7 +16,7 @@ import static com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs.ATTACK_STYLE
 
 @Singleton
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class VampyreGearBonus implements GearBonusComputable
+public class VampyreBaneGearBonus implements GearBonusComputable
 {
 
 	private static final Map<Integer, GearBonuses> weaponToBonus = ImmutableMap.of(

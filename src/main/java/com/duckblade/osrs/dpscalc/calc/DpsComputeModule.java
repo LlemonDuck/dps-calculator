@@ -17,7 +17,7 @@ import com.duckblade.osrs.dpscalc.calc.gearbonus.SalveAmuletGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.SmokeBattlestaffGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.TbowGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.TomesGearBonus;
-import com.duckblade.osrs.dpscalc.calc.gearbonus.VampyreGearBonus;
+import com.duckblade.osrs.dpscalc.calc.gearbonus.VampyreBaneGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.VoidGearBonus;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.CombatStyleImmunityMaxHitLimiter;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimiter;
@@ -55,7 +55,7 @@ public class DpsComputeModule extends AbstractModule
 		gearBonusComputables.addBinding().to(SmokeBattlestaffGearBonus.class);
 		gearBonusComputables.addBinding().to(TbowGearBonus.class);
 		gearBonusComputables.addBinding().to(TomesGearBonus.class);
-		gearBonusComputables.addBinding().to(VampyreGearBonus.class);
+		gearBonusComputables.addBinding().to(VampyreBaneGearBonus.class);
 		gearBonusComputables.addBinding().to(VoidGearBonus.class);
 
 		Multibinder<MaxHitLimiter> maxHitLimiters = Multibinder.newSetBinder(binder(), MaxHitLimiter.class);

@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
-import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.VAMPYRE;
 import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class VampyreGearBonusTest
+class VampyreBaneGearBonusTest
 {
 	@Mock
 	private WeaponComputable weaponComputable;
@@ -32,7 +31,7 @@ class VampyreGearBonusTest
 	private ComputeContext context;
 
 	@InjectMocks
-	private VampyreGearBonus vampyreGearBonus;
+	private VampyreBaneGearBonus vampyreBaneGearBonus;
 
 	@Test
 	void isApplicableWhenUsingVampyrebaneAgainstVampyres()
@@ -45,9 +44,9 @@ class VampyreGearBonusTest
 				ofItemId(ItemID.BLISTERWOOD_FLAIL)
 		);
 
-		assertTrue(vampyreGearBonus.isApplicable(context));
-		assertTrue(vampyreGearBonus.isApplicable(context));
-		assertTrue(vampyreGearBonus.isApplicable(context));
+		assertTrue(vampyreBaneGearBonus.isApplicable(context));
+		assertTrue(vampyreBaneGearBonus.isApplicable(context));
+		assertTrue(vampyreBaneGearBonus.isApplicable(context));
 	}
 
 	@Test
@@ -55,7 +54,7 @@ class VampyreGearBonusTest
 	{
 		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.SCYTHE_OF_VITUR));
 
-		assertFalse(vampyreGearBonus.isApplicable(context));
+		assertFalse(vampyreBaneGearBonus.isApplicable(context));
 	}
 
 	@Test
@@ -65,7 +64,7 @@ class VampyreGearBonusTest
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.VAMPYRE);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
 
-		assertFalse(vampyreGearBonus.isApplicable(context));
+		assertFalse(vampyreBaneGearBonus.isApplicable(context));
 	}
 
 	@Test
@@ -74,7 +73,7 @@ class VampyreGearBonusTest
 		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.BLISTERWOOD_FLAIL));
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributes.EMPTY);
 
-		assertFalse(vampyreGearBonus.isApplicable(context));
+		assertFalse(vampyreBaneGearBonus.isApplicable(context));
 	}
 
 	@Test
@@ -86,9 +85,9 @@ class VampyreGearBonusTest
 				ofItemId(ItemID.BLISTERWOOD_FLAIL)
 		);
 
-		assertEquals(GearBonuses.of(1, 1.20), vampyreGearBonus.compute(context));
-		assertEquals(GearBonuses.of(1.05, 1.15), vampyreGearBonus.compute(context));
-		assertEquals(GearBonuses.of(1.05, 1.25), vampyreGearBonus.compute(context));
+		assertEquals(GearBonuses.of(1, 1.20), vampyreBaneGearBonus.compute(context));
+		assertEquals(GearBonuses.of(1.05, 1.15), vampyreBaneGearBonus.compute(context));
+		assertEquals(GearBonuses.of(1.05, 1.25), vampyreBaneGearBonus.compute(context));
 	}
 
 }
