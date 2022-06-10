@@ -1,7 +1,7 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.result;
 
 import com.duckblade.osrs.dpscalc.calc.AttackSpeedComputable;
-import com.duckblade.osrs.dpscalc.calc.DefenseRollComputable;
+import com.duckblade.osrs.dpscalc.calc.defender.DefenseRollComputable;
 import com.duckblade.osrs.dpscalc.calc.DpsComputable;
 import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
 import com.duckblade.osrs.dpscalc.calc.TimeToKillComputable;

@@ -1,7 +1,7 @@
 package com.duckblade.osrs.dpscalc.calc;
 
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.defender.DefenderSkillsComputable;
 import com.duckblade.osrs.dpscalc.calc.util.TicksToDurationComputable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,6 +14,7 @@ public class TimeToKillComputable extends TicksToDurationComputable
 {
 
 	private final DptComputable dptComputable;
+	private final DefenderSkillsComputable defenderSkillsComputable;
 
 	@Override
 	protected int getTicks(ComputeContext context)
@@ -24,7 +25,7 @@ public class TimeToKillComputable extends TicksToDurationComputable
 			return -1;
 		}
 
-		int targetHp = context.get(ComputeInputs.DEFENDER_SKILLS).getTotals().get(Skill.HITPOINTS);
+		int targetHp = context.get(defenderSkillsComputable).getTotals().get(Skill.HITPOINTS);
 		return (int) (Math.ceil((double) targetHp / dpt));
 	}
 

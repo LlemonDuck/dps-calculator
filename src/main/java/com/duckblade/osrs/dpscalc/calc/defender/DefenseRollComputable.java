@@ -1,4 +1,4 @@
-package com.duckblade.osrs.dpscalc.calc;
+package com.duckblade.osrs.dpscalc.calc.defender;
 
 import com.duckblade.osrs.dpscalc.calc.compute.Computable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
@@ -16,11 +16,13 @@ import net.runelite.api.Skill;
 public class DefenseRollComputable implements Computable<Integer>
 {
 
+	private final DefenderSkillsComputable defenderSkillsComputable;
+
 	@Override
 	public Integer compute(ComputeContext context)
 	{
-		Skills skills = context.get(ComputeInputs.DEFENDER_SKILLS);
-		DefensiveBonuses defensiveBonuses = context.get(ComputeInputs.DEFENDER_BONUSES);
+		Skills skills = context.get(defenderSkillsComputable);
+		DefensiveBonuses defensiveBonuses = context.get(ComputeInputs.DEFENDER_BONUSES); // todo scaling bonuses
 
 		int defenseLevel;
 		int defenseBonus;

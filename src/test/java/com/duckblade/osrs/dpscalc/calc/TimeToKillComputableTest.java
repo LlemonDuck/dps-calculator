@@ -1,7 +1,7 @@
 package com.duckblade.osrs.dpscalc.calc;
 
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.defender.DefenderSkillsComputable;
 import static com.duckblade.osrs.dpscalc.calc.testutil.SkillsUtil.ofSkill;
 import net.runelite.api.Skill;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,6 +18,9 @@ class TimeToKillComputableTest
 
 	@Mock
 	private DptComputable dptComputable;
+
+	@Mock
+	private DefenderSkillsComputable defenderSkillsComputable;
 
 	@Mock
 	private ComputeContext context;
@@ -37,7 +40,7 @@ class TimeToKillComputableTest
 	void givesTicksOnValidDps()
 	{
 		when(context.get(dptComputable)).thenReturn(1.0);
-		when(context.get(ComputeInputs.DEFENDER_SKILLS)).thenReturn(ofSkill(Skill.HITPOINTS, 50));
+		when(context.get(defenderSkillsComputable)).thenReturn(ofSkill(Skill.HITPOINTS, 50));
 
 		assertEquals(50, timeToKillComputable.getTicks(context));
 	}

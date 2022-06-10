@@ -3,6 +3,8 @@ package com.duckblade.osrs.dpscalc.calc;
 import com.duckblade.osrs.dpscalc.calc.ammo.AmmoItemStatsComputable;
 import com.duckblade.osrs.dpscalc.calc.ammo.AmmolessRangedAmmoItemStatsComputable;
 import com.duckblade.osrs.dpscalc.calc.ammo.BlowpipeDartsItemStatsComputable;
+import com.duckblade.osrs.dpscalc.calc.defender.skills.SkillScaling;
+import com.duckblade.osrs.dpscalc.calc.defender.skills.TheatreSkillScaling;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeOutput;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.AhrimsAutocastGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.BlackMaskGearBonus;
@@ -54,6 +56,9 @@ public class DpsComputeModule extends AbstractModule
 		Multibinder<AmmoItemStatsComputable> ammoItemStatsComputables = Multibinder.newSetBinder(binder(), AmmoItemStatsComputable.class);
 		ammoItemStatsComputables.addBinding().to(AmmolessRangedAmmoItemStatsComputable.class);
 		ammoItemStatsComputables.addBinding().to(BlowpipeDartsItemStatsComputable.class);
+
+		Multibinder<SkillScaling> defenderSkillsTransformers = Multibinder.newSetBinder(binder(), SkillScaling.class);
+		defenderSkillsTransformers.addBinding().to(TheatreSkillScaling.class);
 
 		Multibinder<GearBonusComputable> gearBonusComputables = Multibinder.newSetBinder(binder(), GearBonusComputable.class);
 		gearBonusComputables.addBinding().to(AhrimsAutocastGearBonus.class);

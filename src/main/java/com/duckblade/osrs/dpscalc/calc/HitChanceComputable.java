@@ -3,6 +3,7 @@ package com.duckblade.osrs.dpscalc.calc;
 import com.duckblade.osrs.dpscalc.calc.attack.AttackRollComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.Computable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
+import com.duckblade.osrs.dpscalc.calc.defender.DefenseRollComputable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;

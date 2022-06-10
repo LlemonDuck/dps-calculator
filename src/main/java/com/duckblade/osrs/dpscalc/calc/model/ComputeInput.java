@@ -63,6 +63,9 @@ public class ComputeInput
 	@Builder.Default
 	private final boolean inWilderness = false;
 
+	@Builder.Default
+	private final int raidPartySize = 1;
+
 	public ComputeInputBuilder toBuilderDeep()
 	{
 		return toBuilder()
