@@ -76,6 +76,7 @@ public class PanelState
 		private boolean isVampyre3 = false; // requires blisterwood
 		private int size = 1; // scythe
 		private int accuracyMagic = 0; // tbow
+		private int raidPartySize = 0;
 
 		public DefenderAttributes toImmutable()
 		{
@@ -150,6 +151,8 @@ public class PanelState
 
 	private boolean inWilderness = false;
 
+	private int raidPartySize = 1;
+
 	public void loadNpcData(NpcData npc)
 	{
 		if (npc == null)
@@ -188,6 +191,7 @@ public class PanelState
 			.usingChargeSpell(usingChargeSpell)
 			.usingMarkOfDarkness(usingMarkOfDarkness)
 			.inWilderness(inWilderness)
+			.raidPartySize(raidPartySize)
 			.build();
 	}
 }
