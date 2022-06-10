@@ -27,6 +27,7 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 
 	private final CustomJCheckBox manualEntry;
 	private final NpcSelectPanel npcSelectPanel;
+	private final RaidPartySizePanel raidPartySizePanel;
 	private final NpcSkillsPanel npcSkillsPanel;
 	private final NpcBonusesPanel npcBonusesPanel;
 	private final NpcAttributesPanel npcAttributesPanel;
@@ -34,11 +35,12 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	@Inject
 	public NpcStatsPanel(
 		PanelStateManager manager, ClientDataProviderThreadProxy clientDataProviderThreadProxy,
-		NpcSelectPanel npcSelectPanel, NpcSkillsPanel npcSkillsPanel,
+		NpcSelectPanel npcSelectPanel, RaidPartySizePanel raidPartySizePanel, NpcSkillsPanel npcSkillsPanel,
 		NpcBonusesPanel npcBonusesPanel, NpcAttributesPanel npcAttributesPanel
 	)
 	{
 		this.manager = manager;
+		this.raidPartySizePanel = raidPartySizePanel;
 		this.clientDataProviderThreadProxy = clientDataProviderThreadProxy;
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -54,6 +56,9 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 		this.npcSelectPanel = npcSelectPanel;
 		npcSelectPanel.addCallback(this::fromState);
 		add(npcSelectPanel);
+
+		raidPartySizePanel.addCallback(this::fromState);
+		add(raidPartySizePanel);
 
 		this.npcSkillsPanel = npcSkillsPanel;
 		add(npcSkillsPanel);
@@ -93,9 +98,13 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	@Override
 	public void toState()
 	{
+		raidPartySizePanel.toState();
 		if (!manualEntry.getValue())
 		{
 			npcSelectPanel.toState();
+
+			npcSkillsPanel.fromScaled();
+			return;
 		}
 		npcSkillsPanel.toState();
 		npcBonusesPanel.toState();
@@ -105,9 +114,16 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	@Override
 	public void fromState()
 	{
+		raidPartySizePanel.fromState();
+		raidPartySizePanel.updateVisibility();
 		if (!manualEntry.getValue())
 		{
 			npcSelectPanel.fromState();
+
+			npcSkillsPanel.fromScaled();
+			npcBonusesPanel.fromState();
+			npcAttributesPanel.fromState();
+			return;
 		}
 		npcSkillsPanel.fromState();
 		npcBonusesPanel.fromState();
