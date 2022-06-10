@@ -3,7 +3,6 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
@@ -31,29 +30,24 @@ public class VampyreGearBonus implements GearBonusComputable
 	@Override
 	public boolean isApplicable(ComputeContext context)
 	{
+		int weapon = context.get(weaponComputable).getItemId();
+		if (!weaponToBonus.containsKey(weapon))
+		{
+			return false;
+		}
+
 		if (!context.get(ComputeInputs.DEFENDER_ATTRIBUTES).isVampyre())
 		{
+			context.warn("Vampyrebane weapons against a non-vampyre target provide no bonuses.");
 			return false;
 		}
 
-		if (!context.get(ATTACK_STYLE).getAttackType().isMelee())
-		{
-			return false;
-		}
-
-		int weapon = context.get(weaponComputable).getItemId();
-		return weaponToBonus.containsKey(weapon);
+		return context.get(ATTACK_STYLE).getAttackType().isMelee();
 	}
 
 	@Override
 	public GearBonuses compute(ComputeContext context)
 	{
-		DefenderAttributes attributes = context.get(ComputeInputs.DEFENDER_ATTRIBUTES);
-		if (!attributes.isVampyre())
-		{
-			context.warn("Vampyrebane weapons against a non-vampyre target provides no bonuses.");
-			return GearBonuses.EMPTY;
-		}
 		int weapon = context.get(weaponComputable).getItemId();
 		return weaponToBonus.getOrDefault(weapon, GearBonuses.EMPTY);
 	}

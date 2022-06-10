@@ -53,8 +53,6 @@ class VampyreGearBonusTest
 	@Test
 	void isNotApplicableForMeleeWithWrongWeapon()
 	{
-		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.VAMPYRE);
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.STAB));
 		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.SCYTHE_OF_VITUR));
 
 		assertFalse(vampyreGearBonus.isApplicable(context));
@@ -63,6 +61,7 @@ class VampyreGearBonusTest
 	@Test
 	void isNotApplicableWhenNotUsingMelee()
 	{
+		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.BLISTERWOOD_FLAIL));
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.VAMPYRE);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
 
@@ -82,6 +81,7 @@ class VampyreGearBonusTest
 	@Test
 	void isNotApplicableAgainstNonVampyres()
 	{
+		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.BLISTERWOOD_FLAIL));
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributes.EMPTY);
 
 		assertFalse(vampyreGearBonus.isApplicable(context));
@@ -90,7 +90,6 @@ class VampyreGearBonusTest
 	@Test
 	void providesAppropriateBonuses()
 	{
-		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(VAMPYRE);
 		when(context.get(weaponComputable)).thenReturn(
 				ofItemId(ItemID.IVANDIS_FLAIL),
 				ofItemId(ItemID.BLISTERWOOD_SICKLE),
