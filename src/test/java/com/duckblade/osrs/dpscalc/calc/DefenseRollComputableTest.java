@@ -2,10 +2,12 @@ package com.duckblade.osrs.dpscalc.calc;
 
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
+import com.duckblade.osrs.dpscalc.calc.defender.DefenderSkillsComputable;
+import com.duckblade.osrs.dpscalc.calc.defender.DefenseRollComputable;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.DefensiveBonuses;
 import com.duckblade.osrs.dpscalc.calc.model.Skills;
+import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import net.runelite.api.Skill;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +36,9 @@ class DefenseRollComputableTest
 		.build();
 
 	@Mock
+	private DefenderSkillsComputable defenderSkillsComputable;
+
+	@Mock
 	private ComputeContext context;
 
 	@InjectMocks
@@ -42,7 +47,7 @@ class DefenseRollComputableTest
 	@BeforeEach
 	void setUp()
 	{
-		when(context.get(ComputeInputs.DEFENDER_SKILLS)).thenReturn(SKILLS);
+		when(context.get(defenderSkillsComputable)).thenReturn(SKILLS);
 		when(context.get(ComputeInputs.DEFENDER_BONUSES)).thenReturn(BONUSES);
 	}
 

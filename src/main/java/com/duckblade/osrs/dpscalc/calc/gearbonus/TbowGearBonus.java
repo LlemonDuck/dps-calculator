@@ -3,6 +3,7 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.defender.DefenderSkillsComputable;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
@@ -25,6 +26,7 @@ public class TbowGearBonus implements GearBonusComputable
 	private static final int LOW_MAGIC_WARN_THRESHOLD = 100;
 
 	private final WeaponComputable weaponComputable;
+	private final DefenderSkillsComputable defenderSkillsComputable;
 
 	@Override
 	public boolean isApplicable(ComputeContext context)
@@ -35,7 +37,7 @@ public class TbowGearBonus implements GearBonusComputable
 	@Override
 	public GearBonuses compute(ComputeContext context)
 	{
-		int defenderMagicLevel = context.get(ComputeInputs.DEFENDER_SKILLS).getTotals().getOrDefault(Skill.MAGIC, 0);
+		int defenderMagicLevel = context.get(defenderSkillsComputable).getTotals().getOrDefault(Skill.MAGIC, 0);
 		int defenderMagicAccuracy = context.get(ComputeInputs.DEFENDER_ATTRIBUTES).getAccuracyMagic();
 
 		int magic = Math.min(250, Math.max(defenderMagicLevel, defenderMagicAccuracy));

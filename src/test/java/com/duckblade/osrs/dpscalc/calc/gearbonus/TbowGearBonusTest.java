@@ -3,6 +3,7 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.defender.DefenderSkillsComputable;
 import static com.duckblade.osrs.dpscalc.calc.gearbonus.TbowGearBonus.tbowFormula;
 import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.MAX_MAGIC;
 import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.MIN_MAGIC;
@@ -31,6 +32,9 @@ class TbowGearBonusTest
 	private WeaponComputable weaponComputable;
 
 	@Mock
+	private DefenderSkillsComputable defenderSkillsComputable;
+
+	@Mock
 	private ComputeContext context;
 
 	@InjectMocks
@@ -56,7 +60,7 @@ class TbowGearBonusTest
 	void warnsWhenTargetMagicIsLow()
 	{
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(MIN_MAGIC);
-		when(context.get(ComputeInputs.DEFENDER_SKILLS)).thenReturn(ofSkill(Skill.MAGIC, 50));
+		when(context.get(defenderSkillsComputable)).thenReturn(ofSkill(Skill.MAGIC, 50));
 
 		assertEquals(GearBonuses.of(tbowFormula(50, true), tbowFormula(50, false)), tbowGearBonus.compute(context));
 		verify(context, times(1)).warn("Using the twisted bow against low-magic targets incurs negative bonuses.");
@@ -66,7 +70,7 @@ class TbowGearBonusTest
 	void maxesScalingAt250()
 	{
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(MAX_MAGIC);
-		when(context.get(ComputeInputs.DEFENDER_SKILLS)).thenReturn(ofSkill(Skill.MAGIC, 350));
+		when(context.get(defenderSkillsComputable)).thenReturn(ofSkill(Skill.MAGIC, 350));
 
 		assertEquals(
 			GearBonuses.of(tbowFormula(250, true), tbowFormula(250, false)),
@@ -78,7 +82,7 @@ class TbowGearBonusTest
 	void usesMagicLevelIfLargerThanMagicAccuracy()
 	{
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(MAX_MAGIC);
-		when(context.get(ComputeInputs.DEFENDER_SKILLS)).thenReturn(ofSkill(Skill.MAGIC, 100));
+		when(context.get(defenderSkillsComputable)).thenReturn(ofSkill(Skill.MAGIC, 100));
 
 		assertEquals(
 			GearBonuses.of(tbowFormula(250, true), tbowFormula(250, false)),
@@ -90,7 +94,7 @@ class TbowGearBonusTest
 	void usesMagicAccuracyIfLargerThanMagicLevel()
 	{
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(MIN_MAGIC);
-		when(context.get(ComputeInputs.DEFENDER_SKILLS)).thenReturn(ofSkill(Skill.MAGIC, 250));
+		when(context.get(defenderSkillsComputable)).thenReturn(ofSkill(Skill.MAGIC, 250));
 
 		assertEquals(
 			GearBonuses.of(tbowFormula(250, true), tbowFormula(250, false)),

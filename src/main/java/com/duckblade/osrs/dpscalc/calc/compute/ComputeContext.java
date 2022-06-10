@@ -38,6 +38,7 @@ public class ComputeContext
 		this.put(ComputeInputs.USING_CHARGE_SPELL, input.isUsingChargeSpell());
 		this.put(ComputeInputs.USING_MARK_OF_DARKNESS, input.isUsingMarkOfDarkness());
 		this.put(ComputeInputs.IN_WILDERNESS, input.isInWilderness());
+		this.put(ComputeInputs.RAID_PARTY_SIZE, input.getRaidPartySize());
 	}
 
 	public <T> T get(Computable<T> computable)

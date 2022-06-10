@@ -30,7 +30,7 @@ public class ComputeInputs<T> implements Computable<T>
 	public static ComputeInputs<Integer> ATTACK_DISTANCE = ComputeInputs.of("AttackDistance");
 
 	// defender
-	public static ComputeInputs<Skills> DEFENDER_SKILLS = ComputeInputs.of("DefenderSkills");
+	public static ComputeInputs<Skills> DEFENDER_SKILLS = ComputeInputs.of("DefenderSkillsInput");
 	public static ComputeInputs<DefensiveBonuses> DEFENDER_BONUSES = ComputeInputs.of("DefenderBonuses");
 	public static ComputeInputs<DefenderAttributes> DEFENDER_ATTRIBUTES = ComputeInputs.of("DefenderAttributes", DefenderAttributes.EMPTY);
 
@@ -39,6 +39,7 @@ public class ComputeInputs<T> implements Computable<T>
 	public static ComputeInputs<Boolean> USING_CHARGE_SPELL = ComputeInputs.of("UsingChargeSpell", false);
 	public static ComputeInputs<Boolean> USING_MARK_OF_DARKNESS = ComputeInputs.of("UsingMarkOfDarkness", false);
 	public static ComputeInputs<Boolean> IN_WILDERNESS = ComputeInputs.of("InWilderness", false);
+	public static ComputeInputs<Integer> RAID_PARTY_SIZE = ComputeInputs.of("RaidPartySize");
 
 	private final String key;
 

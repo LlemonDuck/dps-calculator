@@ -2,6 +2,7 @@ package com.duckblade.osrs.dpscalc.calc;
 
 import com.duckblade.osrs.dpscalc.calc.attack.AttackRollComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
+import com.duckblade.osrs.dpscalc.calc.defender.DefenseRollComputable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
