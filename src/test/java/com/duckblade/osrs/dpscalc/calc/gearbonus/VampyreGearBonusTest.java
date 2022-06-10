@@ -69,16 +69,6 @@ class VampyreGearBonusTest
 	}
 
 	@Test
-	void isApplicableAgainstVampyres()
-	{
-		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.BLISTERWOOD_FLAIL));
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.CRUSH));
-		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.VAMPYRE);
-
-		assertTrue(vampyreGearBonus.isApplicable(context));
-	}
-
-	@Test
 	void isNotApplicableAgainstNonVampyres()
 	{
 		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.BLISTERWOOD_FLAIL));
