@@ -37,6 +37,7 @@ public class RuneLiteClientDataProvider implements ClientDataProvider
 	private final Client client;
 	private final DpsCalcConfig config;
 	private final ItemStatsProvider itemStatsProvider;
+	private final InteractingNpcTracker interactingNpcTracker;
 
 	@Override
 	public Skills getPlayerSkills()
@@ -134,19 +135,19 @@ public class RuneLiteClientDataProvider implements ClientDataProvider
 	@Override
 	public Skills getNpcTargetSkills()
 	{
-		return null;
+		return interactingNpcTracker.getLastInteracted().getSkills();
 	}
 
 	@Override
 	public DefensiveBonuses getNpcTargetBonuses()
 	{
-		return null;
+		return interactingNpcTracker.getLastInteracted().getDefensiveBonuses();
 	}
 
 	@Override
 	public DefenderAttributes getNpcTargetAttributes()
 	{
-		return null;
+		return interactingNpcTracker.getLastInteracted().getAttributes();
 	}
 
 	@Override
