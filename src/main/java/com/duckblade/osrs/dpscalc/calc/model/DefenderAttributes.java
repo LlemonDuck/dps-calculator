@@ -34,12 +34,25 @@ public class DefenderAttributes
 	private final boolean isUndead = false; // salve
 
 	@Builder.Default
-	private final boolean isVampyre = false; // silver/vampyre-bane
+	private final boolean isVampyre1 = false;
+
+	@Builder.Default
+	private final boolean isVampyre2 = false;
+
+	@Builder.Default
+	private final boolean isVampyre3 = false;
 
 	@Builder.Default
 	private final int size = 1; // scythe
 
 	@Builder.Default
 	private final int accuracyMagic = 0; // tbow
+
+	public boolean isVampyre()
+	{
+		return isVampyre1 ||
+			isVampyre2 ||
+			isVampyre3;
+	}
 
 }

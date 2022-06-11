@@ -11,7 +11,9 @@ public class DefenderAttributesUtil
 	public static DefenderAttributes KALPHITE = DefenderAttributes.builder().isKalphite(true).build();
 	public static DefenderAttributes LEAFY = DefenderAttributes.builder().isLeafy(true).build();
 	public static DefenderAttributes UNDEAD = DefenderAttributes.builder().isUndead(true).build();
-	public static DefenderAttributes VAMPYRE = DefenderAttributes.builder().isVampyre(true).build();
+	public static DefenderAttributes VAMPYRE1 = DefenderAttributes.builder().isVampyre1(true).build();
+	public static DefenderAttributes VAMPYRE2 = DefenderAttributes.builder().isVampyre2(true).build();
+	public static DefenderAttributes VAMPYRE3 = DefenderAttributes.builder().isVampyre3(true).build();
 
 	public static DefenderAttributes MAX_MAGIC = DefenderAttributes.builder().accuracyMagic(350).build();
 	public static DefenderAttributes MIN_MAGIC = DefenderAttributes.builder().accuracyMagic(0).build();

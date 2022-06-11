@@ -68,7 +68,9 @@ public class PanelState
 		private boolean isKalphite = false; // keris
 		private boolean isLeafy = false; // leaf-bladed
 		private boolean isUndead = false; // salve
-		private boolean isVampyre = false; // silver/vampyre-bane
+		private boolean isVampyre1 = false; // no immunities
+		private boolean isVampyre2 = false; // requires silver weapon
+		private boolean isVampyre3 = false; // requires blisterwood
 		private int size = 1; // scythe
 		private int accuracyMagic = 0; // tbow
 
@@ -82,7 +84,9 @@ public class PanelState
 				.isKalphite(isKalphite)
 				.isLeafy(isLeafy)
 				.isUndead(isUndead)
-				.isVampyre(isVampyre)
+				.isVampyre1(isVampyre1)
+				.isVampyre2(isVampyre2)
+				.isVampyre3(isVampyre3)
 				.size(size)
 				.accuracyMagic(accuracyMagic)
 				.build();
@@ -98,7 +102,9 @@ public class PanelState
 			mda.isKalphite = immutable.isKalphite();
 			mda.isLeafy = immutable.isLeafy();
 			mda.isUndead = immutable.isUndead();
-			mda.isVampyre = immutable.isVampyre();
+			mda.isVampyre1 = immutable.isVampyre1();
+			mda.isVampyre2 = immutable.isVampyre2();
+			mda.isVampyre3 = immutable.isVampyre3();
 			mda.size = immutable.getSize();
 			mda.accuracyMagic = immutable.getAccuracyMagic();
 			return mda;
