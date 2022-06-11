@@ -39,6 +39,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 
 	private final DpsCalcConfig config;
 	private final ClientDataProvider clientDataProvider;
+	private final OverlayMinimizerService overlayMinimizerService;
 
 	private final DpsComputable dpsComputable;
 	private final MaxHitComputable maxHitComputable;
@@ -51,7 +52,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	@Inject
 	public LiveDpsOverlay(
 		OverlayManager overlayManager, EventBus eventBus,
-		DpsCalcConfig config, ClientDataProvider clientDataProvider,
+		DpsCalcConfig config, ClientDataProvider clientDataProvider, OverlayMinimizerService overlayMinimizerService,
 		DpsComputable dpsComputable, MaxHitComputable maxHitComputable, HitChanceComputable hitChanceComputable
 	)
 	{
@@ -59,6 +60,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 		this.eventBus = eventBus;
 		this.config = config;
 		this.clientDataProvider = clientDataProvider;
+		this.overlayMinimizerService = overlayMinimizerService;
 		this.dpsComputable = dpsComputable;
 		this.maxHitComputable = maxHitComputable;
 		this.hitChanceComputable = hitChanceComputable;
@@ -89,6 +91,11 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
+		if (overlayMinimizerService.isMinimized())
+		{
+			return null;
+		}
+
 		if (config.liveOverlayShowTitle())
 		{
 			getPanelComponent().getChildren().add(

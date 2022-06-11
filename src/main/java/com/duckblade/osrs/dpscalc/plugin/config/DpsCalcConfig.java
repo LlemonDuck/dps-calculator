@@ -4,6 +4,9 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
+import net.runelite.client.config.Keybind;
+import net.runelite.client.config.Range;
+import net.runelite.client.config.Units;
 
 @ConfigGroup(DpsCalcConfig.CONFIG_GROUP)
 public interface DpsCalcConfig extends Config
@@ -98,5 +101,31 @@ public interface DpsCalcConfig extends Config
 	default boolean liveOverlayShowHitChance()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		section = SECTION_LIVE_OVERLAY_FEATURES,
+		keyName = "minimizeDelay",
+		name = "Minimize Delay",
+		description = "Hide the live overlay after this long out without dealing damage.",
+		position = 106
+	)
+	@Units(Units.SECONDS)
+	@Range()
+	default int liveOverlayMinimizeDelay()
+	{
+		return 60;
+	}
+
+	@ConfigItem(
+		section = SECTION_LIVE_OVERLAY_FEATURES,
+		keyName = "minimizeHotkey",
+		name = "Toggle Hotkey",
+		description = "Toggle the live dps overlay with this hotkey",
+		position = 107
+	)
+	default Keybind liveOverlayMinimizeHotkey()
+	{
+		return Keybind.NOT_SET;
 	}
 }
