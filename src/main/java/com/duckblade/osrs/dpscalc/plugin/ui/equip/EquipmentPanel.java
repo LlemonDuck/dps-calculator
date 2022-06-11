@@ -6,6 +6,7 @@ import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateVisibleComponent;
+import com.duckblade.osrs.dpscalc.plugin.ui.util.LoadFromClientButton;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.HashMap;
@@ -16,7 +17,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
@@ -57,10 +57,7 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH, 1000));
 
-		JButton loadFromClientButton = new JButton("Load From Client");
-		loadFromClientButton.addActionListener(e -> loadFromClient());
-		loadFromClientButton.setAlignmentX(CENTER_ALIGNMENT);
-		add(loadFromClientButton);
+		add(new LoadFromClientButton(this::loadFromClient));
 
 		add(Box.createVerticalStrut(10));
 

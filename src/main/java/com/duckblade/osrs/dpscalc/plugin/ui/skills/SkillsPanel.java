@@ -7,6 +7,7 @@ import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundStatBox;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.CustomJComboBox;
+import com.duckblade.osrs.dpscalc.plugin.ui.util.LoadFromClientButton;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -62,11 +63,7 @@ public class SkillsPanel extends JPanel implements StateBoundComponent
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		JButton loadFromClientButton = new JButton("Load From Client");
-		loadFromClientButton.addActionListener(e -> loadFromClient());
-		loadFromClientButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(loadFromClientButton);
-		add(Box.createVerticalStrut(10));
+		add(new LoadFromClientButton(this::loadFromClient));
 
 		statBoxes = Arrays.asList(
 			new StateBoundStatBox(manager, "att", "Attack", true, writer(PanelState::getAttackerSkills, ATTACK), reader(PanelState::getAttackerSkills, ATTACK)),
