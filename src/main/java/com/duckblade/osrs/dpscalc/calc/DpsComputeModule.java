@@ -23,6 +23,8 @@ import com.duckblade.osrs.dpscalc.calc.gearbonus.VampyreBaneGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.VoidGearBonus;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.CombatStyleImmunityMaxHitLimiter;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimiter;
+import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.Tier2VampyreImmunities;
+import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.Tier3VampyreImmunities;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.ZulrahMaxHitLimiter;
 import com.duckblade.osrs.dpscalc.calc.multihit.DharoksDptComputable;
 import com.duckblade.osrs.dpscalc.calc.multihit.KarilsDptComputable;
@@ -64,6 +66,8 @@ public class DpsComputeModule extends AbstractModule
 
 		Multibinder<MaxHitLimiter> maxHitLimiters = Multibinder.newSetBinder(binder(), MaxHitLimiter.class);
 		maxHitLimiters.addBinding().to(CombatStyleImmunityMaxHitLimiter.class);
+		maxHitLimiters.addBinding().to(Tier2VampyreImmunities.class);
+		maxHitLimiters.addBinding().to(Tier3VampyreImmunities.class);
 		maxHitLimiters.addBinding().to(ZulrahMaxHitLimiter.class);
 
 		Multibinder<MultiHitDptComputable> multiHitDptComputables = Multibinder.newSetBinder(binder(), MultiHitDptComputable.class);
