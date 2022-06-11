@@ -1,14 +1,19 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.npc;
 
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThreadProxy;
+import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState.MutableDefenderAttributes;
+import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState.MutableDefensiveBonuses;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.CustomJCheckBox;
+import com.duckblade.osrs.dpscalc.plugin.ui.util.LoadFromClientButton;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import lombok.Getter;
 
 @Singleton
@@ -17,6 +22,7 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 
 	@Getter
 	private final PanelStateManager manager;
+	private final ClientDataProviderThreadProxy clientDataProviderThreadProxy;
 
 	private final CustomJCheckBox manualEntry;
 	private final NpcSelectPanel npcSelectPanel;
@@ -26,13 +32,17 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 
 	@Inject
 	public NpcStatsPanel(
-		PanelStateManager manager, NpcSelectPanel npcSelectPanel,
-		NpcSkillsPanel npcSkillsPanel, NpcBonusesPanel npcBonusesPanel, NpcAttributesPanel npcAttributesPanel
+		PanelStateManager manager, ClientDataProviderThreadProxy clientDataProviderThreadProxy,
+		NpcSelectPanel npcSelectPanel, NpcSkillsPanel npcSkillsPanel,
+		NpcBonusesPanel npcBonusesPanel, NpcAttributesPanel npcAttributesPanel
 	)
 	{
 		this.manager = manager;
+		this.clientDataProviderThreadProxy = clientDataProviderThreadProxy;
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+		add(new LoadFromClientButton(this::loadFromClient));
 
 		manualEntry = new CustomJCheckBox("Manual Entry Mode");
 		manualEntry.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
@@ -65,6 +75,17 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 		npcSkillsPanel.setEditable(manualMode);
 		npcBonusesPanel.setEditable(manualMode);
 		npcAttributesPanel.setEditable(manualMode);
+	}
+
+	public void loadFromClient()
+	{
+		clientDataProviderThreadProxy.tryAcquire(clientDataProvider ->
+		{
+			getState().setDefenderSkills(clientDataProvider.getNpcTargetSkills().getTotals());
+			getState().setDefenderBonuses(MutableDefensiveBonuses.fromImmutable(clientDataProvider.getNpcTargetBonuses()));
+			getState().setDefenderAttributes(MutableDefenderAttributes.fromImmutable(clientDataProvider.getNpcTargetAttributes()));
+			SwingUtilities.invokeLater(this::fromState);
+		});
 	}
 
 	@Override
