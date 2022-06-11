@@ -138,6 +138,7 @@ public class DpsCalcPanel extends JPanel
 
 	public void loadAllFromClient()
 	{
+		npcStatsPanel.loadFromClient();
 		equipmentPanel.loadFromClient();
 		skillsPanel.loadFromClient();
 		prayerPanel.loadFromClient();
