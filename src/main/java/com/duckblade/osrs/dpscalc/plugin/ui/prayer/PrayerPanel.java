@@ -8,6 +8,7 @@ import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThr
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
+import com.duckblade.osrs.dpscalc.plugin.ui.util.LoadFromClientButton;
 import com.google.common.collect.ImmutableList;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -16,9 +17,7 @@ import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -44,11 +43,7 @@ public class PrayerPanel extends JPanel implements StateBoundComponent
 		this.clientDataProviderThreadProxy = clientDataProviderThreadProxy;
 		this.prayerDrainComputable = prayerDrainComputable;
 
-		JButton loadFromClientButton = new JButton("Load From Client");
-		loadFromClientButton.addActionListener(e -> loadFromClient());
-		loadFromClientButton.setAlignmentX(CENTER_ALIGNMENT);
-		add(loadFromClientButton);
-		add(Box.createVerticalStrut(10));
+		add(new LoadFromClientButton(this::loadFromClient));
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setMinimumSize(new Dimension(PluginPanel.PANEL_WIDTH, 0));

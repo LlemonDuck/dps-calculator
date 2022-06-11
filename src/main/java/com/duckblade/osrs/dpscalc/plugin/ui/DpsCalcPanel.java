@@ -6,6 +6,7 @@ import com.duckblade.osrs.dpscalc.plugin.ui.prayer.PrayerPanel;
 import com.duckblade.osrs.dpscalc.plugin.ui.result.CalcResultPanel;
 import com.duckblade.osrs.dpscalc.plugin.ui.skills.SkillsPanel;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
+import com.duckblade.osrs.dpscalc.plugin.ui.util.LoadFromClientButton;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -14,7 +15,6 @@ import javax.inject.Singleton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import net.runelite.client.ui.PluginPanel;
@@ -57,11 +57,7 @@ public class DpsCalcPanel extends JPanel
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
 		add(menuPanel);
 
-		JButton loadAllFromClientButton = new JButton("Load All From Client");
-		loadAllFromClientButton.addActionListener(e -> loadAllFromClient());
-		loadAllFromClientButton.setAlignmentX(CENTER_ALIGNMENT);
-		menuPanel.add(loadAllFromClientButton);
-		menuPanel.add(Box.createVerticalStrut(10));
+		menuPanel.add(new LoadFromClientButton("Load All From Client", this::loadAllFromClient));
 
 		npcStatsNav = new MenuPanelNavEntry("NPC Stats", "Not Set", () -> openPanel(npcStatsPanel));
 		menuPanel.add(npcStatsNav);
