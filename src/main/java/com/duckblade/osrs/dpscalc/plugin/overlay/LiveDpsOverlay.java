@@ -16,6 +16,9 @@ import java.util.function.Predicate;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.events.GameTick;
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -32,6 +35,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	private static final DecimalFormat HIT_CHANCE_FORMAT = new DecimalFormat("#.##%");
 
 	private final OverlayManager overlayManager;
+	private final EventBus eventBus;
 
 	private final DpsCalcConfig config;
 	private final ClientDataProvider clientDataProvider;
@@ -40,13 +44,19 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	private final MaxHitComputable maxHitComputable;
 	private final HitChanceComputable hitChanceComputable;
 
+	private boolean ticked = true;
 	private ComputeInput lastInput;
 	private ComputeContext context;
 
 	@Inject
-	public LiveDpsOverlay(OverlayManager overlayManager, DpsCalcConfig config, ClientDataProvider clientDataProvider, DpsComputable dpsComputable, MaxHitComputable maxHitComputable, HitChanceComputable hitChanceComputable)
+	public LiveDpsOverlay(
+		OverlayManager overlayManager, EventBus eventBus,
+		DpsCalcConfig config, ClientDataProvider clientDataProvider,
+		DpsComputable dpsComputable, MaxHitComputable maxHitComputable, HitChanceComputable hitChanceComputable
+	)
 	{
 		this.overlayManager = overlayManager;
+		this.eventBus = eventBus;
 		this.config = config;
 		this.clientDataProvider = clientDataProvider;
 		this.dpsComputable = dpsComputable;
@@ -66,12 +76,14 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	public void startUp()
 	{
 		overlayManager.add(this);
+		eventBus.register(this);
 	}
 
 	@Override
 	public void shutDown()
 	{
 		overlayManager.remove(this);
+		eventBus.unregister(this);
 	}
 
 	@Override
@@ -86,12 +98,13 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 			);
 		}
 
-		ComputeInput input = clientDataProvider.toComputeInput();
-		if (!input.equals(lastInput) || log.isDebugEnabled())
+		ComputeInput input;
+		if (ticked && !(input = clientDataProvider.toComputeInput()).equals(lastInput))
 		{
 			lastInput = input;
 			context = new ComputeContext(input);
 		}
+		ticked = false;
 
 		if (config.liveOverlayShowDps())
 		{
@@ -124,6 +137,12 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 		}
 
 		return super.render(graphics);
+	}
+
+	@Subscribe
+	public void onGameTick(GameTick e)
+	{
+		ticked = true;
 	}
 
 	private String buildDpsString(ComputeContext context)
