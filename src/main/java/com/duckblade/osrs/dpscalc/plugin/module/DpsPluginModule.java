@@ -8,6 +8,7 @@ import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcDataProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiItemStatsProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiNpcDataProvider;
+import com.duckblade.osrs.dpscalc.plugin.overlay.LiveDpsOverlay;
 import com.duckblade.osrs.dpscalc.plugin.ui.NavButtonManager;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
@@ -23,6 +24,7 @@ public class DpsPluginModule extends AbstractModule
 		Multibinder<PluginLifecycleComponent> lifecycleComponents = Multibinder.newSetBinder(binder(), PluginLifecycleComponent.class);
 		lifecycleComponents.addBinding().to(DpsMenuActionListener.class);
 		lifecycleComponents.addBinding().to(InteractingNpcTracker.class);
+		lifecycleComponents.addBinding().to(LiveDpsOverlay.class);
 		lifecycleComponents.addBinding().to(NavButtonManager.class);
 
 		bind(ItemStatsProvider.class).to(WikiItemStatsProvider.class);
