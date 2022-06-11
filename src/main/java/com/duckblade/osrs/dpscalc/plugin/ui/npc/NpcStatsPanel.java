@@ -1,5 +1,6 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.npc;
 
+import com.duckblade.osrs.dpscalc.calc.model.Skills;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThreadProxy;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState.MutableDefenderAttributes;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState.MutableDefensiveBonuses;
@@ -81,7 +82,8 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	{
 		clientDataProviderThreadProxy.tryAcquire(clientDataProvider ->
 		{
-			getState().setDefenderSkills(clientDataProvider.getNpcTargetSkills().getTotals());
+			Skills s = clientDataProvider.getNpcTargetSkills();
+			getState().setDefenderSkills(s != null ? s.getTotals() : Skills.EMPTY.getTotals());
 			getState().setDefenderBonuses(MutableDefensiveBonuses.fromImmutable(clientDataProvider.getNpcTargetBonuses()));
 			getState().setDefenderAttributes(MutableDefenderAttributes.fromImmutable(clientDataProvider.getNpcTargetAttributes()));
 			SwingUtilities.invokeLater(this::fromState);

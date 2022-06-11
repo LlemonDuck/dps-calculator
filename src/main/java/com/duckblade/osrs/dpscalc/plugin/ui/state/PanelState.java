@@ -47,11 +47,14 @@ public class PanelState
 		public static MutableDefensiveBonuses fromImmutable(DefensiveBonuses immutable)
 		{
 			MutableDefensiveBonuses mbd = new MutableDefensiveBonuses();
-			mbd.defenseStab = immutable.getDefenseStab();
-			mbd.defenseSlash = immutable.getDefenseSlash();
-			mbd.defenseCrush = immutable.getDefenseCrush();
-			mbd.defenseRanged = immutable.getDefenseRanged();
-			mbd.defenseMagic = immutable.getDefenseMagic();
+			if (immutable != null)
+			{
+				mbd.defenseStab = immutable.getDefenseStab();
+				mbd.defenseSlash = immutable.getDefenseSlash();
+				mbd.defenseCrush = immutable.getDefenseCrush();
+				mbd.defenseRanged = immutable.getDefenseRanged();
+				mbd.defenseMagic = immutable.getDefenseMagic();
+			}
 			return mbd;
 		}
 	}
@@ -95,18 +98,21 @@ public class PanelState
 		public static MutableDefenderAttributes fromImmutable(DefenderAttributes immutable)
 		{
 			MutableDefenderAttributes mda = new MutableDefenderAttributes();
-			mda.npcId = immutable.getNpcId();
-			mda.name = immutable.getName();
-			mda.isDemon = immutable.isDemon();
-			mda.isDragon = immutable.isDragon();
-			mda.isKalphite = immutable.isKalphite();
-			mda.isLeafy = immutable.isLeafy();
-			mda.isUndead = immutable.isUndead();
-			mda.isVampyre1 = immutable.isVampyre1();
-			mda.isVampyre2 = immutable.isVampyre2();
-			mda.isVampyre3 = immutable.isVampyre3();
-			mda.size = immutable.getSize();
-			mda.accuracyMagic = immutable.getAccuracyMagic();
+			if (immutable != null)
+			{
+				mda.npcId = immutable.getNpcId();
+				mda.name = immutable.getName();
+				mda.isDemon = immutable.isDemon();
+				mda.isDragon = immutable.isDragon();
+				mda.isKalphite = immutable.isKalphite();
+				mda.isLeafy = immutable.isLeafy();
+				mda.isUndead = immutable.isUndead();
+				mda.isVampyre1 = immutable.isVampyre1();
+				mda.isVampyre2 = immutable.isVampyre2();
+				mda.isVampyre3 = immutable.isVampyre3();
+				mda.size = immutable.getSize();
+				mda.accuracyMagic = immutable.getAccuracyMagic();
+			}
 			return mda;
 		}
 	}

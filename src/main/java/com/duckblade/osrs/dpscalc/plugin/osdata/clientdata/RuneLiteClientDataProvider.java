@@ -9,6 +9,7 @@ import com.duckblade.osrs.dpscalc.calc.model.Skills;
 import com.duckblade.osrs.dpscalc.calc.model.Spell;
 import com.duckblade.osrs.dpscalc.plugin.config.DpsCalcConfig;
 import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
+import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcData;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
@@ -135,19 +136,22 @@ public class RuneLiteClientDataProvider implements ClientDataProvider
 	@Override
 	public Skills getNpcTargetSkills()
 	{
-		return interactingNpcTracker.getLastInteracted().getSkills();
+		NpcData lastInteracted = interactingNpcTracker.getLastInteracted();
+		return lastInteracted == null ? null : lastInteracted.getSkills();
 	}
 
 	@Override
 	public DefensiveBonuses getNpcTargetBonuses()
 	{
-		return interactingNpcTracker.getLastInteracted().getDefensiveBonuses();
+		NpcData lastInteracted = interactingNpcTracker.getLastInteracted();
+		return lastInteracted == null ? null : lastInteracted.getDefensiveBonuses();
 	}
 
 	@Override
 	public DefenderAttributes getNpcTargetAttributes()
 	{
-		return interactingNpcTracker.getLastInteracted().getAttributes();
+		NpcData lastInteracted = interactingNpcTracker.getLastInteracted();
+		return lastInteracted == null ? null : lastInteracted.getAttributes();
 	}
 
 	@Override
