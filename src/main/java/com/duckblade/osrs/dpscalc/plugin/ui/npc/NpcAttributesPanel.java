@@ -8,6 +8,7 @@ import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundJCheckBox;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundStatBox;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -64,14 +65,20 @@ public class NpcAttributesPanel extends JPanel implements StateBoundComponent
 		add(new StatCategory("Defensive Bonuses", numericalAttrBoxes));
 		add(Box.createVerticalStrut(5));
 
+		JPanel booleanAttrPanel = new JPanel();
+		booleanAttrPanel.setLayout(new GridLayout(4, 2));
+		add(booleanAttrPanel);
+
 		booleanAttrBoxes.add(new StateBoundJCheckBox("Demon", manager, writer(MutableDefenderAttributes::setDemon), reader(MutableDefenderAttributes::isDemon)));
 		booleanAttrBoxes.add(new StateBoundJCheckBox("Dragon", manager, writer(MutableDefenderAttributes::setDragon), reader(MutableDefenderAttributes::isDragon)));
 		booleanAttrBoxes.add(new StateBoundJCheckBox("Kalphite", manager, writer(MutableDefenderAttributes::setKalphite), reader(MutableDefenderAttributes::isKalphite)));
 		booleanAttrBoxes.add(new StateBoundJCheckBox("Leafy", manager, writer(MutableDefenderAttributes::setLeafy), reader(MutableDefenderAttributes::isLeafy)));
 		booleanAttrBoxes.add(new StateBoundJCheckBox("Undead", manager, writer(MutableDefenderAttributes::setUndead), reader(MutableDefenderAttributes::isUndead)));
-		booleanAttrBoxes.add(new StateBoundJCheckBox("Vampyre", manager, writer(MutableDefenderAttributes::setVampyre), reader(MutableDefenderAttributes::isVampyre)));
+		booleanAttrBoxes.add(new StateBoundJCheckBox("T1 Vampyre", manager, writer(MutableDefenderAttributes::setVampyre1), reader(MutableDefenderAttributes::isVampyre1)));
+		booleanAttrBoxes.add(new StateBoundJCheckBox("T2 Vampyre", manager, writer(MutableDefenderAttributes::setVampyre2), reader(MutableDefenderAttributes::isVampyre2)));
+		booleanAttrBoxes.add(new StateBoundJCheckBox("T3 Vampyre", manager, writer(MutableDefenderAttributes::setVampyre3), reader(MutableDefenderAttributes::isVampyre3)));
 		booleanAttrBoxes.forEach(sbsb -> sbsb.setEditable(false));
-		booleanAttrBoxes.forEach(this::add);
+		booleanAttrBoxes.forEach(booleanAttrPanel::add);
 	}
 
 	@Override
