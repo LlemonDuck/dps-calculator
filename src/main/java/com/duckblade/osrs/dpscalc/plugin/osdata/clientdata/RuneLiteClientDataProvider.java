@@ -47,9 +47,12 @@ public class RuneLiteClientDataProvider implements ClientDataProvider
 		Map<Skill, Integer> boosts = new EnumMap<>(Skill.class);
 		for (Skill s : Skill.values())
 		{
-			int level = client.getRealSkillLevel(s);
-			levels.put(s, level);
-			boosts.put(s, client.getBoostedSkillLevel(s) - level);
+			if (s != Skill.OVERALL)
+			{
+				int level = client.getRealSkillLevel(s);
+				levels.put(s, level);
+				boosts.put(s, client.getBoostedSkillLevel(s) - level);
+			}
 		}
 
 		return Skills.builder()
