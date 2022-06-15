@@ -66,8 +66,9 @@ public class MockClientDataProvider implements ClientDataProvider
 			.level(Skill.STRENGTH, 99)
 			.level(Skill.MAGIC, 99)
 			.level(Skill.RANGED, 99)
-			.boost(Skill.ATTACK, 18)
-			.boost(Skill.STRENGTH, 18)
+			.level(Skill.PRAYER, 99)
+			.boost(Skill.ATTACK, 19)
+			.boost(Skill.STRENGTH, 19)
 			.boost(Skill.RANGED, 13)
 			.build();
 	}
