@@ -5,6 +5,7 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
+import com.duckblade.osrs.dpscalc.calc.model.MaxHitLimit;
 import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.VAMPYRE1;
 import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.VAMPYRE2;
@@ -18,14 +19,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class Tier3VampyreImmunitiesTest
 {
+
+	private static final MaxHitLimit EXPECTED = MaxHitLimit.of(0, "Tier 3 vampyres can only be damaged by Blisterwood weapons.");
 
 	@Mock
 	private WeaponComputable weaponComputable;
@@ -66,9 +67,7 @@ class Tier3VampyreImmunitiesTest
 			ofAttackType(AttackType.RANGED)
 		);
 
-		assertEquals(0, tier3VampyreImmunities.compute(context));
-		assertEquals(0, tier3VampyreImmunities.compute(context));
-		verify(context, times(2)).warn("Tier 3 vampyres can only be damaged by Blisterwood weapons.");
+		assertEquals(EXPECTED, tier3VampyreImmunities.compute(context));
 	}
 
 	@Test
@@ -85,10 +84,9 @@ class Tier3VampyreImmunitiesTest
 			ofItemId(ItemID.ABYSSAL_BLUDGEON)
 		);
 
-		assertEquals(0, tier3VampyreImmunities.compute(context));
-		assertEquals(0, tier3VampyreImmunities.compute(context));
-		assertEquals(0, tier3VampyreImmunities.compute(context));
-		verify(context, times(3)).warn("Tier 3 vampyres can only be damaged by Blisterwood weapons.");
+		assertEquals(EXPECTED, tier3VampyreImmunities.compute(context));
+		assertEquals(EXPECTED, tier3VampyreImmunities.compute(context));
+		assertEquals(EXPECTED, tier3VampyreImmunities.compute(context));
 	}
 
 	@Test
@@ -101,8 +99,8 @@ class Tier3VampyreImmunitiesTest
 			ofItemId(ItemID.IVANDIS_FLAIL)
 		);
 
-		assertEquals(Integer.MAX_VALUE, tier3VampyreImmunities.compute(context));
-		assertEquals(Integer.MAX_VALUE, tier3VampyreImmunities.compute(context));
-		assertEquals(Integer.MAX_VALUE, tier3VampyreImmunities.compute(context));
+		assertEquals(MaxHitLimit.UNLIMITED, tier3VampyreImmunities.compute(context));
+		assertEquals(MaxHitLimit.UNLIMITED, tier3VampyreImmunities.compute(context));
+		assertEquals(MaxHitLimit.UNLIMITED, tier3VampyreImmunities.compute(context));
 	}
 }

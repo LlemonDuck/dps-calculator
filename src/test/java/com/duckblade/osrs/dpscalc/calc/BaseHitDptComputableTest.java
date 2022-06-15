@@ -1,7 +1,7 @@
 package com.duckblade.osrs.dpscalc.calc;
 
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,7 @@ class BaseHitDptComputableTest
 	private HitChanceComputable hitChanceComputable;
 
 	@Mock
-	private MaxHitComputable maxHitComputable;
+	private BaseMaxHitComputable baseMaxHitComputable;
 
 	@Mock
 	private AttackSpeedComputable attackSpeedComputable;
@@ -33,7 +33,7 @@ class BaseHitDptComputableTest
 	void computePassesChildrenToByComponents()
 	{
 		when(context.get(hitChanceComputable)).thenReturn(3.0);
-		when(context.get(maxHitComputable)).thenReturn(12);
+		when(context.get(baseMaxHitComputable)).thenReturn(12);
 		when(context.get(attackSpeedComputable)).thenReturn(4);
 
 		assertEquals(BaseHitDptComputable.byComponents(3, 12, 4), baseHitDptComputable.compute(context));

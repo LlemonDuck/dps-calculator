@@ -9,7 +9,8 @@ import com.duckblade.osrs.dpscalc.calc.attack.AttackRollComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.exceptions.DpsComputeException;
 import com.duckblade.osrs.dpscalc.calc.exceptions.MissingInputException;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.TrueMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.prayer.PrayerDurationRemainingComputable;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
@@ -69,7 +70,8 @@ public class CalcResultPanel extends JPanel implements StateBoundComponent
 		DpsComputable dpsComputable,
 		AttackRollComputable attackRollComputable,
 		DefenseRollComputable defenseRollComputable,
-		MaxHitComputable maxHitComputable,
+		BaseMaxHitComputable baseMaxHitComputable,
+		TrueMaxHitComputable trueMaxHitComputable,
 		HitChanceComputable hitChanceComputable,
 		AttackSpeedComputable attackSpeedComputable,
 		TimeToKillComputable timeToKillComputable,
@@ -95,22 +97,31 @@ public class CalcResultPanel extends JPanel implements StateBoundComponent
 		resultLabels = Arrays.asList(
 			new CalcResultLabel("Max Attack Roll:", ctx -> ROLL_FORMAT.format(ctx.get(attackRollComputable))),
 			new CalcResultLabel("NPC Defense Roll:", ctx -> ROLL_FORMAT.format(ctx.get(defenseRollComputable))),
-			new CalcResultLabel("Max Hit:", ctx -> String.valueOf(ctx.get(maxHitComputable))),
 			new CalcResultLabel("Hit Chance:", ctx -> HIT_CHANCE_FORMAT.format(ctx.get(hitChanceComputable))),
+
+			new CalcResultLabel("Max Hit:", ctx -> String.valueOf(ctx.get(trueMaxHitComputable))),
+			new CalcResultLabel("Base Max Hit:", ctx ->
+			{
+				int baseMaxHit = ctx.get(baseMaxHitComputable);
+				if (baseMaxHit < ctx.get(trueMaxHitComputable))
+				{
+					return String.valueOf(baseMaxHit);
+				}
+				return null;
+			}),
 
 			new CalcResultLabel("Attack Every:", ctx -> HIT_RATE_FORMAT.format(ctx.get(attackSpeedComputable) / 0.6)),
 			new CalcResultLabel("Avg TTK:", ctx -> timeFormat(ctx.get(timeToKillComputable))),
-
 			new CalcResultLabel("Prayer Lasts:", ctx -> timeFormat(ctx.get(prayerDurationRemainingComputable)))
 		);
 
-		resultLabels.subList(0, 4).forEach(this::add);
+		resultLabels.subList(0, 3).forEach(this::add);
 		add(Box.createVerticalStrut(10));
 
-		resultLabels.subList(4, 6).forEach(this::add);
+		resultLabels.subList(3, 5).forEach(this::add);
 		add(Box.createVerticalStrut(10));
 
-		resultLabels.subList(6, 7).forEach(this::add);
+		resultLabels.subList(6, 8).forEach(this::add);
 		add(Box.createVerticalStrut(20));
 
 		warningsLabel = new JTextArea();

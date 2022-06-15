@@ -3,6 +3,7 @@ package com.duckblade.osrs.dpscalc.calc.maxhit.limiters;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import com.duckblade.osrs.dpscalc.calc.model.MaxHitLimit;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.util.Map;
@@ -58,21 +59,18 @@ public class CombatStyleImmunityMaxHitLimiter implements MaxHitLimiter
 	@Override
 	public boolean isApplicable(ComputeContext context)
 	{
-		int npcId = context.get(ComputeInputs.DEFENDER_ATTRIBUTES).getNpcId();
-		AttackType mode = context.get(ComputeInputs.ATTACK_STYLE).getAttackType();
-
-		if (IMMUNITY_MAP.get(mode).contains(npcId))
-		{
-			context.warn("This target cannot be hit by " + mode.name().toLowerCase() + " attacks.");
-			return true;
-		}
-
-		return false;
+		return IMMUNITY_MAP.get(context.get(ComputeInputs.ATTACK_STYLE).getAttackType())
+			.contains(context.get(ComputeInputs.DEFENDER_ATTRIBUTES).getNpcId());
 	}
 
 	@Override
-	public Integer compute(ComputeContext context)
+	public MaxHitLimit compute(ComputeContext context)
 	{
-		return 0;
+		String npcName = context.get(ComputeInputs.DEFENDER_ATTRIBUTES).getName();
+		AttackType attackType = context.get(ComputeInputs.ATTACK_STYLE).getAttackType();
+		return MaxHitLimit.builder()
+			.limit(0)
+			.warning(npcName + " cannot be hit by " + attackType.name().toLowerCase() + " attacks.")
+			.build();
 	}
 }

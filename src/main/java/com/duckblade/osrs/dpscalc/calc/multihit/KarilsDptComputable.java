@@ -7,7 +7,8 @@ import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeOutput;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.google.common.collect.ImmutableSet;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class KarilsDptComputable implements MultiHitDptComputable
 	private final BaseHitDptComputable baseHitDptComputable;
 	private final EquipmentItemIdsComputable equipmentItemIdsComputable;
 	private final HitChanceComputable hitChanceComputable;
-	private final MaxHitComputable maxHitComputable;
+	private final MaxHitLimitComputable maxHitLimitComputable;
 	private final AttackSpeedComputable attackSpeedComputable;
 
 	@Override
@@ -96,7 +97,7 @@ public class KarilsDptComputable implements MultiHitDptComputable
 	{
 		double baseDps = context.get(baseHitDptComputable);
 
-		int effectMaxHit = (int) (1.5 * context.get(maxHitComputable));
+		int effectMaxHit = maxHitLimitComputable.coerce((int) (1.5 * context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)), context);
 		context.put(KARILS_MAX_HIT, effectMaxHit);
 
 		double hitChance = context.get(hitChanceComputable);

@@ -3,6 +3,7 @@ package com.duckblade.osrs.dpscalc.calc.maxhit.limiters;
 import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.model.MaxHitLimit;
 import com.google.common.collect.ImmutableSet;
 import java.util.Map;
 import java.util.Set;
@@ -59,7 +60,15 @@ public class Tier2VampyreImmunities implements MaxHitLimiter
 		ItemID.EFARITAYS_AID
 	);
 
-	private static final String EFARITAY_WARNING = "Efaritay's aid limits max hit to 10.";
+	private static final MaxHitLimit EFARITAY_LIMIT = MaxHitLimit.builder()
+		.limit(10)
+		.warning("Efaritay's aid limits max hit to 10.")
+		.build();
+
+	private static final MaxHitLimit TIER_2_IMMUNITY = MaxHitLimit.builder()
+		.limit(0)
+		.warning("Tier 2 vampyres can only be damaged by silver weaponry or with Efaritay's aid.")
+		.build();
 
 	private final EquipmentItemIdsComputable equipmentItemIdsComputable;
 
@@ -70,7 +79,7 @@ public class Tier2VampyreImmunities implements MaxHitLimiter
 	}
 
 	@Override
-	public Integer compute(ComputeContext context)
+	public MaxHitLimit compute(ComputeContext context)
 	{
 		Map<EquipmentInventorySlot, Integer> equipment = context.get(equipmentItemIdsComputable);
 		boolean efaritay = EFARITAYS_AID.contains(equipment.get(EquipmentInventorySlot.RING));
@@ -78,44 +87,23 @@ public class Tier2VampyreImmunities implements MaxHitLimiter
 		switch (context.get(ComputeInputs.ATTACK_STYLE).getAttackType())
 		{
 			case MAGIC:
-				if (efaritay)
-				{
-					context.warn(EFARITAY_WARNING);
-					return 10;
-				}
-
-				context.warn("Tier 2 vampyres cannot be hit by magic without Efaritay's aid.");
-				return 0;
+				return efaritay ? EFARITAY_LIMIT : TIER_2_IMMUNITY;
 
 			case RANGED:
 				if (SILVER_AMMO.contains(equipment.get(EquipmentInventorySlot.AMMO)))
 				{
-					return Integer.MAX_VALUE;
+					return MaxHitLimit.UNLIMITED;
 				}
 
-				if (efaritay)
-				{
-					context.warn(EFARITAY_WARNING);
-					return 10;
-				}
-
-				context.warn("Tier 2 vampyres cannot be hit by ranged without Silver bolts.");
-				return 0;
+				return efaritay ? EFARITAY_LIMIT : TIER_2_IMMUNITY;
 
 			default:
 				if (SILVER_MELEE.contains(equipment.get(EquipmentInventorySlot.WEAPON)))
 				{
-					return Integer.MAX_VALUE;
+					return MaxHitLimit.UNLIMITED;
 				}
 
-				if (efaritay)
-				{
-					context.warn(EFARITAY_WARNING);
-					return 10;
-				}
-
-				context.warn("Tier 2 vampyres can only be hit by silver weapons or with Efaritay's aid.");
-				return 0;
+				return efaritay ? EFARITAY_LIMIT : TIER_2_IMMUNITY;
 		}
 	}
 }

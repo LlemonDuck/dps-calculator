@@ -6,7 +6,8 @@ import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
 import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.google.common.collect.ImmutableMap;
@@ -18,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.times;
@@ -39,7 +42,7 @@ class KarilsDptComputableTest
 	private HitChanceComputable hitChanceComputable;
 
 	@Mock
-	private MaxHitComputable maxHitComputable;
+	private MaxHitLimitComputable maxHitLimitComputable;
 
 	@Mock
 	private AttackSpeedComputable attackSpeedComputable;
@@ -107,13 +110,28 @@ class KarilsDptComputableTest
 	void addsSecondHitToDps()
 	{
 		when(context.get(baseHitDptComputable)).thenReturn(4.0);
-		when(context.get(maxHitComputable)).thenReturn(50);
+		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(50);
 		when(context.get(hitChanceComputable)).thenReturn(0.5);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
+		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
 
 		double karilsEffectDps = BaseHitDptComputable.byComponents(0.5, 75, 5);
 		assertEquals(0.75 * 4.0 + 0.25 * karilsEffectDps, karilsDptComputable.compute(context));
 		verify(context).put(KarilsDptComputable.KARILS_MAX_HIT, 75);
+	}
+
+	@Test
+	void respectsMaxHitLimiters()
+	{
+		when(context.get(baseHitDptComputable)).thenReturn(4.0);
+		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(50);
+		when(context.get(hitChanceComputable)).thenReturn(0.5);
+		when(context.get(attackSpeedComputable)).thenReturn(5);
+		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenReturn(5);
+
+		double karilsEffectDps = BaseHitDptComputable.byComponents(0.5, 5, 5);
+		assertEquals(0.75 * 4.0 + 0.25 * karilsEffectDps, karilsDptComputable.compute(context));
+		verify(context).put(KarilsDptComputable.KARILS_MAX_HIT, 5);
 	}
 
 }

@@ -6,10 +6,11 @@ import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
-import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
+import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.Skills;
+import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import static com.duckblade.osrs.dpscalc.calc.testutil.SkillsUtil.ofSkill;
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -21,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
@@ -38,7 +41,7 @@ class DharoksDptComputableTest
 	private HitChanceComputable hitChanceComputable;
 
 	@Mock
-	private MaxHitComputable maxHitComputable;
+	private MaxHitLimitComputable maxHitLimitComputable;
 
 	@Mock
 	private AttackSpeedComputable attackSpeedComputable;
@@ -95,9 +98,10 @@ class DharoksDptComputableTest
 	@Test
 	void increasesMaxHitByAppropriateAmountAt1HpWith99Max()
 	{
-		when(context.get(maxHitComputable)).thenReturn(100);
+		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(100);
 		when(context.get(hitChanceComputable)).thenReturn(1.0);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
+		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
 
 		when(context.get(ComputeInputs.ATTACKER_SKILLS)).thenReturn(
 			Skills.builder()
@@ -114,9 +118,10 @@ class DharoksDptComputableTest
 	@Test
 	void increasesMaxHitByAppropriateAmountAt99HpWith99Max()
 	{
-		when(context.get(maxHitComputable)).thenReturn(100);
+		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(100);
 		when(context.get(hitChanceComputable)).thenReturn(1.0);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
+		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
 
 		when(context.get(ComputeInputs.ATTACKER_SKILLS)).thenReturn(ofSkill(Skill.HITPOINTS, 99));
 		double dharokMod = 1.0;
@@ -128,7 +133,8 @@ class DharoksDptComputableTest
 	@Test
 	void increasesMaxHitByAppropriateAmountAt25HpWith50Max()
 	{
-		when(context.get(maxHitComputable)).thenReturn(100);
+		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(100);
+		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
 		when(context.get(hitChanceComputable)).thenReturn(1.0);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 
@@ -142,6 +148,25 @@ class DharoksDptComputableTest
 
 		assertEquals(BaseHitDptComputable.byComponents(1.0, (int) (100 * dharokMod), 5), dharoksDptComputable.compute(context));
 		verify(context).put(DharoksDptComputable.DHAROKS_MAX_HIT, (int) (100 * dharokMod));
+	}
+
+	@Test
+	void respectsMaxHitLimiters()
+	{
+		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(100);
+		when(context.get(hitChanceComputable)).thenReturn(1.0);
+		when(context.get(attackSpeedComputable)).thenReturn(5);
+		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenReturn(5);
+
+		when(context.get(ComputeInputs.ATTACKER_SKILLS)).thenReturn(
+			Skills.builder()
+				.level(Skill.HITPOINTS, 99)
+				.boost(Skill.HITPOINTS, -98)
+				.build()
+		);
+
+		assertEquals(BaseHitDptComputable.byComponents(1.0, 5, 5), dharoksDptComputable.compute(context));
+		verify(context).put(DharoksDptComputable.DHAROKS_MAX_HIT, 5);
 	}
 
 }

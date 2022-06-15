@@ -5,7 +5,7 @@ import com.duckblade.osrs.dpscalc.calc.BaseHitDptComputable;
 import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
 import com.google.common.collect.ImmutableSet;
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +54,7 @@ public class VeracsDptComputable implements MultiHitDptComputable
 
 	private final BaseHitDptComputable baseHitDptComputable;
 	private final EquipmentItemIdsComputable equipmentItemIdsComputable;
-	private final MaxHitComputable maxHitComputable;
+	private final BaseMaxHitComputable baseMaxHitComputable;
 	private final AttackSpeedComputable attackSpeedComputable;
 
 	@Override
@@ -77,7 +77,7 @@ public class VeracsDptComputable implements MultiHitDptComputable
 	{
 		double baseDps = context.get(baseHitDptComputable);
 
-		int maxHit = context.get(maxHitComputable);
+		int maxHit = context.get(baseMaxHitComputable);
 		int attackSpeed = context.get(attackSpeedComputable);
 
 		// special effect is 25% chance to ignore defence and +1 damage to hit (we add 2 to overcome the mean division)

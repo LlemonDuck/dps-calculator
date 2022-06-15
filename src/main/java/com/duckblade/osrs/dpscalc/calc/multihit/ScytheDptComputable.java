@@ -7,7 +7,8 @@ import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeOutput;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -37,7 +38,8 @@ public class ScytheDptComputable implements MultiHitDptComputable
 	private final WeaponComputable weaponComputable;
 	private final BaseHitDptComputable baseHitDptComputable;
 	private final HitChanceComputable hitChanceComputable;
-	private final MaxHitComputable maxHitComputable;
+	private final BaseMaxHitComputable baseMaxHitComputable;
+	private final MaxHitLimitComputable maxHitLimitComputable;
 	private final AttackSpeedComputable attackSpeedComputable;
 
 	@Override
@@ -59,10 +61,12 @@ public class ScytheDptComputable implements MultiHitDptComputable
 		}
 
 		double hitChance = context.get(hitChanceComputable);
-		int maxHit = context.get(maxHitComputable);
 		int attackSpeed = context.get(attackSpeedComputable);
 
-		int maxHit2 = maxHit / 2;
+		int maxHit = context.get(baseMaxHitComputable);
+		int maxHitUnlimited = context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT);
+
+		int maxHit2 = maxHitLimitComputable.coerce(maxHitUnlimited / 2, context);
 		context.put(SCY_MAX_HIT_2, maxHit2);
 		double secondHitDps = BaseHitDptComputable.byComponents(hitChance, maxHit2, attackSpeed);
 
@@ -70,7 +74,7 @@ public class ScytheDptComputable implements MultiHitDptComputable
 		int maxHit3 = 0;
 		if (npcSize > 2)
 		{
-			maxHit3 = maxHit / 4;
+			maxHit3 = maxHitLimitComputable.coerce(maxHitUnlimited / 4, context);
 			context.put(SCY_MAX_HIT_3, maxHit3);
 			thirdHitDps = BaseHitDptComputable.byComponents(hitChance, maxHit3, attackSpeed);
 		}

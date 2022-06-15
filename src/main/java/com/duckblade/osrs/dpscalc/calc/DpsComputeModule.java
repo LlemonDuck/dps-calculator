@@ -3,6 +3,7 @@ package com.duckblade.osrs.dpscalc.calc;
 import com.duckblade.osrs.dpscalc.calc.ammo.AmmoItemStatsComputable;
 import com.duckblade.osrs.dpscalc.calc.ammo.AmmolessRangedAmmoItemStatsComputable;
 import com.duckblade.osrs.dpscalc.calc.ammo.BlowpipeDartsItemStatsComputable;
+import com.duckblade.osrs.dpscalc.calc.compute.ComputeOutput;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.AhrimsAutocastGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.BlackMaskGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.ChinchompaDistanceGearBonus;
@@ -32,8 +33,12 @@ import com.duckblade.osrs.dpscalc.calc.multihit.KerisDptComputable;
 import com.duckblade.osrs.dpscalc.calc.multihit.MultiHitDptComputable;
 import com.duckblade.osrs.dpscalc.calc.multihit.ScytheDptComputable;
 import com.duckblade.osrs.dpscalc.calc.multihit.VeracsDptComputable;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
+import com.google.inject.name.Names;
+import java.util.List;
 
 public class DpsComputeModule extends AbstractModule
 {
@@ -76,6 +81,17 @@ public class DpsComputeModule extends AbstractModule
 		multiHitDptComputables.addBinding().to(KerisDptComputable.class);
 		multiHitDptComputables.addBinding().to(ScytheDptComputable.class);
 		multiHitDptComputables.addBinding().to(VeracsDptComputable.class);
+
+		// CHECKSTYLE:OFF
+		bind(new TypeLiteral<List<ComputeOutput<Integer>>>() {})
+			.annotatedWith(Names.named("EffectMaxHitOutputs"))
+			.toInstance(ImmutableList.of(
+				DharoksDptComputable.DHAROKS_MAX_HIT,
+				KarilsDptComputable.KARILS_MAX_HIT,
+				KerisDptComputable.KERIS_MAX_HIT,
+				ScytheDptComputable.SCY_MAX_HIT_SUM
+			));
+		// CHECKSTYLE:ON
 
 		bind(DptComputable.class).asEagerSingleton();
 	}
