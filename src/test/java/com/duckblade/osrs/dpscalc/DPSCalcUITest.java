@@ -10,6 +10,7 @@ import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThreadProxy;
 import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcDataProvider;
+import com.duckblade.osrs.dpscalc.plugin.overlay.LiveDpsOverlay;
 import com.duckblade.osrs.dpscalc.plugin.ui.DpsPluginPanel;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -54,6 +55,7 @@ public class DPSCalcUITest
 					i.bind(NpcDataProvider.class).to(LocalNpcDataProvider.class).asEagerSingleton();
 					i.bind(ClientDataProvider.class).to(MockClientDataProvider.class).asEagerSingleton();
 					i.bind(ClientDataProviderThreadProxy.class).to(MockClientDataProvider.MockClientDataProviderThreadProxy.class);
+					i.bind(LiveDpsOverlay.class).toProvider(Providers.of(null));
 				})
 		);
 
