@@ -6,7 +6,8 @@ import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
 import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
 import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil;
 import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
@@ -17,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
@@ -37,7 +40,7 @@ class KerisDptComputableTest
 	private HitChanceComputable hitChanceComputable;
 
 	@Mock
-	private MaxHitComputable maxHitComputable;
+	private MaxHitLimitComputable maxHitLimitComputable;
 
 	@Mock
 	private AttackSpeedComputable attackSpeedComputable;
@@ -93,13 +96,28 @@ class KerisDptComputableTest
 	void appliesTripleHitAppropriately()
 	{
 		when(context.get(baseHitDptComputable)).thenReturn(4.0);
-		when(context.get(maxHitComputable)).thenReturn(50);
+		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(50);
 		when(context.get(hitChanceComputable)).thenReturn(0.5);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
+		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
 
 		double kerisEffectDps = BaseHitDptComputable.byComponents(0.5, 150, 5);
 		assertEquals((50.0 / 51.0) * 4.0 + (1.0 / 51.0) * kerisEffectDps, kerisDptComputable.compute(context));
 		verify(context).put(KerisDptComputable.KERIS_MAX_HIT, 150);
+	}
+
+	@Test
+	void respectsMaxHitLimiters()
+	{
+		when(context.get(baseHitDptComputable)).thenReturn(4.0);
+		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(50);
+		when(context.get(hitChanceComputable)).thenReturn(0.5);
+		when(context.get(attackSpeedComputable)).thenReturn(5);
+		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenReturn(5);
+
+		double kerisEffectDps = BaseHitDptComputable.byComponents(0.5, 5, 5);
+		assertEquals((50.0 / 51.0) * 4.0 + (1.0 / 51.0) * kerisEffectDps, kerisDptComputable.compute(context));
+		verify(context).put(KerisDptComputable.KERIS_MAX_HIT, 5);
 	}
 
 }

@@ -2,11 +2,12 @@ package com.duckblade.osrs.dpscalc.calc.maxhit.limiters;
 
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
+import com.duckblade.osrs.dpscalc.calc.model.MaxHitLimit;
 import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.CALLISTO;
 import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.ZULRAH;
-import com.duckblade.osrs.dpscalc.calc.model.AttackType;
-import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -66,9 +67,16 @@ class CombatStyleImmunityMaxHitLimiterTest
 	}
 
 	@Test
-	void limitsToZero()
+	void returnsAppropriateLimit()
 	{
-		assertEquals(0, combatStyleImmunityMaxHitLimiter.compute(context));
+		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(ZULRAH);
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.SLASH));
+
+		MaxHitLimit limit = MaxHitLimit.builder()
+			.limit(0)
+			.warning("Zulrah cannot be hit by slash attacks.")
+			.build();
+		assertEquals(limit, combatStyleImmunityMaxHitLimiter.compute(context));
 	}
 
 }

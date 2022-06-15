@@ -7,7 +7,8 @@ import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeOutput;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
 import com.duckblade.osrs.dpscalc.calc.model.Skills;
 import com.google.common.collect.ImmutableSet;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class DharoksDptComputable implements MultiHitDptComputable
 
 	private final EquipmentItemIdsComputable equipmentItemIdsComputable;
 	private final HitChanceComputable hitChanceComputable;
-	private final MaxHitComputable maxHitComputable;
+	private final MaxHitLimitComputable maxHitLimitComputable;
 	private final AttackSpeedComputable attackSpeedComputable;
 
 	@Override
@@ -86,7 +87,7 @@ public class DharoksDptComputable implements MultiHitDptComputable
 		int currentHp = attackerSkills.getTotals().getOrDefault(Skill.HITPOINTS, maxHp);
 		double dharokMod = 1 + ((maxHp - currentHp) / 100.0) * (maxHp / 100.0);
 
-		int effectMaxHit = (int) (context.get(maxHitComputable) * dharokMod);
+		int effectMaxHit = maxHitLimitComputable.coerce((int) (context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT) * dharokMod), context);
 		context.put(DHAROKS_MAX_HIT, effectMaxHit);
 
 		double hitChance = context.get(hitChanceComputable);

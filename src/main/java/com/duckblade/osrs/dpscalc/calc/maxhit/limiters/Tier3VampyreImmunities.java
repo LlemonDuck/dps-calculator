@@ -3,6 +3,7 @@ package com.duckblade.osrs.dpscalc.calc.maxhit.limiters;
 import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.model.MaxHitLimit;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -22,6 +23,11 @@ public class Tier3VampyreImmunities implements MaxHitLimiter
 		ItemID.BLISTERWOOD_FLAIL
 	);
 
+	private static final MaxHitLimit TIER_3_IMMUNITY = MaxHitLimit.builder()
+		.limit(0)
+		.warning("Tier 3 vampyres can only be damaged by Blisterwood weapons.")
+		.build();
+
 	private final WeaponComputable weaponComputable;
 
 	@Override
@@ -31,15 +37,14 @@ public class Tier3VampyreImmunities implements MaxHitLimiter
 	}
 
 	@Override
-	public Integer compute(ComputeContext context)
+	public MaxHitLimit compute(ComputeContext context)
 	{
 		if (context.get(ComputeInputs.ATTACK_STYLE).getAttackType().isMelee() &&
 			T3_VAMPYREBANE_WEAPONS.contains(context.get(weaponComputable).getItemId()))
 		{
-			return Integer.MAX_VALUE;
+			return MaxHitLimit.UNLIMITED;
 		}
 
-		context.warn("Tier 3 vampyres can only be damaged by Blisterwood weapons.");
-		return 0;
+		return TIER_3_IMMUNITY;
 	}
 }

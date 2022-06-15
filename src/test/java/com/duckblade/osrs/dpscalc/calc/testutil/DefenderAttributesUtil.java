@@ -18,8 +18,8 @@ public class DefenderAttributesUtil
 	public static DefenderAttributes MAX_MAGIC = DefenderAttributes.builder().accuracyMagic(350).build();
 	public static DefenderAttributes MIN_MAGIC = DefenderAttributes.builder().accuracyMagic(0).build();
 
-	public static DefenderAttributes ZULRAH = DefenderAttributes.builder().npcId(NpcID.ZULRAH).build();
-	public static DefenderAttributes CALLISTO = DefenderAttributes.builder().npcId(NpcID.CALLISTO).build();
+	public static DefenderAttributes ZULRAH = DefenderAttributes.builder().name("Zulrah").npcId(NpcID.ZULRAH).build();
+	public static DefenderAttributes CALLISTO = DefenderAttributes.builder().name("Callisto").npcId(NpcID.CALLISTO).build();
 
 	public static DefenderAttributes SIZE_1 = DefenderAttributes.builder().size(1).build();
 	public static DefenderAttributes SIZE_2 = DefenderAttributes.builder().size(2).build();

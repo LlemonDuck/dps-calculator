@@ -2,7 +2,7 @@ package com.duckblade.osrs.dpscalc.calc;
 
 import com.duckblade.osrs.dpscalc.calc.compute.Computable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
@@ -12,17 +12,15 @@ import lombok.RequiredArgsConstructor;
 public class BaseHitDptComputable implements Computable<Double>
 {
 
-	private static final double SECONDS_PER_TICK = 0.6;
-
 	private final HitChanceComputable hitChanceComputable;
-	private final MaxHitComputable maxHitComputable;
+	private final BaseMaxHitComputable baseMaxHitComputable;
 	private final AttackSpeedComputable attackSpeedComputable;
 
 	@Override
 	public Double compute(ComputeContext context)
 	{
 		double hitChance = context.get(hitChanceComputable);
-		int maxHit = context.get(maxHitComputable);
+		int maxHit = context.get(baseMaxHitComputable);
 		int attackSpeed = context.get(attackSpeedComputable);
 
 		return byComponents(hitChance, maxHit, attackSpeed);

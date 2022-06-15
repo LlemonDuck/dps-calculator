@@ -5,6 +5,7 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
+import com.duckblade.osrs.dpscalc.calc.model.MaxHitLimit;
 import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.VAMPYRE1;
 import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.VAMPYRE2;
@@ -20,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -70,8 +69,10 @@ class Tier2VampyreImmunitiesTest
 		);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
 
-		assertEquals(0, tier2VampyreImmunities.compute(context));
-		verify(context, times(1)).warn("Tier 2 vampyres cannot be hit by magic without Efaritay's aid.");
+		assertEquals(
+			MaxHitLimit.of(0, "Tier 2 vampyres can only be damaged by silver weaponry or with Efaritay's aid."),
+			tier2VampyreImmunities.compute(context)
+		);
 	}
 
 	@Test
@@ -80,8 +81,10 @@ class Tier2VampyreImmunitiesTest
 		when(context.get(equipmentItemIdsComputable)).thenReturn(ImmutableMap.of(EquipmentInventorySlot.RING, ItemID.EFARITAYS_AID));
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
 
-		assertEquals(10, tier2VampyreImmunities.compute(context));
-		verify(context, times(1)).warn("Efaritay's aid limits max hit to 10.");
+		assertEquals(
+			MaxHitLimit.of(10, "Efaritay's aid limits max hit to 10."),
+			tier2VampyreImmunities.compute(context)
+		);
 	}
 
 	@Test
@@ -90,8 +93,10 @@ class Tier2VampyreImmunitiesTest
 		when(context.get(equipmentItemIdsComputable)).thenAnswer(i -> Collections.emptyMap());
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.RANGED));
 
-		assertEquals(0, tier2VampyreImmunities.compute(context));
-		verify(context, times(1)).warn("Tier 2 vampyres cannot be hit by ranged without Silver bolts.");
+		assertEquals(
+			MaxHitLimit.of(0, "Tier 2 vampyres can only be damaged by silver weaponry or with Efaritay's aid."),
+			tier2VampyreImmunities.compute(context)
+		);
 	}
 
 	@Test
@@ -100,8 +105,10 @@ class Tier2VampyreImmunitiesTest
 		when(context.get(equipmentItemIdsComputable)).thenReturn(ImmutableMap.of(EquipmentInventorySlot.RING, ItemID.EFARITAYS_AID));
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.RANGED));
 
-		assertEquals(10, tier2VampyreImmunities.compute(context));
-		verify(context, times(1)).warn("Efaritay's aid limits max hit to 10.");
+		assertEquals(
+			MaxHitLimit.of(10, "Efaritay's aid limits max hit to 10."),
+			tier2VampyreImmunities.compute(context)
+		);
 	}
 
 	@Test
@@ -117,8 +124,8 @@ class Tier2VampyreImmunitiesTest
 		);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.RANGED));
 
-		assertEquals(Integer.MAX_VALUE, tier2VampyreImmunities.compute(context));
-		assertEquals(Integer.MAX_VALUE, tier2VampyreImmunities.compute(context));
+		assertEquals(MaxHitLimit.UNLIMITED, tier2VampyreImmunities.compute(context));
+		assertEquals(MaxHitLimit.UNLIMITED, tier2VampyreImmunities.compute(context));
 	}
 
 	@Test
@@ -127,8 +134,10 @@ class Tier2VampyreImmunitiesTest
 		when(context.get(equipmentItemIdsComputable)).thenAnswer(i -> Collections.emptyMap());
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.SLASH));
 
-		assertEquals(0, tier2VampyreImmunities.compute(context));
-		verify(context, times(1)).warn("Tier 2 vampyres can only be hit by silver weapons or with Efaritay's aid.");
+		assertEquals(
+			MaxHitLimit.of(0, "Tier 2 vampyres can only be damaged by silver weaponry or with Efaritay's aid."),
+			tier2VampyreImmunities.compute(context)
+		);
 	}
 
 	@Test
@@ -137,8 +146,10 @@ class Tier2VampyreImmunitiesTest
 		when(context.get(equipmentItemIdsComputable)).thenReturn(ImmutableMap.of(EquipmentInventorySlot.RING, ItemID.EFARITAYS_AID));
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.SLASH));
 
-		assertEquals(10, tier2VampyreImmunities.compute(context));
-		verify(context, times(1)).warn("Efaritay's aid limits max hit to 10.");
+		assertEquals(
+			MaxHitLimit.of(10, "Efaritay's aid limits max hit to 10."),
+			tier2VampyreImmunities.compute(context)
+		);
 	}
 
 	@Test
@@ -154,7 +165,7 @@ class Tier2VampyreImmunitiesTest
 		);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.SLASH));
 
-		assertEquals(Integer.MAX_VALUE, tier2VampyreImmunities.compute(context));
-		assertEquals(Integer.MAX_VALUE, tier2VampyreImmunities.compute(context));
+		assertEquals(MaxHitLimit.UNLIMITED, tier2VampyreImmunities.compute(context));
+		assertEquals(MaxHitLimit.UNLIMITED, tier2VampyreImmunities.compute(context));
 	}
 }

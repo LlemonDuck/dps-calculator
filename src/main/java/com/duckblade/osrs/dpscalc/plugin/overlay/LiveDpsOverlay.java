@@ -4,7 +4,7 @@ import com.duckblade.osrs.dpscalc.calc.DpsComputable;
 import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.exceptions.DpsComputeException;
-import com.duckblade.osrs.dpscalc.calc.maxhit.MaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.TrueMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.model.ComputeInput;
 import com.duckblade.osrs.dpscalc.plugin.config.DpsCalcConfig;
 import com.duckblade.osrs.dpscalc.plugin.module.PluginLifecycleComponent;
@@ -42,7 +42,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	private final OverlayMinimizerService overlayMinimizerService;
 
 	private final DpsComputable dpsComputable;
-	private final MaxHitComputable maxHitComputable;
+	private final TrueMaxHitComputable trueMaxHitComputable;
 	private final HitChanceComputable hitChanceComputable;
 
 	private boolean ticked = true;
@@ -53,7 +53,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	public LiveDpsOverlay(
 		OverlayManager overlayManager, EventBus eventBus,
 		DpsCalcConfig config, ClientDataProvider clientDataProvider, OverlayMinimizerService overlayMinimizerService,
-		DpsComputable dpsComputable, MaxHitComputable maxHitComputable, HitChanceComputable hitChanceComputable
+		DpsComputable dpsComputable, TrueMaxHitComputable trueMaxHitComputable, HitChanceComputable hitChanceComputable
 	)
 	{
 		this.overlayManager = overlayManager;
@@ -62,7 +62,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 		this.clientDataProvider = clientDataProvider;
 		this.overlayMinimizerService = overlayMinimizerService;
 		this.dpsComputable = dpsComputable;
-		this.maxHitComputable = maxHitComputable;
+		this.trueMaxHitComputable = trueMaxHitComputable;
 		this.hitChanceComputable = hitChanceComputable;
 
 		setPosition(OverlayPosition.BOTTOM_LEFT);
@@ -168,7 +168,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	{
 		try
 		{
-			return MAX_HIT_FORMAT.format(context.get(maxHitComputable));
+			return MAX_HIT_FORMAT.format(context.get(trueMaxHitComputable));
 		}
 		catch (DpsComputeException e)
 		{
