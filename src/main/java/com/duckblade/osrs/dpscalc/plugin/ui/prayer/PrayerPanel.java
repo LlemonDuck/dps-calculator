@@ -13,6 +13,7 @@ import com.google.common.collect.ImmutableList;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
@@ -73,7 +74,7 @@ public class PrayerPanel extends JPanel implements StateBoundComponent
 	{
 		clientDataProviderThreadProxy.tryAcquire(clientDataProvider ->
 		{
-			getState().setAttackerPrayers(clientDataProvider.getPlayerActivePrayers());
+			getState().setAttackerPrayers(new HashSet<>(clientDataProvider.getPlayerActivePrayers()));
 			SwingUtilities.invokeLater(this::fromState);
 		});
 	}
