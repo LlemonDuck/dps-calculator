@@ -113,14 +113,34 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 		}
 		ticked = false;
 
-		if (config.liveOverlayShowDps())
+		try
 		{
-			getPanelComponent().getChildren().add(
-				LineComponent.builder()
-					.left("DPS")
-					.right(buildDpsString(context))
-					.build()
-			);
+			double dps = context.get(dpsComputable);
+			if (config.liveOverlayShowDps())
+			{
+				getPanelComponent().getChildren().add(
+					LineComponent.builder()
+						.left("DPS")
+						.right(DPS_FORMAT.format(dps))
+						.build()
+				);
+			}
+		}
+		catch (DpsComputeException e)
+		{
+			if (config.liveOverlayMinimizeIncomplete())
+			{
+				return null;
+			}
+			else
+			{
+				getPanelComponent().getChildren().add(
+					LineComponent.builder()
+						.left("DPS")
+						.right("???")
+						.build()
+				);
+			}
 		}
 
 		if (config.liveOverlayShowMaxHit())
@@ -150,18 +170,6 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	public void onGameTick(GameTick e)
 	{
 		ticked = true;
-	}
-
-	private String buildDpsString(ComputeContext context)
-	{
-		try
-		{
-			return DPS_FORMAT.format(context.get(dpsComputable));
-		}
-		catch (DpsComputeException e)
-		{
-			return "???";
-		}
 	}
 
 	private String buildMaxHitString(ComputeContext context)

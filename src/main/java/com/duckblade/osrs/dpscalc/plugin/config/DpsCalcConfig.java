@@ -119,10 +119,22 @@ public interface DpsCalcConfig extends Config
 
 	@ConfigItem(
 		section = SECTION_LIVE_OVERLAY_FEATURES,
+		keyName = "minimizeIncomplete",
+		name = "Minimize Incomplete",
+		description = "Minimize the overlay when the DPS cannot be calculated.",
+		position = 106
+	)
+	default boolean liveOverlayMinimizeIncomplete()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		section = SECTION_LIVE_OVERLAY_FEATURES,
 		keyName = "minimizeHotkey",
 		name = "Toggle Hotkey",
 		description = "Toggle the live dps overlay with this hotkey",
-		position = 107
+		position = 108
 	)
 	default Keybind liveOverlayMinimizeHotkey()
 	{
