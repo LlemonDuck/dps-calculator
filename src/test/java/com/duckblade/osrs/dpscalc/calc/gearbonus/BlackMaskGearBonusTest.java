@@ -77,7 +77,7 @@ class BlackMaskGearBonusTest
 	void warnsWhenSalveAlreadyInEffect()
 	{
 		when(context.get(ComputeInputs.ON_SLAYER_TASK)).thenReturn(true);
-		when(context.get(salveAmuletGearBonus)).thenReturn(GearBonuses.symmetric(1.2));
+		when(salveAmuletGearBonus.isApplicable(context)).thenReturn(true);
 
 		assertEquals(GearBonuses.EMPTY, blackMaskGearBonus.compute(context));
 		verify(context).warn("Black mask/Slayer helmet does not stack with salve amulet.");
@@ -87,7 +87,7 @@ class BlackMaskGearBonusTest
 	void warnsForRangedWithUnimbuedMask()
 	{
 		when(context.get(ComputeInputs.ON_SLAYER_TASK)).thenReturn(true);
-		when(context.get(salveAmuletGearBonus)).thenReturn(GearBonuses.EMPTY);
+		when(salveAmuletGearBonus.isApplicable(context)).thenReturn(false);
 		when(context.get(equipmentItemIdsComputable)).thenReturn(helmetMap(ItemID.SLAYER_HELMET));
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.RANGED));
 
@@ -99,7 +99,7 @@ class BlackMaskGearBonusTest
 	void warnsForMagicWithUnimbuedMask()
 	{
 		when(context.get(ComputeInputs.ON_SLAYER_TASK)).thenReturn(true);
-		when(context.get(salveAmuletGearBonus)).thenReturn(GearBonuses.EMPTY);
+		when(salveAmuletGearBonus.isApplicable(context)).thenReturn(false);
 		when(context.get(equipmentItemIdsComputable)).thenReturn(helmetMap(ItemID.SLAYER_HELMET));
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
 
@@ -111,7 +111,7 @@ class BlackMaskGearBonusTest
 	void givesBonusForMeleeWithoutImbue()
 	{
 		when(context.get(ComputeInputs.ON_SLAYER_TASK)).thenReturn(true);
-		when(context.get(salveAmuletGearBonus)).thenReturn(GearBonuses.EMPTY);
+		when(salveAmuletGearBonus.isApplicable(context)).thenReturn(false);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.STAB));
 
 		assertEquals(GearBonuses.symmetric(7.0 / 6.0), blackMaskGearBonus.compute(context));
@@ -121,7 +121,7 @@ class BlackMaskGearBonusTest
 	void givesBonusForMeleeWithImbue()
 	{
 		when(context.get(ComputeInputs.ON_SLAYER_TASK)).thenReturn(true);
-		when(context.get(salveAmuletGearBonus)).thenReturn(GearBonuses.EMPTY);
+		when(salveAmuletGearBonus.isApplicable(context)).thenReturn(false);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.STAB));
 
 		assertEquals(GearBonuses.symmetric(7.0 / 6.0), blackMaskGearBonus.compute(context));
@@ -131,7 +131,7 @@ class BlackMaskGearBonusTest
 	void givesBonusForRangedWithImbue()
 	{
 		when(context.get(ComputeInputs.ON_SLAYER_TASK)).thenReturn(true);
-		when(context.get(salveAmuletGearBonus)).thenReturn(GearBonuses.EMPTY);
+		when(salveAmuletGearBonus.isApplicable(context)).thenReturn(false);
 		when(context.get(equipmentItemIdsComputable)).thenReturn(helmetMap(ItemID.SLAYER_HELMET_I));
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.RANGED));
 
@@ -142,7 +142,7 @@ class BlackMaskGearBonusTest
 	void givesBonusForMagicWithImbue()
 	{
 		when(context.get(ComputeInputs.ON_SLAYER_TASK)).thenReturn(true);
-		when(context.get(salveAmuletGearBonus)).thenReturn(GearBonuses.EMPTY);
+		when(salveAmuletGearBonus.isApplicable(context)).thenReturn(false);
 		when(context.get(equipmentItemIdsComputable)).thenReturn(helmetMap(ItemID.SLAYER_HELMET_I));
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
 
