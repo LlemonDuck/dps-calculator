@@ -10,10 +10,13 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.slayer.SlayerPlugin;
 
 @Slf4j
 @Singleton
+@PluginDependency(SlayerPlugin.class)
 @PluginDescriptor(
 	name = "DPS Calculator"
 )

@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
@@ -25,8 +26,10 @@ import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.NPC;
 import net.runelite.api.Skill;
 import net.runelite.api.VarPlayer;
+import net.runelite.client.plugins.slayer.SlayerPluginService;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -36,6 +39,8 @@ public class RuneLiteClientDataProvider implements ClientDataProvider
 	private static final int AUTOCAST_SPELL_VARBIT = 276;
 
 	private final Client client;
+	private final SlayerPluginService slayerPluginService;
+
 	private final DpsCalcConfig config;
 	private final ItemStatsProvider itemStatsProvider;
 	private final InteractingNpcTracker interactingNpcTracker;
@@ -160,7 +165,23 @@ public class RuneLiteClientDataProvider implements ClientDataProvider
 	@Override
 	public boolean playerIsOnSlayerTask()
 	{
-		return false;
+		DefenderAttributes attr = getNpcTargetAttributes();
+		if (attr == null)
+		{
+			return false;
+		}
+
+		List<NPC> targets = slayerPluginService.getTargets();
+		if (targets == null)
+		{
+			return false;
+		}
+
+		// this will only work if the task npc is on-screen which should always be true for the overlay
+		// but could be inaccurate if loading the data into side panel after a delay
+		return targets
+			.stream()
+			.anyMatch(npc -> npc.getId() == attr.getNpcId());
 	}
 
 	@Override
