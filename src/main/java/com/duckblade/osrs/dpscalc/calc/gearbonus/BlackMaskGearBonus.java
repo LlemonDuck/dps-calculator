@@ -134,7 +134,7 @@ public class BlackMaskGearBonus implements GearBonusComputable
 			return GearBonuses.EMPTY;
 		}
 
-		if (!GearBonuses.EMPTY.equals(context.get(salveAmuletGearBonus)))
+		if (salveAmuletGearBonus.isApplicable(context))
 		{
 			context.warn("Black mask/Slayer helmet does not stack with salve amulet.");
 			return GearBonuses.EMPTY;
