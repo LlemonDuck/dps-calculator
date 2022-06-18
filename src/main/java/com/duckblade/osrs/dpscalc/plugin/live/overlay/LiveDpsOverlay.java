@@ -6,6 +6,7 @@ import com.duckblade.osrs.dpscalc.calc.maxhit.TrueMaxHitComputable;
 import com.duckblade.osrs.dpscalc.plugin.config.DpsCalcConfig;
 import com.duckblade.osrs.dpscalc.plugin.live.TargetedDps;
 import com.duckblade.osrs.dpscalc.plugin.live.TargetedDpsChanged;
+import com.duckblade.osrs.dpscalc.plugin.live.party.PartyDpsService;
 import com.duckblade.osrs.dpscalc.plugin.module.PluginLifecycleComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
 import java.awt.Dimension;
@@ -37,6 +38,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	private final DpsCalcConfig config;
 
 	private final OverlayMinimizerService overlayMinimizerService;
+	private final PartyDpsService partyDpsService;
 
 	private final TrueMaxHitComputable trueMaxHitComputable;
 	private final HitChanceComputable hitChanceComputable;
@@ -49,7 +51,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	@Inject
 	public LiveDpsOverlay(
 		OverlayManager overlayManager, EventBus eventBus, DpsCalcConfig config,
-		OverlayMinimizerService overlayMinimizerService,
+		OverlayMinimizerService overlayMinimizerService, PartyDpsService partyDpsService,
 		TrueMaxHitComputable trueMaxHitComputable, HitChanceComputable hitChanceComputable
 	)
 	{
@@ -58,6 +60,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 		this.config = config;
 
 		this.overlayMinimizerService = overlayMinimizerService;
+		this.partyDpsService = partyDpsService;
 
 		this.trueMaxHitComputable = trueMaxHitComputable;
 		this.hitChanceComputable = hitChanceComputable;
@@ -120,6 +123,12 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 		if (config.liveOverlayShowDps())
 		{
 			addLineComponent("DPS", targetedDps == null ? "???" : DPS_FORMAT.format(targetedDps.getDps()));
+		}
+
+		if (config.liveOverlayShowPartyDps() && partyDpsService.hasDps())
+		{
+			double partyDps = partyDpsService.getPartyDps(targetedDps.getNpcTarget());
+			addLineComponent("Party DPS", targetedDps == null ? "???" : DPS_FORMAT.format(partyDps));
 		}
 
 		if (config.liveOverlayShowMaxHit())
