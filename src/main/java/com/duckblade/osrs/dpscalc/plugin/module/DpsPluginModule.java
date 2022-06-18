@@ -4,6 +4,7 @@ import com.duckblade.osrs.dpscalc.plugin.DpsMenuActionListener;
 import com.duckblade.osrs.dpscalc.plugin.live.LiveDpsService;
 import com.duckblade.osrs.dpscalc.plugin.live.overlay.LiveDpsOverlay;
 import com.duckblade.osrs.dpscalc.plugin.live.overlay.OverlayMinimizerService;
+import com.duckblade.osrs.dpscalc.plugin.live.party.PartyDpsService;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.InteractingNpcTracker;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.RuneLiteClientDataProvider;
@@ -28,6 +29,7 @@ public class DpsPluginModule extends AbstractModule
 		lifecycleComponents.addBinding().to(InteractingNpcTracker.class);
 		lifecycleComponents.addBinding().to(LiveDpsService.class);
 		lifecycleComponents.addBinding().to(LiveDpsOverlay.class);
+		lifecycleComponents.addBinding().to(PartyDpsService.class);
 		lifecycleComponents.addBinding().to(NavButtonManager.class);
 		lifecycleComponents.addBinding().to(OverlayMinimizerService.class);
 
