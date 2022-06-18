@@ -10,7 +10,7 @@ import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThreadProxy;
 import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcDataProvider;
-import com.duckblade.osrs.dpscalc.plugin.overlay.LiveDpsOverlay;
+import com.duckblade.osrs.dpscalc.plugin.live.overlay.LiveDpsOverlay;
 import com.duckblade.osrs.dpscalc.plugin.ui.DpsPluginPanel;
 import com.google.inject.Guice;
 import com.google.inject.Injector;

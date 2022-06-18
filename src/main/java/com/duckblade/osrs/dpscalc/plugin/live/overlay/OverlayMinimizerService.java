@@ -1,4 +1,4 @@
-package com.duckblade.osrs.dpscalc.plugin.overlay;
+package com.duckblade.osrs.dpscalc.plugin.live.overlay;
 
 import com.duckblade.osrs.dpscalc.plugin.config.DpsCalcConfig;
 import com.duckblade.osrs.dpscalc.plugin.module.PluginLifecycleComponent;
