@@ -20,7 +20,7 @@ repositories {
     mavenCentral()
 }
 
-def runeLiteVersion = '1.8.23'
+def runeLiteVersion = '1.8.24.1'
 
 dependencies {
     compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
@@ -43,7 +43,7 @@ dependencies {
 }
 
 group = 'com.duckblade.osrs'
-version = '2.1.1'
+version = '2.2.0'
 sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
