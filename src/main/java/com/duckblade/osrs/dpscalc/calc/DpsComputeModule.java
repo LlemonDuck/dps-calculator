@@ -27,6 +27,7 @@ import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimiter;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.Tier2VampyreImmunities;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.Tier3VampyreImmunities;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.ZulrahMaxHitLimiter;
+import com.duckblade.osrs.dpscalc.calc.multihit.ColossalBladeDptComputable;
 import com.duckblade.osrs.dpscalc.calc.multihit.DharoksDptComputable;
 import com.duckblade.osrs.dpscalc.calc.multihit.KarilsDptComputable;
 import com.duckblade.osrs.dpscalc.calc.multihit.KerisDptComputable;
@@ -76,6 +77,7 @@ public class DpsComputeModule extends AbstractModule
 		maxHitLimiters.addBinding().to(ZulrahMaxHitLimiter.class);
 
 		Multibinder<MultiHitDptComputable> multiHitDptComputables = Multibinder.newSetBinder(binder(), MultiHitDptComputable.class);
+		multiHitDptComputables.addBinding().to(ColossalBladeDptComputable.class);
 		multiHitDptComputables.addBinding().to(DharoksDptComputable.class);
 		multiHitDptComputables.addBinding().to(KarilsDptComputable.class);
 		multiHitDptComputables.addBinding().to(KerisDptComputable.class);
@@ -86,6 +88,7 @@ public class DpsComputeModule extends AbstractModule
 		bind(new TypeLiteral<List<ComputeOutput<Integer>>>() {})
 			.annotatedWith(Names.named("EffectMaxHitOutputs"))
 			.toInstance(ImmutableList.of(
+				ColossalBladeDptComputable.COLOSSAL_BLADE_MAX_HIT,
 				DharoksDptComputable.DHAROKS_MAX_HIT,
 				KarilsDptComputable.KARILS_MAX_HIT,
 				KerisDptComputable.KERIS_MAX_HIT,
