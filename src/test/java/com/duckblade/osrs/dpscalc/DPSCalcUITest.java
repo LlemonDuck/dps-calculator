@@ -5,6 +5,7 @@ import com.duckblade.osrs.dpscalc.devbindings.LocalItemStatsProvider;
 import com.duckblade.osrs.dpscalc.devbindings.LocalNpcDataProvider;
 import com.duckblade.osrs.dpscalc.devbindings.MockClientDataProvider;
 import com.duckblade.osrs.dpscalc.plugin.config.DpsCalcConfig;
+import com.duckblade.osrs.dpscalc.plugin.live.party.PartyDpsService;
 import com.duckblade.osrs.dpscalc.plugin.module.DpsPluginModule;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThreadProxy;
@@ -56,6 +57,7 @@ public class DPSCalcUITest
 					i.bind(ClientDataProvider.class).to(MockClientDataProvider.class).asEagerSingleton();
 					i.bind(ClientDataProviderThreadProxy.class).to(MockClientDataProvider.MockClientDataProviderThreadProxy.class);
 					i.bind(LiveDpsOverlay.class).toProvider(Providers.of(null));
+					i.bind(PartyDpsService.class).toProvider(Providers.of(null));
 				})
 		);
 

@@ -8,7 +8,7 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeOutput;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.KerisGearBonus;
-import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.PreLimitBaseMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,6 +24,7 @@ public class KerisDptComputable implements MultiHitDptComputable
 	private final WeaponComputable weaponComputable;
 	private final BaseHitDptComputable baseHitDptComputable;
 	private final HitChanceComputable hitChanceComputable;
+	private final PreLimitBaseMaxHitComputable preLimitBaseMaxHitComputable;
 	private final MaxHitLimitComputable maxHitLimitComputable;
 	private final AttackSpeedComputable attackSpeedComputable;
 
@@ -46,7 +47,7 @@ public class KerisDptComputable implements MultiHitDptComputable
 
 		// 1/51 chance to deal triple damage
 		double hitChance = context.get(hitChanceComputable);
-		int effectMaxHit = maxHitLimitComputable.coerce(3 * context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT), context);
+		int effectMaxHit = maxHitLimitComputable.coerce(3 * context.get(preLimitBaseMaxHitComputable), context);
 		int attackSpeed = context.get(attackSpeedComputable);
 
 		double tripleHitDps = BaseHitDptComputable.byComponents(hitChance, effectMaxHit, attackSpeed);

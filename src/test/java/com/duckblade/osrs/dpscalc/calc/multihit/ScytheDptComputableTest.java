@@ -7,6 +7,7 @@ import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.PreLimitBaseMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
 import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil;
@@ -39,6 +40,9 @@ class ScytheDptComputableTest
 
 	@Mock
 	private HitChanceComputable hitChanceComputable;
+
+	@Mock
+	private PreLimitBaseMaxHitComputable preLimitBaseMaxHitComputable;
 
 	@Mock
 	private BaseMaxHitComputable baseMaxHitComputable;
@@ -111,7 +115,7 @@ class ScytheDptComputableTest
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.SIZE_2);
 		when(context.get(hitChanceComputable)).thenReturn(0.5);
 		when(context.get(baseMaxHitComputable)).thenReturn(4);
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(4);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(4);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 
@@ -128,7 +132,7 @@ class ScytheDptComputableTest
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.SIZE_3, DefenderAttributesUtil.SIZE_4);
 		when(context.get(hitChanceComputable)).thenReturn(0.5);
 		when(context.get(baseMaxHitComputable)).thenReturn(4);
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(4);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(4);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 
@@ -148,7 +152,7 @@ class ScytheDptComputableTest
 		when(context.get(ComputeInputs.DEFENDER_ATTRIBUTES)).thenReturn(DefenderAttributesUtil.SIZE_3, DefenderAttributesUtil.SIZE_4);
 		when(context.get(hitChanceComputable)).thenReturn(0.5);
 		when(context.get(baseMaxHitComputable)).thenReturn(1);
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(4);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(4);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenReturn(1);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 

@@ -6,7 +6,7 @@ import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.PreLimitBaseMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.Skills;
@@ -42,6 +42,9 @@ class DharoksDptComputableTest
 
 	@Mock
 	private MaxHitLimitComputable maxHitLimitComputable;
+
+	@Mock
+	private PreLimitBaseMaxHitComputable preLimitBaseMaxHitComputable;
 
 	@Mock
 	private AttackSpeedComputable attackSpeedComputable;
@@ -98,7 +101,7 @@ class DharoksDptComputableTest
 	@Test
 	void increasesMaxHitByAppropriateAmountAt1HpWith99Max()
 	{
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(100);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(100);
 		when(context.get(hitChanceComputable)).thenReturn(1.0);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
@@ -118,7 +121,7 @@ class DharoksDptComputableTest
 	@Test
 	void increasesMaxHitByAppropriateAmountAt99HpWith99Max()
 	{
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(100);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(100);
 		when(context.get(hitChanceComputable)).thenReturn(1.0);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
@@ -133,7 +136,7 @@ class DharoksDptComputableTest
 	@Test
 	void increasesMaxHitByAppropriateAmountAt25HpWith50Max()
 	{
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(100);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(100);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
 		when(context.get(hitChanceComputable)).thenReturn(1.0);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
@@ -153,7 +156,7 @@ class DharoksDptComputableTest
 	@Test
 	void respectsMaxHitLimiters()
 	{
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(100);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(100);
 		when(context.get(hitChanceComputable)).thenReturn(1.0);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenReturn(5);

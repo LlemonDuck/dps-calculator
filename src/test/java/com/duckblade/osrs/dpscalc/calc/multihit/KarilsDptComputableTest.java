@@ -6,10 +6,10 @@ import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.PreLimitBaseMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
-import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import net.runelite.api.EquipmentInventorySlot;
@@ -40,6 +40,9 @@ class KarilsDptComputableTest
 
 	@Mock
 	private HitChanceComputable hitChanceComputable;
+
+	@Mock
+	private PreLimitBaseMaxHitComputable preLimitBaseMaxHitComputable;
 
 	@Mock
 	private MaxHitLimitComputable maxHitLimitComputable;
@@ -110,7 +113,7 @@ class KarilsDptComputableTest
 	void addsSecondHitToDps()
 	{
 		when(context.get(baseHitDptComputable)).thenReturn(4.0);
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(50);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(50);
 		when(context.get(hitChanceComputable)).thenReturn(0.5);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
@@ -124,7 +127,7 @@ class KarilsDptComputableTest
 	void respectsMaxHitLimiters()
 	{
 		when(context.get(baseHitDptComputable)).thenReturn(4.0);
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(50);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(50);
 		when(context.get(hitChanceComputable)).thenReturn(0.5);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenReturn(5);

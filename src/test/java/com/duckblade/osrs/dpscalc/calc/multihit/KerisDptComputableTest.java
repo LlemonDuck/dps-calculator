@@ -6,12 +6,12 @@ import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
 import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.PreLimitBaseMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
+import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil;
 import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
-import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import net.runelite.api.ItemID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -38,6 +38,9 @@ class KerisDptComputableTest
 
 	@Mock
 	private HitChanceComputable hitChanceComputable;
+
+	@Mock
+	private PreLimitBaseMaxHitComputable preLimitBaseMaxHitComputable;
 
 	@Mock
 	private MaxHitLimitComputable maxHitLimitComputable;
@@ -96,7 +99,7 @@ class KerisDptComputableTest
 	void appliesTripleHitAppropriately()
 	{
 		when(context.get(baseHitDptComputable)).thenReturn(4.0);
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(50);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(50);
 		when(context.get(hitChanceComputable)).thenReturn(0.5);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenAnswer(i -> i.getArgument(0));
@@ -110,7 +113,7 @@ class KerisDptComputableTest
 	void respectsMaxHitLimiters()
 	{
 		when(context.get(baseHitDptComputable)).thenReturn(4.0);
-		when(context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT)).thenReturn(50);
+		when(context.get(preLimitBaseMaxHitComputable)).thenReturn(50);
 		when(context.get(hitChanceComputable)).thenReturn(0.5);
 		when(context.get(attackSpeedComputable)).thenReturn(5);
 		when(maxHitLimitComputable.coerce(anyInt(), eq(context))).thenReturn(5);

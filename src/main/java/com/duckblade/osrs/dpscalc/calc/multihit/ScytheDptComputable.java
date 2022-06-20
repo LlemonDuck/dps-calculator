@@ -8,6 +8,7 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeOutput;
 import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.PreLimitBaseMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimitComputable;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
@@ -38,6 +39,7 @@ public class ScytheDptComputable implements MultiHitDptComputable
 	private final WeaponComputable weaponComputable;
 	private final BaseHitDptComputable baseHitDptComputable;
 	private final HitChanceComputable hitChanceComputable;
+	private final PreLimitBaseMaxHitComputable preLimitBaseMaxHitComputable;
 	private final BaseMaxHitComputable baseMaxHitComputable;
 	private final MaxHitLimitComputable maxHitLimitComputable;
 	private final AttackSpeedComputable attackSpeedComputable;
@@ -63,8 +65,8 @@ public class ScytheDptComputable implements MultiHitDptComputable
 		double hitChance = context.get(hitChanceComputable);
 		int attackSpeed = context.get(attackSpeedComputable);
 
-		int maxHit = context.get(baseMaxHitComputable);
-		int maxHitUnlimited = context.get(BaseMaxHitComputable.PRE_LIMIT_MAX_HIT);
+		int maxHitUnlimited = context.get(preLimitBaseMaxHitComputable);
+		int maxHit1 = context.get(baseMaxHitComputable);
 
 		int maxHit2 = maxHitLimitComputable.coerce(maxHitUnlimited / 2, context);
 		context.put(SCY_MAX_HIT_2, maxHit2);
@@ -79,7 +81,7 @@ public class ScytheDptComputable implements MultiHitDptComputable
 			thirdHitDps = BaseHitDptComputable.byComponents(hitChance, maxHit3, attackSpeed);
 		}
 
-		context.put(SCY_MAX_HIT_SUM, maxHit + maxHit2 + maxHit3);
+		context.put(SCY_MAX_HIT_SUM, maxHit1 + maxHit2 + maxHit3);
 		return baseDps + secondHitDps + thirdHitDps;
 	}
 
