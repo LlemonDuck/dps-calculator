@@ -7,7 +7,6 @@ import com.duckblade.osrs.dpscalc.plugin.live.party.messages.UpdateLiveDps;
 import com.duckblade.osrs.dpscalc.plugin.module.PluginLifecycleComponent;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Predicate;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,7 +16,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PartyChanged;
 import net.runelite.client.party.PartyService;
 import net.runelite.client.party.WSClient;
-import net.runelite.client.party.messages.UserPart;
+import net.runelite.client.party.events.UserPart;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -28,7 +27,7 @@ public class PartyDpsService implements PluginLifecycleComponent
 	private final PartyService partyService;
 	private final WSClient wsClient;
 
-	private final Map<UUID, TargetedDps> partyMemberDps = new HashMap<>();
+	private final Map<Long, TargetedDps> partyMemberDps = new HashMap<>();
 
 	@Override
 	public Predicate<DpsCalcConfig> isConfigEnabled()
@@ -73,13 +72,13 @@ public class PartyDpsService implements PluginLifecycleComponent
 	{
 		if (partyService.isInParty())
 		{
-			UUID localId = partyService.getLocalMember().getMemberId();
+			long localId = partyService.getLocalMember().getMemberId();
 			setMemberDps(localId, e.getTargetedDps());
 			partyService.send(new UpdateLiveDps(localId, e.getTargetedDps()));
 		}
 	}
 
-	private void setMemberDps(UUID memberId, TargetedDps dps)
+	private void setMemberDps(long memberId, TargetedDps dps)
 	{
 		if (dps == null)
 		{
