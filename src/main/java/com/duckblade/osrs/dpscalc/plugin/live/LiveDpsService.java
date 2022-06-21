@@ -7,6 +7,7 @@ import com.duckblade.osrs.dpscalc.calc.model.ComputeInput;
 import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
 import com.duckblade.osrs.dpscalc.plugin.module.PluginLifecycleComponent;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProvider;
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.InteractingNpcTracker;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,10 @@ public class LiveDpsService implements PluginLifecycleComponent
 
 	private final ClientDataProvider clientDataProvider;
 	private final DpsComputable dpsComputable;
+	private final InteractingNpcTracker interactingNpcTracker;
 
 	private ComputeInput lastInput;
+	private int lastNpcIndex;
 
 	@Override
 	public void startUp()
@@ -42,8 +45,10 @@ public class LiveDpsService implements PluginLifecycleComponent
 	public void onGameTick(GameTick tick)
 	{
 		ComputeInput input = clientDataProvider.toComputeInput();
-		if (!input.equals(lastInput))
+		int npcIndex = interactingNpcTracker.getLastInteractedIndex();
+		if (!input.equals(lastInput) || lastNpcIndex != npcIndex)
 		{
+			lastNpcIndex = npcIndex;
 			lastInput = input;
 			ComputeContext context = new ComputeContext(input);
 			try
@@ -55,7 +60,7 @@ public class LiveDpsService implements PluginLifecycleComponent
 				}
 				else
 				{
-					TargetedDps newDps = new TargetedDps(defenderAttributes.getNpcId(), context.get(dpsComputable));
+					TargetedDps newDps = new TargetedDps(npcIndex, context.get(dpsComputable));
 					setDps(newDps, input, context);
 				}
 			}

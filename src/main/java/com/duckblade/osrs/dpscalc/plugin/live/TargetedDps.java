@@ -6,7 +6,7 @@ import lombok.Value;
 public class TargetedDps
 {
 
-	private final int npcTarget;
+	private final int npcIndex;
 	private final double dps;
 
 }

@@ -127,7 +127,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 
 		if (config.liveOverlayShowPartyDps() && partyDpsService.hasDps())
 		{
-			double partyDps = partyDpsService.getPartyDps(targetedDps.getNpcTarget());
+			double partyDps = partyDpsService.getPartyDps(targetedDps.getNpcIndex());
 			addLineComponent("Party DPS", targetedDps == null ? "???" : DPS_FORMAT.format(partyDps));
 		}
 

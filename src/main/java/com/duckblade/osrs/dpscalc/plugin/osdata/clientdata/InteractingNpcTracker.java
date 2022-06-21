@@ -28,6 +28,9 @@ public class InteractingNpcTracker implements PluginLifecycleComponent
 	@Getter
 	private NpcData lastInteracted = null;
 
+	@Getter
+	private int lastInteractedIndex = -1;
+
 	@Override
 	public void startUp()
 	{
@@ -53,8 +56,9 @@ public class InteractingNpcTracker implements PluginLifecycleComponent
 			return;
 		}
 
-		int npcId = ((NPC) e.getTarget()).getId();
-		lastInteracted = npcDataProvider.getById(npcId);
+		NPC npc = (NPC) e.getTarget();
+		lastInteractedIndex = npc.getIndex();
+		lastInteracted = npcDataProvider.getById(npc.getId());
 
 		log.debug("Setting last interacted to {}", lastInteracted == null ? "null" : lastInteracted.getAttributes().getName());
 	}

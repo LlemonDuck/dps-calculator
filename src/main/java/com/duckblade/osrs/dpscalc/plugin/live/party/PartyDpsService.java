@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PartyChanged;
+import net.runelite.client.party.PartyMember;
 import net.runelite.client.party.PartyService;
 import net.runelite.client.party.WSClient;
 import net.runelite.client.party.events.UserPart;
@@ -70,9 +71,10 @@ public class PartyDpsService implements PluginLifecycleComponent
 	@Subscribe
 	public void onTargetedDpsChanged(TargetedDpsChanged e)
 	{
-		if (partyService.isInParty())
+		PartyMember localMember;
+		if (partyService.isInParty() && (localMember = partyService.getLocalMember()) != null)
 		{
-			long localId = partyService.getLocalMember().getMemberId();
+			long localId = localMember.getMemberId();
 			setMemberDps(localId, e.getTargetedDps());
 			partyService.send(new UpdateLiveDps(localId, e.getTargetedDps()));
 		}
@@ -90,11 +92,11 @@ public class PartyDpsService implements PluginLifecycleComponent
 		}
 	}
 
-	public double getPartyDps(int npcTarget)
+	public double getPartyDps(int npcIndex)
 	{
 		return partyMemberDps.values()
 			.stream()
-			.filter(td -> td.getNpcTarget() == npcTarget)
+			.filter(td -> td.getNpcIndex() == npcIndex)
 			.mapToDouble(TargetedDps::getDps)
 			.sum();
 	}
