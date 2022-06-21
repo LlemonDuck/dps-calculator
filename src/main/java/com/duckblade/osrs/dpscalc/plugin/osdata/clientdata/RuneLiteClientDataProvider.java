@@ -29,6 +29,7 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.NPC;
 import net.runelite.api.Skill;
 import net.runelite.api.VarPlayer;
+import net.runelite.api.Varbits;
 import net.runelite.client.plugins.slayer.SlayerPluginService;
 
 @Singleton
@@ -199,6 +200,6 @@ public class RuneLiteClientDataProvider implements ClientDataProvider
 	@Override
 	public boolean playerIsInWilderness()
 	{
-		return false;
+		return client.getVarbitValue(Varbits.PVP_SPEC_ORB) == 1;
 	}
 }
