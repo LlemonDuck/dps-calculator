@@ -9,4 +9,6 @@ public interface NpcDataProvider
 
 	NpcData getById(int npcId);
 
+	int canonicalize(int npcId);
+
 }

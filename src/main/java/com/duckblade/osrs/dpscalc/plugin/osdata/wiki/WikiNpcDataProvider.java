@@ -45,8 +45,12 @@ public class WikiNpcDataProvider implements NpcDataProvider
 
 	public NpcData getById(int npcId)
 	{
-		int baseId = npcBaseIdsMap.getOrDefault(npcId, npcId);
-		return npcStatsMap.get(baseId);
+		return npcStatsMap.get(canonicalize(npcId));
+	}
+
+	public int canonicalize(int npcId)
+	{
+		return npcBaseIdsMap.getOrDefault(npcId, npcId);
 	}
 
 }

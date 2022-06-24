@@ -10,6 +10,7 @@ import com.duckblade.osrs.dpscalc.calc.model.Spell;
 import com.duckblade.osrs.dpscalc.plugin.config.DpsCalcConfig;
 import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcData;
+import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcDataProvider;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
@@ -44,6 +45,7 @@ public class RuneLiteClientDataProvider implements ClientDataProvider
 
 	private final DpsCalcConfig config;
 	private final ItemStatsProvider itemStatsProvider;
+	private final NpcDataProvider npcDataProvider;
 	private final InteractingNpcTracker interactingNpcTracker;
 
 	@Override
@@ -180,9 +182,8 @@ public class RuneLiteClientDataProvider implements ClientDataProvider
 
 		// this will only work if the task npc is on-screen which should always be true for the overlay
 		// but could be inaccurate if loading the data into side panel after a delay
-		return targets
-			.stream()
-			.anyMatch(npc -> npc.getId() == attr.getNpcId());
+		return targets.stream()
+			.anyMatch(npc -> npcDataProvider.canonicalize(npc.getId()) == attr.getNpcId());
 	}
 
 	@Override
