@@ -1,12 +1,14 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.equip;
 
-import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
-import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
+import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.maxhit.magic.SpellMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.model.Spell;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateVisibleComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundJComboBox;
+import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
 import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,8 +17,10 @@ import javax.inject.Singleton;
 public class SpellSelectPanel extends StateBoundJComboBox<Spell> implements StateVisibleComponent
 {
 
+	private final SpellMaxHitComputable spellMaxHitComputable;
+
 	@Inject
-	public SpellSelectPanel(PanelStateManager manager)
+	public SpellSelectPanel(PanelStateManager manager, SpellMaxHitComputable spellMaxHitComputable)
 	{
 		super(
 			Arrays.asList(Spell.values()),
@@ -26,6 +30,7 @@ public class SpellSelectPanel extends StateBoundJComboBox<Spell> implements Stat
 			PanelState::setSpell,
 			PanelState::getSpell
 		);
+		this.spellMaxHitComputable = spellMaxHitComputable;
 
 		setAlignmentX(CENTER_ALIGNMENT);
 		setVisible(false);
@@ -35,8 +40,16 @@ public class SpellSelectPanel extends StateBoundJComboBox<Spell> implements Stat
 	@Override
 	public void updateVisibility()
 	{
-		AttackStyle style = getState().getAttackStyle();
-		boolean visible = style != null && style.getAttackType() == AttackType.MAGIC;
+		Boolean visibleOpt = ComputeUtil.tryCompute(() ->
+		{
+			ComputeContext context = new ComputeContext();
+			context.put(ComputeInputs.ATTACKER_ITEMS, getState().getAttackerItems());
+			context.put(ComputeInputs.ATTACK_STYLE, getState().getAttackStyle());
+
+			return spellMaxHitComputable.isApplicable(context);
+		});
+
+		boolean visible = visibleOpt != null && visibleOpt;
 		setVisible(visible);
 		if (!visible)
 		{
