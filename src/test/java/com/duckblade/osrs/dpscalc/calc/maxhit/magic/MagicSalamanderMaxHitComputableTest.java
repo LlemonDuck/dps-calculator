@@ -3,12 +3,19 @@ package com.duckblade.osrs.dpscalc.calc.maxhit.magic;
 import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
+import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import com.duckblade.osrs.dpscalc.calc.model.WeaponCategory;
+import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
+import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofWeaponCategory;
 import static com.duckblade.osrs.dpscalc.calc.testutil.SkillsUtil.ofSkill;
 import net.runelite.api.ItemID;
 import net.runelite.api.Skill;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,6 +35,40 @@ class MagicSalamanderMaxHitComputableTest
 
 	@InjectMocks
 	private MagicSalamanderMaxHitComputable magicSalamanderMaxHitComputable;
+
+	@Test
+	void isApplicableWhenUsingSalamandersForMagic()
+	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		when(context.get(weaponComputable)).thenReturn(ofWeaponCategory(WeaponCategory.SALAMANDER));
+
+		assertTrue(magicSalamanderMaxHitComputable.isApplicable(context));
+	}
+
+	@Test
+	void isNotApplicableWhenNotUsingMagic()
+	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.SLASH));
+
+		assertFalse(magicSalamanderMaxHitComputable.isApplicable(context));
+	}
+
+	@Test
+	void isNotApplicableWhenManualCasting()
+	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(AttackStyle.MANUAL_CAST);
+
+		assertFalse(magicSalamanderMaxHitComputable.isApplicable(context));
+	}
+
+	@Test
+	void isNotApplicableWhenNotUsingSalamanders()
+	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		when(context.get(weaponComputable)).thenReturn(ofWeaponCategory(WeaponCategory.STAFF));
+
+		assertFalse(magicSalamanderMaxHitComputable.isApplicable(context));
+	}
 
 	@Test
 	void computesMaxHitForSalamanders()

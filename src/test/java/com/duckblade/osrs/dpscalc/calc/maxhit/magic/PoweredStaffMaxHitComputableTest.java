@@ -3,12 +3,19 @@ package com.duckblade.osrs.dpscalc.calc.maxhit.magic;
 import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
+import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import com.duckblade.osrs.dpscalc.calc.model.WeaponCategory;
+import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
+import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofWeaponCategory;
 import static com.duckblade.osrs.dpscalc.calc.testutil.SkillsUtil.ofSkill;
 import net.runelite.api.ItemID;
 import net.runelite.api.Skill;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,6 +35,40 @@ class PoweredStaffMaxHitComputableTest
 
 	@InjectMocks
 	private PoweredStaffMaxHitComputable poweredStaffMaxHitComputable;
+
+	@Test
+	void isApplicableWhenUsingPoweredStavesForMagic()
+	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		when(context.get(weaponComputable)).thenReturn(ofWeaponCategory(WeaponCategory.POWERED_STAFF));
+
+		assertTrue(poweredStaffMaxHitComputable.isApplicable(context));
+	}
+
+	@Test
+	void isNotApplicableWhenNotUsingMagic()
+	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.SLASH));
+
+		assertFalse(poweredStaffMaxHitComputable.isApplicable(context));
+	}
+
+	@Test
+	void isNotApplicableWhenManualCasting()
+	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(AttackStyle.MANUAL_CAST);
+
+		assertFalse(poweredStaffMaxHitComputable.isApplicable(context));
+	}
+
+	@Test
+	void isNotApplicableWhenNotUsingPoweredStaves()
+	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		when(context.get(weaponComputable)).thenReturn(ofWeaponCategory(WeaponCategory.STAFF));
+
+		assertFalse(poweredStaffMaxHitComputable.isApplicable(context));
+	}
 
 	@Test
 	void givesMaxHitForTridentOfTheSeas()
@@ -78,35 +119,6 @@ class PoweredStaffMaxHitComputableTest
 
 		assertEquals(5, poweredStaffMaxHitComputable.compute(context));
 		assertEquals(32, poweredStaffMaxHitComputable.compute(context));
-	}
-
-	@Test
-	void givesMaxHitForSlayerStaff()
-	{
-		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.SLAYERS_STAFF));
-		when(context.get(ComputeInputs.ATTACKER_SKILLS)).thenReturn(
-			ofSkill(Skill.MAGIC, 60),
-			ofSkill(Skill.MAGIC, 99)
-		);
-
-		assertEquals(16, poweredStaffMaxHitComputable.compute(context));
-		assertEquals(19, poweredStaffMaxHitComputable.compute(context));
-	}
-
-	@Test
-	void givesMaxHitForSlayerStaffE()
-	{
-		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.SLAYERS_STAFF_E));
-		when(context.get(ComputeInputs.ATTACKER_SKILLS)).thenReturn(
-			ofSkill(Skill.MAGIC, 99),
-			ofSkill(Skill.MAGIC, 99),
-			ofSkill(Skill.MAGIC, 108)
-		);
-		when(context.get(ComputeInputs.ON_SLAYER_TASK)).thenReturn(true, false, true);
-
-		assertEquals(29, poweredStaffMaxHitComputable.compute(context));
-		assertEquals(19, poweredStaffMaxHitComputable.compute(context));
-		assertEquals(31, poweredStaffMaxHitComputable.compute(context));
 	}
 
 	@Test

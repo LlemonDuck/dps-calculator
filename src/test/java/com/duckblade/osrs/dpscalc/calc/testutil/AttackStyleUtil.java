@@ -11,6 +11,7 @@ public class AttackStyleUtil
 	{
 		return AttackStyle.builder()
 			.attackType(attackType)
+			.isManualCast(false)
 			.build();
 	}
 

@@ -27,6 +27,10 @@ import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.MaxHitLimiter;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.Tier2VampyreImmunities;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.Tier3VampyreImmunities;
 import com.duckblade.osrs.dpscalc.calc.maxhit.limiters.ZulrahMaxHitLimiter;
+import com.duckblade.osrs.dpscalc.calc.maxhit.magic.MagicMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.magic.MagicSalamanderMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.magic.PoweredStaffMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.maxhit.magic.SpellMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.multihit.ColossalBladeDptComputable;
 import com.duckblade.osrs.dpscalc.calc.multihit.DharoksDptComputable;
 import com.duckblade.osrs.dpscalc.calc.multihit.KarilsDptComputable;
@@ -69,6 +73,11 @@ public class DpsComputeModule extends AbstractModule
 		gearBonusComputables.addBinding().to(TomesGearBonus.class);
 		gearBonusComputables.addBinding().to(VampyreBaneGearBonus.class);
 		gearBonusComputables.addBinding().to(VoidGearBonus.class);
+
+		Multibinder<MagicMaxHitComputable> magicMaxHitComputables = Multibinder.newSetBinder(binder(), MagicMaxHitComputable.class);
+		magicMaxHitComputables.addBinding().to(MagicSalamanderMaxHitComputable.class);
+		magicMaxHitComputables.addBinding().to(PoweredStaffMaxHitComputable.class);
+		magicMaxHitComputables.addBinding().to(SpellMaxHitComputable.class);
 
 		Multibinder<MaxHitLimiter> maxHitLimiters = Multibinder.newSetBinder(binder(), MaxHitLimiter.class);
 		maxHitLimiters.addBinding().to(CombatStyleImmunityMaxHitLimiter.class);

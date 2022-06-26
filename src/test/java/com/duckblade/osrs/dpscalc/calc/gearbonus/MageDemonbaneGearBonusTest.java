@@ -2,12 +2,11 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.model.AttackType;
-import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
-import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.DEMON;
+import com.duckblade.osrs.dpscalc.calc.maxhit.magic.SpellMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
 import com.duckblade.osrs.dpscalc.calc.model.Spell;
+import static com.duckblade.osrs.dpscalc.calc.testutil.DefenderAttributesUtil.DEMON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,6 +24,9 @@ class MageDemonbaneGearBonusTest
 {
 
 	@Mock
+	private SpellMaxHitComputable spellMaxHitComputable;
+
+	@Mock
 	private ComputeContext context;
 
 	@InjectMocks
@@ -33,7 +35,7 @@ class MageDemonbaneGearBonusTest
 	@Test
 	void isApplicableWhenUsingDemonbaneSpells()
 	{
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		when(spellMaxHitComputable.isApplicable(context)).thenReturn(true);
 		when(context.get(ComputeInputs.SPELL)).thenReturn(
 			Spell.INFERIOR_DEMONBANE,
 			Spell.SUPERIOR_DEMONBANE,
@@ -48,7 +50,7 @@ class MageDemonbaneGearBonusTest
 	@Test
 	void isNotApplicableWhenNotUsingMagic()
 	{
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.RANGED));
+		when(spellMaxHitComputable.isApplicable(context)).thenReturn(false);
 
 		assertFalse(mageDemonbaneGearBonus.isApplicable(context));
 	}
@@ -56,7 +58,7 @@ class MageDemonbaneGearBonusTest
 	@Test
 	void isNotApplicableWhenNotUsingDemonbaneSpells()
 	{
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		when(spellMaxHitComputable.isApplicable(context)).thenReturn(true);
 		when(context.get(ComputeInputs.SPELL)).thenReturn(Spell.FIRE_SURGE);
 
 		assertFalse(mageDemonbaneGearBonus.isApplicable(context));

@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.ItemID;
+import net.runelite.api.Skill;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -51,6 +52,16 @@ public class SpellcastingMaxHitBonusComputable implements Computable<Integer>
 			{
 				return 10;
 			}
+		}
+		else if (spell == Spell.MAGIC_DART)
+		{
+			int magicLvl = context.get(ComputeInputs.ATTACKER_SKILLS).getTotals().get(Skill.MAGIC);
+			int weaponId = context.get(equipmentItemIdsComputable).get(EquipmentInventorySlot.WEAPON);
+			if (weaponId == ItemID.SLAYERS_STAFF_E && context.get(ComputeInputs.ON_SLAYER_TASK))
+			{
+				return magicLvl / 6 + 3;
+			}
+			return magicLvl / 10;
 		}
 
 		return 0;

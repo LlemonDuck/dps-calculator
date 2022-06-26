@@ -4,9 +4,11 @@ import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.Spell;
+import static com.duckblade.osrs.dpscalc.calc.testutil.SkillsUtil.ofSkill;
 import com.google.common.collect.ImmutableMap;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.ItemID;
+import net.runelite.api.Skill;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,6 +60,38 @@ class SpellcastingMaxHitBonusComputableTest
 		assertEquals(10, spellcastingMaxHitBonusComputable.compute(context));
 		assertEquals(10, spellcastingMaxHitBonusComputable.compute(context));
 		assertEquals(10, spellcastingMaxHitBonusComputable.compute(context));
+	}
+
+	@Test
+	void givesBonusForMagicDart()
+	{
+		when(context.get(ComputeInputs.SPELL)).thenReturn(Spell.MAGIC_DART);
+		when(context.get(equipmentItemIdsComputable)).thenReturn(ImmutableMap.of(
+			EquipmentInventorySlot.WEAPON, ItemID.SLAYERS_STAFF
+		));
+		when(context.get(ComputeInputs.ATTACKER_SKILLS)).thenReturn(
+			ofSkill(Skill.MAGIC, 0),
+			ofSkill(Skill.MAGIC, 50),
+			ofSkill(Skill.MAGIC, 99)
+		);
+
+		assertEquals(0, spellcastingMaxHitBonusComputable.compute(context));
+		assertEquals(5, spellcastingMaxHitBonusComputable.compute(context));
+		assertEquals(9, spellcastingMaxHitBonusComputable.compute(context));
+	}
+
+	@Test
+	void givesBonusForMagicDartE()
+	{
+		when(context.get(ComputeInputs.SPELL)).thenReturn(Spell.MAGIC_DART);
+		when(context.get(equipmentItemIdsComputable)).thenReturn(ImmutableMap.of(
+			EquipmentInventorySlot.WEAPON, ItemID.SLAYERS_STAFF_E
+		));
+		when(context.get(ComputeInputs.ATTACKER_SKILLS)).thenReturn(ofSkill(Skill.MAGIC, 99));
+		when(context.get(ComputeInputs.ON_SLAYER_TASK)).thenReturn(true, false);
+
+		assertEquals(19, spellcastingMaxHitBonusComputable.compute(context)); // on task
+		assertEquals(9, spellcastingMaxHitBonusComputable.compute(context)); // off task
 	}
 
 	@Test
