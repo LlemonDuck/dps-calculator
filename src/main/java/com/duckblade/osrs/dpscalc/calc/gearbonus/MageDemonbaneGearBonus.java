@@ -3,7 +3,7 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import static com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs.DEFENDER_ATTRIBUTES;
-import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import com.duckblade.osrs.dpscalc.calc.maxhit.magic.SpellMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
 import com.duckblade.osrs.dpscalc.calc.model.Spell;
 import com.google.common.collect.ImmutableSet;
@@ -23,10 +23,12 @@ public class MageDemonbaneGearBonus implements GearBonusComputable
 		Spell.DARK_DEMONBANE
 	);
 
+	private final SpellMaxHitComputable spellMaxHitComputable;
+
 	@Override
 	public boolean isApplicable(ComputeContext context)
 	{
-		return context.get(ComputeInputs.ATTACK_STYLE).getAttackType() == AttackType.MAGIC &&
+		return spellMaxHitComputable.isApplicable(context) &&
 			DEMONBANE_SPELLS.contains(context.get(ComputeInputs.SPELL));
 	}
 
