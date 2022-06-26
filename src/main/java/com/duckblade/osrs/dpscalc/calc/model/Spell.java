@@ -49,12 +49,12 @@ public enum Spell
 	WIND_STRIKE(1, "Wind Strike", 2, Spellbook.STANDARD),
 
 	// standard but not autocast without special staff
-	FLAMES_OF_ZAMORAK(-1, "Flames of Zamorak", 20, Spellbook.STANDARD),
+	FLAMES_OF_ZAMORAK(20, "Flames of Zamorak", 20, Spellbook.STANDARD),
 	CLAWS_OF_GUTHIX(-1, "Claws of Guthix", 20, Spellbook.STANDARD),
 	SARADOMIN_STRIKE(-1, "Saradomin Strike", 20, Spellbook.STANDARD),
-	CRUMBLE_UNDEAD(-1, "Crumble Undead", 15, Spellbook.STANDARD),
-	IBAN_BLAST(-1, "Iban Blast", 25, Spellbook.STANDARD),
-	MAGIC_DART(-1, "Magic Dart", 10, Spellbook.STANDARD),
+	CRUMBLE_UNDEAD(17, "Crumble Undead", 15, Spellbook.STANDARD),
+	IBAN_BLAST(47, "Iban Blast", 25, Spellbook.STANDARD),
+	MAGIC_DART(18, "Magic Dart", 10, Spellbook.STANDARD),
 
 	// arceuus
 	INFERIOR_DEMONBANE(53, "Inferior Demonbane", 16, Spellbook.ARCEUUS),
