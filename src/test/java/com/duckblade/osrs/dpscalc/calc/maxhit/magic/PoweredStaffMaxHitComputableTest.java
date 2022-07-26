@@ -126,7 +126,7 @@ class PoweredStaffMaxHitComputableTest
 	{
 		when(context.get(weaponComputable)).thenReturn(
 			ofItemId(ItemID.CRYSTAL_STAFF_BASIC),
-			ofItemId(ItemID.CRYSTAL_STAFF_ATTUNED),
+			ofItemId(ItemID.CORRUPTED_STAFF_ATTUNED),
 			ofItemId(ItemID.CRYSTAL_STAFF_PERFECTED)
 		);
 
