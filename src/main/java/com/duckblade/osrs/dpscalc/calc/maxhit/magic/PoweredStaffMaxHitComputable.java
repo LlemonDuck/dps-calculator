@@ -41,8 +41,11 @@ public class PoweredStaffMaxHitComputable implements MagicMaxHitComputable
 		.put(ItemID.SANGUINESTI_STAFF, SANGUINESTI)
 		.put(ItemID.HOLY_SANGUINESTI_STAFF, SANGUINESTI)
 		.put(ItemID.CRYSTAL_STAFF_BASIC, ignored -> 23)
+		.put(ItemID.CORRUPTED_STAFF_BASIC, ignored -> 23)
 		.put(ItemID.CRYSTAL_STAFF_ATTUNED, ignored -> 31)
+		.put(ItemID.CORRUPTED_STAFF_ATTUNED, ignored -> 31)
 		.put(ItemID.CRYSTAL_STAFF_PERFECTED, ignored -> 39)
+		.put(ItemID.CORRUPTED_STAFF_PERFECTED, ignored -> 39)
 		.build();
 
 	private final WeaponComputable weaponComputable;
