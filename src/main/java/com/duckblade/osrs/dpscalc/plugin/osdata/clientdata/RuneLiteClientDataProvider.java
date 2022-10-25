@@ -110,7 +110,7 @@ public class RuneLiteClientDataProvider implements ClientDataProvider
 	public AttackStyle getAttackStyle()
 	{
 		ItemStats weapon = getPlayerEquipment().getOrDefault(EquipmentInventorySlot.WEAPON, ItemStats.EMPTY);
-		int asVarp = client.getVar(VarPlayer.ATTACK_STYLE);
+		int asVarp = client.getVarpValue(VarPlayer.ATTACK_STYLE);
 
 		for (AttackStyle as : weapon.getWeaponCategory().getAttackStyles())
 		{

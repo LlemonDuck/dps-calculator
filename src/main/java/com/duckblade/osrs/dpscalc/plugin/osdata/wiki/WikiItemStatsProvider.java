@@ -17,16 +17,15 @@ import lombok.extern.slf4j.Slf4j;
 public class WikiItemStatsProvider implements ItemStatsProvider
 {
 
-	private static final Gson GSON = new Gson();
 	private static final String ITEM_STATS_URL = "items.min.json";
 
 	private Map<Integer, ItemStats> itemStatsMap;
 
 	@Inject
-	public WikiItemStatsProvider(WikiDataLoader wikiDataLoader) throws IOException
+	public WikiItemStatsProvider(Gson gson, WikiDataLoader wikiDataLoader) throws IOException
 	{
 		wikiDataLoader.getReader(ITEM_STATS_URL, reader ->
-			itemStatsMap = GSON.fromJson(reader, new TypeToken<HashMap<Integer, ItemStats>>()
+			itemStatsMap = gson.fromJson(reader, new TypeToken<HashMap<Integer, ItemStats>>()
 			{
 			}.getType())
 		);
