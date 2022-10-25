@@ -8,6 +8,7 @@ import com.duckblade.osrs.dpscalc.calc.model.WeaponCategory;
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.ItemID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,6 +82,21 @@ class AttackerItemStatsComputableTest
 		.strengthMagic(58)
 		.prayer(59)
 		.slot(EquipmentInventorySlot.AMMO.getSlotIdx())
+		.build();
+
+	private static final ItemStats SHADOW = ItemStats.builder()
+		.itemId(ItemID.TUMEKENS_SHADOW)
+		.name("MockShadow")
+		.accuracyStab(61)
+		.accuracySlash(62)
+		.accuracyCrush(63)
+		.accuracyRanged(64)
+		.accuracyMagic(65)
+		.strengthMelee(66)
+		.strengthRanged(67)
+		.strengthMagic(68)
+		.prayer(69)
+		.slot(EquipmentInventorySlot.WEAPON.getSlotIdx())
 		.build();
 
 	@Mock
@@ -192,6 +208,22 @@ class AttackerItemStatsComputableTest
 		when(context.get(ammoSlotItemStatsComputable)).thenReturn(ItemStats.EMPTY);
 
 		assertEquals(ItemStats.EMPTY, attackerItemStatsComputable.compute(context));
+	}
+
+	@Test
+	void appliesTumekensShadowBonusWhenApplicable()
+	{
+		when(context.get(ComputeInputs.ATTACKER_ITEMS)).thenReturn(Collections.singletonMap(EquipmentInventorySlot.WEAPON, SHADOW));
+		when(context.get(ammoSlotItemStatsComputable)).thenReturn(ItemStats.EMPTY);
+
+		ItemStats expected = SHADOW.toBuilder()
+			.itemId(-1)
+			.name(null)
+			.accuracyMagic(3 * SHADOW.getAccuracyMagic())
+			.strengthMagic(3 * SHADOW.getStrengthMagic())
+			.build();
+
+		assertEquals(expected, attackerItemStatsComputable.compute(context));
 	}
 
 }
