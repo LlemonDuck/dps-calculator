@@ -122,6 +122,21 @@ class PoweredStaffMaxHitComputableTest
 	}
 
 	@Test
+	void givesMaxHitForTumekensShadow()
+	{
+		when(context.get(weaponComputable)).thenReturn(
+			ofItemId(ItemID.TUMEKENS_SHADOW)
+		);
+		when(context.get(ComputeInputs.ATTACKER_SKILLS)).thenReturn(
+			ofSkill(Skill.MAGIC, 0),
+			ofSkill(Skill.MAGIC, 99)
+		);
+
+		assertEquals(7, poweredStaffMaxHitComputable.compute(context));
+		assertEquals(34, poweredStaffMaxHitComputable.compute(context));
+	}
+
+	@Test
 	void givesMaxHitForGauntletStaves()
 	{
 		when(context.get(weaponComputable)).thenReturn(

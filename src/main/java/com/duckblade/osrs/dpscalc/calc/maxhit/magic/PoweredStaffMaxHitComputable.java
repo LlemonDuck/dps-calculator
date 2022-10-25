@@ -31,6 +31,7 @@ public class PoweredStaffMaxHitComputable implements MagicMaxHitComputable
 	};
 	private static final StaffMaxHitProvider SWAMP = ctx -> SEAS.compute(ctx) + 3;
 	private static final StaffMaxHitProvider SANGUINESTI = ctx -> SEAS.compute(ctx) + 4;
+	private static final StaffMaxHitProvider SHADOW = ctx -> SEAS.compute(ctx) + 6;
 
 	private static final Map<Integer, StaffMaxHitProvider> SPELL_MAP = ImmutableMap.<Integer, StaffMaxHitProvider>builder()
 		.put(ItemID.TRIDENT_OF_THE_SEAS, SEAS)
@@ -40,6 +41,7 @@ public class PoweredStaffMaxHitComputable implements MagicMaxHitComputable
 		.put(ItemID.TRIDENT_OF_THE_SWAMP_E, SWAMP)
 		.put(ItemID.SANGUINESTI_STAFF, SANGUINESTI)
 		.put(ItemID.HOLY_SANGUINESTI_STAFF, SANGUINESTI)
+		.put(ItemID.TUMEKENS_SHADOW, SHADOW)
 		.put(ItemID.CRYSTAL_STAFF_BASIC, ignored -> 23)
 		.put(ItemID.CORRUPTED_STAFF_BASIC, ignored -> 23)
 		.put(ItemID.CRYSTAL_STAFF_ATTUNED, ignored -> 31)

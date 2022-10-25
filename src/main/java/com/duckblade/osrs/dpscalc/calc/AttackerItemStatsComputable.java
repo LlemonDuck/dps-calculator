@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.ItemID;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -33,7 +34,19 @@ public class AttackerItemStatsComputable implements Computable<ItemStats>
 			.orElse(ItemStats.EMPTY);
 
 		ItemStats ammoSlot = context.get(ammoSlotItemStatsComputable);
-		return reduce(ammoless, ammoSlot);
+		ItemStats preShadow = reduce(ammoless, ammoSlot);
+
+		// todo if anything else ever gets functionality similar, move this out to a better structure
+		ItemStats weapon = itemStats.get(EquipmentInventorySlot.WEAPON);
+		if (weapon != null && weapon.getItemId() == ItemID.TUMEKENS_SHADOW)
+		{
+			return preShadow.toBuilder()
+				.accuracyMagic(3 * preShadow.getAccuracyMagic())
+				.strengthMagic(3 * preShadow.getStrengthMagic())
+				.build();
+		}
+
+		return preShadow;
 	}
 
 	public static ItemStats reduce(ItemStats a, ItemStats b)
