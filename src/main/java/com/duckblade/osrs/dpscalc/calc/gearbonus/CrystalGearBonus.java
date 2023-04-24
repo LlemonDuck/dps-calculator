@@ -33,15 +33,36 @@ public class CrystalGearBonus implements GearBonusComputable
 	);
 
 	private static final Set<Integer> CRYSTAL_HELM_IDS = ImmutableSet.of(
-		ItemID.CRYSTAL_HELM
+		ItemID.CRYSTAL_HELM,
+		ItemID.CRYSTAL_HELM_27705,
+		ItemID.CRYSTAL_HELM_27717,
+		ItemID.CRYSTAL_HELM_27729,
+		ItemID.CRYSTAL_HELM_27741,
+		ItemID.CRYSTAL_HELM_27753,
+		ItemID.CRYSTAL_HELM_27765,
+		ItemID.CRYSTAL_HELM_27777
 	);
 
 	private static final Set<Integer> CRYSTAL_BODY_IDS = ImmutableSet.of(
-		ItemID.CRYSTAL_BODY
+		ItemID.CRYSTAL_BODY,
+		ItemID.CRYSTAL_BODY_27697,
+		ItemID.CRYSTAL_BODY_27709,
+		ItemID.CRYSTAL_BODY_27721,
+		ItemID.CRYSTAL_BODY_27733,
+		ItemID.CRYSTAL_BODY_27745,
+		ItemID.CRYSTAL_BODY_27757,
+		ItemID.CRYSTAL_BODY_27769
 	);
 
 	private static final Set<Integer> CRYSTAL_LEGS_IDS = ImmutableSet.of(
-		ItemID.CRYSTAL_LEGS
+		ItemID.CRYSTAL_LEGS,
+		ItemID.CRYSTAL_LEGS_27701,
+		ItemID.CRYSTAL_LEGS_27713,
+		ItemID.CRYSTAL_LEGS_27725,
+		ItemID.CRYSTAL_LEGS_27737,
+		ItemID.CRYSTAL_LEGS_27749,
+		ItemID.CRYSTAL_LEGS_27761,
+		ItemID.CRYSTAL_LEGS_27773
 	);
 
 	private final EquipmentItemIdsComputable equipmentItemIdsComputable;
