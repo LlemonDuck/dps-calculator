@@ -2,6 +2,10 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 
 import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
+import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.exceptions.DpsComputeException;
+import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
+import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
 import com.google.common.collect.ImmutableSet;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +54,16 @@ public class ObsidianGearBonus implements GearBonusComputable
     @Override
     public boolean isApplicable(ComputeContext context)
     {
-        return OBSIDIAN_WEAPONS.contains(context.get(equipmentItemIdsComputable).get(EquipmentInventorySlot.WEAPON));
+        try
+        {
+            boolean castingSpell = context.get(ComputeInputs.ATTACK_STYLE).isManualCast();
+            return OBSIDIAN_WEAPONS.contains(context.get(equipmentItemIdsComputable).get(EquipmentInventorySlot.WEAPON)) &&
+                    !castingSpell;
+        }
+        catch (DpsComputeException e)
+        {
+            return false;
+        }
     }
 
     @Override
