@@ -72,7 +72,11 @@ class TomesGearBonusTest
 	@Test
 	void isNotApplicableWhenUsingMagicWithoutATome()
 	{
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		AttackStyle.AttackStyleBuilder attackStyle = AttackStyle.builder().attackType(AttackType.MAGIC);
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(
+				attackStyle.isManualCast(true).build(),
+				attackStyle.combatStyle(CombatStyle.AUTOCAST).build()
+		);
 		// noinspection unchecked
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
 			Collections.singletonMap(EquipmentInventorySlot.SHIELD, ItemID.TOME_OF_FIRE_EMPTY),
@@ -80,6 +84,9 @@ class TomesGearBonusTest
 			Collections.singletonMap(EquipmentInventorySlot.SHIELD, ItemID.DRAGON_DEFENDER)
 		);
 
+		assertFalse(tomesGearBonus.isApplicable(context));
+		assertFalse(tomesGearBonus.isApplicable(context));
+		assertFalse(tomesGearBonus.isApplicable(context));
 		assertFalse(tomesGearBonus.isApplicable(context));
 		assertFalse(tomesGearBonus.isApplicable(context));
 		assertFalse(tomesGearBonus.isApplicable(context));
