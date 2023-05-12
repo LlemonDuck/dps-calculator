@@ -5,6 +5,8 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
+import com.duckblade.osrs.dpscalc.calc.model.CombatStyle;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
 import com.duckblade.osrs.dpscalc.calc.model.Spell;
 import java.util.Collections;
@@ -36,7 +38,11 @@ class TomesGearBonusTest
 	@Test
 	void isApplicableWhenUsingMagicWithATome()
 	{
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		AttackStyle.AttackStyleBuilder attackStyle = AttackStyle.builder().attackType(AttackType.MAGIC);
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(
+			attackStyle.isManualCast(true).build(),
+			attackStyle.combatStyle(CombatStyle.AUTOCAST).build()
+		);
 		// noinspection unchecked
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
 			Collections.singletonMap(EquipmentInventorySlot.SHIELD, ItemID.TOME_OF_FIRE),
@@ -45,6 +51,22 @@ class TomesGearBonusTest
 
 		assertTrue(tomesGearBonus.isApplicable(context));
 		assertTrue(tomesGearBonus.isApplicable(context));
+		assertTrue(tomesGearBonus.isApplicable(context));
+		assertTrue(tomesGearBonus.isApplicable(context));
+	}
+
+	@Test
+	void isNotApplicableWhenUsingPoweredStaves()
+	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		// noinspection unchecked
+		when(context.get(equipmentItemIdsComputable)).thenReturn(
+			Collections.singletonMap(EquipmentInventorySlot.SHIELD, ItemID.TOME_OF_FIRE),
+			Collections.singletonMap(EquipmentInventorySlot.SHIELD, ItemID.TOME_OF_WATER)
+		);
+
+		assertFalse(tomesGearBonus.isApplicable(context));
+		assertFalse(tomesGearBonus.isApplicable(context));
 	}
 
 	@Test
