@@ -1,6 +1,7 @@
 package com.duckblade.osrs.dpscalc.calc.compute;
 
 import com.duckblade.osrs.dpscalc.calc.exceptions.DpsComputeException;
+import com.duckblade.osrs.dpscalc.calc.model.CombatStyle;
 import com.duckblade.osrs.dpscalc.calc.model.ComputeInput;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
@@ -28,7 +29,14 @@ public class ComputeContext
 		this.put(ComputeInputs.ATTACKER_ITEMS, input.getAttackerItems());
 		this.put(ComputeInputs.ATTACKER_PRAYERS, input.getAttackerPrayers());
 		this.put(ComputeInputs.ATTACK_STYLE, input.getAttackStyle());
-		this.put(ComputeInputs.SPELL, input.getSpell());
+		if (input.getAttackStyle().isManualCast() || input.getAttackStyle().getCombatStyle() == CombatStyle.AUTOCAST)
+		{
+			this.put(ComputeInputs.SPELL, input.getSpell());
+		}
+		else
+		{
+			this.put(ComputeInputs.SPELL, null);
+		}
 		this.put(ComputeInputs.BLOWPIPE_DARTS, input.getBlowpipeDarts());
 		this.put(ComputeInputs.ATTACK_DISTANCE, input.getAttackerDistance());
 		this.put(ComputeInputs.DEFENDER_SKILLS, input.getDefenderSkills());

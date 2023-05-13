@@ -3,11 +3,7 @@ package com.duckblade.osrs.dpscalc.calc;
 import com.duckblade.osrs.dpscalc.calc.compute.Computable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.model.ItemStats;
-import com.duckblade.osrs.dpscalc.calc.model.CombatStyle;
-import com.duckblade.osrs.dpscalc.calc.model.Spellbook;
-import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
-import com.duckblade.osrs.dpscalc.calc.model.WeaponCategory;
+import com.duckblade.osrs.dpscalc.calc.model.*;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -39,8 +35,9 @@ public class AttackSpeedComputable implements Computable<Integer>
 				}
 
 				// harm effect only works on standard spellbook
+				Spell spell = context.get(ComputeInputs.SPELL);
 				if (FOUR_TICK_MAGIC_WEAPONS.contains(weapon.getItemId()) &&
-					context.get(ComputeInputs.SPELL).getSpellbook() == Spellbook.STANDARD)
+					spell != null && spell.getSpellbook() == Spellbook.STANDARD)
 				{
 					return 4;
 				}
