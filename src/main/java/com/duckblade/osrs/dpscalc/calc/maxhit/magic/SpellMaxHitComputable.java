@@ -5,6 +5,7 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import com.duckblade.osrs.dpscalc.calc.model.Spell;
 import com.duckblade.osrs.dpscalc.calc.model.WeaponCategory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,7 +40,12 @@ public class SpellMaxHitComputable implements MagicMaxHitComputable
 	@Override
 	public Integer compute(ComputeContext context)
 	{
-		int baseMaxHit = context.get(ComputeInputs.SPELL).getBaseMaxHit();
+		Spell spell = context.get(ComputeInputs.SPELL);
+		if (spell == null)
+		{
+			return 0;
+		}
+		int baseMaxHit = spell.getBaseMaxHit();
 		int spellBonus = context.get(spellcastingMaxHitBonusComputable);
 		return baseMaxHit + spellBonus;
 	}

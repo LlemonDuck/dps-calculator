@@ -5,6 +5,7 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
+import com.duckblade.osrs.dpscalc.calc.model.Spell;
 import com.duckblade.osrs.dpscalc.calc.model.Spellbook;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
@@ -28,9 +29,11 @@ public class SmokeBattlestaffGearBonus implements GearBonusComputable
 	@Override
 	public boolean isApplicable(ComputeContext context)
 	{
+		Spell spell = context.get(ComputeInputs.SPELL);
 		return context.get(ComputeInputs.ATTACK_STYLE).getAttackType() == AttackType.MAGIC &&
 			SMOKE_BATTLESTAVES.contains(context.get(weaponComputable).getItemId()) &&
-			context.get(ComputeInputs.SPELL).getSpellbook() == Spellbook.STANDARD;
+			spell != null &&
+			spell.getSpellbook() == Spellbook.STANDARD;
 	}
 
 	@Override

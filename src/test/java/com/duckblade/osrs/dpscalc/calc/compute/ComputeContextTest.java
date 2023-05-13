@@ -10,7 +10,6 @@ import com.duckblade.osrs.dpscalc.calc.model.ItemStats;
 import com.duckblade.osrs.dpscalc.calc.model.Prayer;
 import com.duckblade.osrs.dpscalc.calc.model.Skills;
 import com.duckblade.osrs.dpscalc.calc.model.Spell;
-import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
 import static com.duckblade.osrs.dpscalc.calc.testutil.SkillsUtil.ofSkill;
 import java.util.Arrays;
@@ -120,7 +119,7 @@ class ComputeContextTest
 		Skills attackerSkills = ofSkill(Skill.HITPOINTS, 100);
 		Map<EquipmentInventorySlot, ItemStats> attackerEquipment = Collections.singletonMap(EquipmentInventorySlot.WEAPON, ofItemId(100));
 		Set<Prayer> attackerPrayers = Collections.singleton(Prayer.PIETY);
-		AttackStyle attackStyle = ofAttackType(AttackType.RANGED);
+		AttackStyle attackStyle = AttackStyle.builder().attackType(AttackType.MAGIC).isManualCast(true).build();
 		Spell spell = Spell.FIRE_SURGE;
 		ItemStats blowpipeDarts = ofItemId(ItemID.DRAGON_DART);
 		Skills defenderSkills = ofSkill(Skill.DEFENCE, 100);
