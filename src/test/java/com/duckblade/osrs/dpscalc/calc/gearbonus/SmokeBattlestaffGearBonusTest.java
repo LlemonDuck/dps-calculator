@@ -3,9 +3,8 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 import com.duckblade.osrs.dpscalc.calc.WeaponComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.model.AttackType;
-import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
-import com.duckblade.osrs.dpscalc.calc.model.Spell;
+import com.duckblade.osrs.dpscalc.calc.model.*;
+
 import static com.duckblade.osrs.dpscalc.calc.testutil.AttackStyleUtil.ofAttackType;
 import static com.duckblade.osrs.dpscalc.calc.testutil.ItemStatsUtil.ofItemId;
 import net.runelite.api.ItemID;
@@ -43,19 +42,32 @@ class SmokeBattlestaffGearBonusTest
 	}
 
 	@Test
-	void isApplicableWhenNotUsingMagic()
+	void isApplicableWhenNotUsingSpells()
 	{
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.CRUSH));
-
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.SMOKE_BATTLESTAFF));
+		when(context.get(ComputeInputs.SPELL)).thenReturn(null);
 		assertFalse(smokeBattlestaffGearBonus.isApplicable(context));
 	}
 
 	@Test
 	void isApplicableWhenNotUsingSmokeStaff()
 	{
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(
+				AttackStyle.builder()
+					.attackType(AttackType.MAGIC)
+					.isManualCast(true)
+					.build(),
+				AttackStyle.builder()
+					.attackType(AttackType.MAGIC)
+					.combatStyle(CombatStyle.AUTOCAST)
+					.build()
+		);
 		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.MIST_BATTLESTAFF));
-
+		when(context.get(ComputeInputs.SPELL)).thenReturn(
+				Spell.FIRE_SURGE
+		);
+		assertFalse(smokeBattlestaffGearBonus.isApplicable(context));
 		assertFalse(smokeBattlestaffGearBonus.isApplicable(context));
 	}
 
