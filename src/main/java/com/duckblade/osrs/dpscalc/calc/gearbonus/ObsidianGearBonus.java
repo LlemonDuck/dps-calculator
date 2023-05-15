@@ -51,16 +51,10 @@ public class ObsidianGearBonus implements GearBonusComputable
 	@Override
 	public boolean isApplicable(ComputeContext context)
 	{
-		try
-		{
-			boolean castingSpell = context.get(ComputeInputs.ATTACK_STYLE).isManualCast();
-			return OBSIDIAN_WEAPONS.contains(context.get(equipmentItemIdsComputable).get(EquipmentInventorySlot.WEAPON)) &&
-					!castingSpell;
-		}
-		catch (DpsComputeException e)
-		{
-			return false;
-		}
+		// Obsidian armour bonuses only apply when attacking i.e. manual casting is forbidden
+		boolean castingSpell = context.get(ComputeInputs.ATTACK_STYLE).isManualCast();
+		return OBSIDIAN_WEAPONS.contains(context.get(equipmentItemIdsComputable).get(EquipmentInventorySlot.WEAPON)) &&
+				!castingSpell;
 	}
 
 	@Override
