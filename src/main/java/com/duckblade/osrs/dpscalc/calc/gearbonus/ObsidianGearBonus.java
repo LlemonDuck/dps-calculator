@@ -3,7 +3,6 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.exceptions.DpsComputeException;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
 import com.google.common.collect.ImmutableSet;
 import lombok.RequiredArgsConstructor;
