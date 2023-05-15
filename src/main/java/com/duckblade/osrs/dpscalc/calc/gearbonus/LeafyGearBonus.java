@@ -58,7 +58,7 @@ public class LeafyGearBonus implements GearBonusComputable
 		{
 			case MAGIC:
 				Spell spell = context.get(ComputeInputs.SPELL);
-				if (spell != null && LEAF_BLADED_SPELLS.contains(spell))
+				if (LEAF_BLADED_SPELLS.contains(spell))
 				{
 					return GearBonuses.EMPTY;
 				}

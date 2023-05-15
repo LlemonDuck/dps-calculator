@@ -3,7 +3,6 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.exceptions.DpsComputeException;
 import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.CombatStyle;
@@ -62,17 +61,7 @@ public class TomesGearBonus implements GearBonusComputable
 	public GearBonuses compute(ComputeContext context)
 	{
 		int offHand = context.get(equipmentItemIdsComputable).get(EquipmentInventorySlot.SHIELD);
-		Spell spell;
-		try
-		{
-			spell = context.get(ComputeInputs.SPELL);
-		}
-		catch (DpsComputeException e)
-		{
-			// No spell
-			return GearBonuses.EMPTY;
-		}
-
+		Spell spell = context.get(ComputeInputs.SPELL);
 		if (TOME_OF_FIRE.contains(offHand) && FIRE_SPELLS.contains(spell))
 		{
 			return GearBonuses.of(1.0, 1.5);

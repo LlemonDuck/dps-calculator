@@ -39,11 +39,7 @@ public class SpellcastingMaxHitBonusComputable implements Computable<Integer>
 	public Integer compute(ComputeContext context)
 	{
 		Spell spell = context.get(ComputeInputs.SPELL);
-		if (spell == null)
-		{
-			return 0;
-		}
-		else if (BOLT_SPELLS.contains(spell))
+		if (BOLT_SPELLS.contains(spell))
 		{
 			if (CHAOS_GAUNTLETS == context.get(equipmentItemIdsComputable).get(EquipmentInventorySlot.GLOVES))
 			{

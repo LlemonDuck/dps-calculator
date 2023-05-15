@@ -34,12 +34,7 @@ class AttackSpeedComputableTest
 	@Test
 	void isCorrectForHarmStaff()
 	{
-		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(
-			AttackStyle.builder()
-				.attackType(AttackType.MAGIC)
-				.isManualCast(true)
-				.build()
-		);
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
 		when(context.get(weaponComputable)).thenReturn(
 			ItemStats.builder()
 				.itemId(ItemID.HARMONISED_NIGHTMARE_STAFF)

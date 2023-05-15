@@ -28,10 +28,8 @@ public class MageDemonbaneGearBonus implements GearBonusComputable
 	@Override
 	public boolean isApplicable(ComputeContext context)
 	{
-		Spell spell = context.get(ComputeInputs.SPELL);
 		return spellMaxHitComputable.isApplicable(context) &&
-			spell != null &&
-			DEMONBANE_SPELLS.contains(spell);
+			DEMONBANE_SPELLS.contains(context.get(ComputeInputs.SPELL));
 	}
 
 	@Override
