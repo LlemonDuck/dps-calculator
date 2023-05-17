@@ -3,7 +3,9 @@ package com.duckblade.osrs.dpscalc.calc.gearbonus;
 import com.duckblade.osrs.dpscalc.calc.EquipmentItemIdsComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
+import com.duckblade.osrs.dpscalc.calc.model.CombatStyle;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
 import com.duckblade.osrs.dpscalc.calc.model.Spell;
 import com.google.common.collect.ImmutableSet;
@@ -49,8 +51,10 @@ public class TomesGearBonus implements GearBonusComputable
 	public boolean isApplicable(ComputeContext context)
 	{
 		int offHand = context.get(equipmentItemIdsComputable).get(EquipmentInventorySlot.SHIELD);
-		boolean usingMagic = context.get(ComputeInputs.ATTACK_STYLE).getAttackType() == AttackType.MAGIC;
-		return usingMagic && (TOME_OF_FIRE.contains(offHand) || TOME_OF_WATER.contains(offHand));
+		AttackStyle attackStyle = context.get(ComputeInputs.ATTACK_STYLE);
+		boolean usingMagic = attackStyle.getAttackType() == AttackType.MAGIC;
+		boolean castingSpell = attackStyle.getCombatStyle() == CombatStyle.AUTOCAST || attackStyle.isManualCast();
+		return usingMagic && castingSpell && (TOME_OF_FIRE.contains(offHand) || TOME_OF_WATER.contains(offHand));
 	}
 
 	@Override
