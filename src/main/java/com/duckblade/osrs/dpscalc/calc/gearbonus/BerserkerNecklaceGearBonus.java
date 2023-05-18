@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class ObsidianGearBonus implements GearBonusComputable
+public class BerserkerNecklaceGearBonus implements GearBonusComputable
 {
 	private static final Set<Integer> OBSIDIAN_WEAPONS = ImmutableSet.of(
 		// Is the staff affected? Wiki is unclear. Will anybody ever use it? We'll find out.
@@ -29,16 +29,9 @@ public class ObsidianGearBonus implements GearBonusComputable
 		ItemID.TZHAARKETOM_T
 	);
 
-	private static final Set<Integer> OBSIDIAN_HELMETS = ImmutableSet.of(
-		ItemID.OBSIDIAN_HELMET
-	);
-
-	private static final Set<Integer> OBSIDIAN_PLATEBODIES = ImmutableSet.of(
-		ItemID.OBSIDIAN_PLATEBODY
-	);
-
-	private static final Set<Integer> OBSIDIAN_PLATELEGS = ImmutableSet.of(
-		ItemID.OBSIDIAN_PLATELEGS
+	private static final Set<Integer> BERSERKER_NECKLACES = ImmutableSet.of(
+		ItemID.BERSERKER_NECKLACE,
+		ItemID.BERSERKER_NECKLACE_OR
 	);
 
 	private final EquipmentItemIdsComputable equipmentItemIdsComputable;
@@ -56,15 +49,13 @@ public class ObsidianGearBonus implements GearBonusComputable
 	public GearBonuses compute(ComputeContext context)
 	{
 		Map<EquipmentInventorySlot, Integer> equipment = context.get(equipmentItemIdsComputable);
-
-		if (OBSIDIAN_HELMETS.contains(equipment.get(EquipmentInventorySlot.HEAD)) &&
-			OBSIDIAN_PLATEBODIES.contains(equipment.get(EquipmentInventorySlot.BODY)) &&
-			OBSIDIAN_PLATELEGS.contains(equipment.get(EquipmentInventorySlot.LEGS)))
+		if (BERSERKER_NECKLACES.contains(equipment.get(EquipmentInventorySlot.AMULET)))
 		{
-			return GearBonuses.of(1.1, 1.1);
+			return GearBonuses.of(1.0, 1.2);
 		}
 		return GearBonuses.EMPTY;
 	}
 
 }
+
 
