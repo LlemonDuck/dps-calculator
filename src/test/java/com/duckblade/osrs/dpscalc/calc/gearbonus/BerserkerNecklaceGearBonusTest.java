@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,7 +34,7 @@ class BerserkerNecklaceGearBonusTest
 	private BerserkerNecklaceGearBonus berserkerNecklaceGearBonus;
 
 	@Test
-	void isApplicableWhenUsingObsidianWeapons()
+	void isApplicableWhenUsingObsidianWeaponsAndNecklace()
 	{
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(
 			AttackStyle.builder().attackType(AttackType.STAB).build()
@@ -63,18 +62,44 @@ class BerserkerNecklaceGearBonusTest
 		);
 		// noinspection unchecked
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
-			emptyMap(),
-			singletonMap(EquipmentInventorySlot.WEAPON, ItemID.MAGIC_SHORTBOW)
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.AMULET, ItemID.BERSERKER_NECKLACE)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.MAGIC_SHORTBOW)
+				.put(EquipmentInventorySlot.AMULET, ItemID.BERSERKER_NECKLACE)
+				.build()
 		);
 		assertFalse(berserkerNecklaceGearBonus.isApplicable(context));
 		assertFalse(berserkerNecklaceGearBonus.isApplicable(context));
 	}
 
 	@Test
+	void isNotApplicableWithoutBerserkerNecklace()
+	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(
+			AttackStyle.builder().attackType(AttackType.STAB).build()
+		);
+		// noinspection unchecked
+		when(context.get(equipmentItemIdsComputable)).thenReturn(
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.MAGIC_SHORTBOW)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK)
+				.build()
+		);
+		assertFalse(berserkerNecklaceGearBonus.isApplicable(context));
+		assertFalse(berserkerNecklaceGearBonus.isApplicable(context));
+	}
+	@Test
 	void isNotApplicableWhenCasting()
 	{
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
-			singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK)
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK)
+				.put(EquipmentInventorySlot.AMULET, ItemID.BERSERKER_NECKLACE)
+				.build()
 		);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(AttackStyle.MANUAL_CAST);
 		assertFalse(berserkerNecklaceGearBonus.isApplicable(context));
