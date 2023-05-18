@@ -6,6 +6,7 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.GearBonuses;
+import com.google.common.collect.ImmutableMap;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.ItemID;
 import org.junit.jupiter.api.Test;
@@ -37,19 +38,19 @@ class BerserkerNecklaceGearBonusTest
 	void isApplicableWhenUsingObsidianWeapons()
 	{
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(
-				AttackStyle.builder().attackType(AttackType.STAB).build()
+			AttackStyle.builder().attackType(AttackType.STAB).build()
 		);
 		// noinspection unchecked
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK),
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILEK),
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETEM),
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM),
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK)
+				.put(EquipmentInventorySlot.AMULET, ItemID.BERSERKER_NECKLACE)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+				.put(EquipmentInventorySlot.AMULET, ItemID.BERSERKER_NECKLACE)
+				.build()
 		);
-		assertTrue(berserkerNecklaceGearBonus.isApplicable(context));
-		assertTrue(berserkerNecklaceGearBonus.isApplicable(context));
-		assertTrue(berserkerNecklaceGearBonus.isApplicable(context));
 		assertTrue(berserkerNecklaceGearBonus.isApplicable(context));
 		assertTrue(berserkerNecklaceGearBonus.isApplicable(context));
 	}
@@ -58,12 +59,12 @@ class BerserkerNecklaceGearBonusTest
 	void isNotApplicableWithoutObsidianWeapons()
 	{
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(
-				AttackStyle.builder().attackType(AttackType.RANGED).build()
+			AttackStyle.builder().attackType(AttackType.RANGED).build()
 		);
 		// noinspection unchecked
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
-				emptyMap(),
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.MAGIC_SHORTBOW)
+			emptyMap(),
+			singletonMap(EquipmentInventorySlot.WEAPON, ItemID.MAGIC_SHORTBOW)
 		);
 		assertFalse(berserkerNecklaceGearBonus.isApplicable(context));
 		assertFalse(berserkerNecklaceGearBonus.isApplicable(context));
@@ -73,20 +74,15 @@ class BerserkerNecklaceGearBonusTest
 	void isNotApplicableWhenCasting()
 	{
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK)
+			singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK)
 		);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(AttackStyle.MANUAL_CAST);
 		assertFalse(berserkerNecklaceGearBonus.isApplicable(context));
 	}
 
 	@Test
-	void grantsBonusForBerserkerNecklace()
+	void grantsExpectedBonus()
 	{
-		// noinspection unchecked
-		when(context.get(equipmentItemIdsComputable)).thenReturn(
-				singletonMap(EquipmentInventorySlot.AMULET, ItemID.BERSERKER_NECKLACE),
-				singletonMap(EquipmentInventorySlot.AMULET, ItemID.BERSERKER_NECKLACE_OR)
-		);
 		assertEquals(GearBonuses.of(1.0, 1.2), berserkerNecklaceGearBonus.compute(context));
 	}
 

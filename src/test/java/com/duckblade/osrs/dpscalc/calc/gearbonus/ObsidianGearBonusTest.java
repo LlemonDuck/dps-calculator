@@ -15,8 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -35,22 +33,26 @@ class ObsidianGearBonusTest
 	private ObsidianGearBonus obsidianGearBonus;
 
 	@Test
-	void isApplicableWhenUsingObsidianWeapons()
+	void isApplicableWhenUsingObsidianWeaponAndFullSet()
 	{
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(
-				AttackStyle.builder().attackType(AttackType.STAB).build()
+			AttackStyle.builder().attackType(AttackType.STAB).build()
 		);
 		// noinspection unchecked
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK),
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILEK),
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETEM),
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM),
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK)
+				.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
+				.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
+				.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+				.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
+				.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
+				.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
+				.build()
 		);
-		assertTrue(obsidianGearBonus.isApplicable(context));
-		assertTrue(obsidianGearBonus.isApplicable(context));
-		assertTrue(obsidianGearBonus.isApplicable(context));
 		assertTrue(obsidianGearBonus.isApplicable(context));
 		assertTrue(obsidianGearBonus.isApplicable(context));
 	}
@@ -59,12 +61,21 @@ class ObsidianGearBonusTest
 	void isNotApplicableWithoutObsidianWeapons()
 	{
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(
-				AttackStyle.builder().attackType(AttackType.RANGED).build()
+			AttackStyle.builder().attackType(AttackType.RANGED).build()
 		);
 		// noinspection unchecked
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
-				emptyMap(),
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.MAGIC_SHORTBOW)
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
+				.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
+				.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.MAGIC_SHORTBOW)
+				.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
+				.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
+				.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
+				.build()
 		);
 		assertFalse(obsidianGearBonus.isApplicable(context));
 		assertFalse(obsidianGearBonus.isApplicable(context));
@@ -73,54 +84,66 @@ class ObsidianGearBonusTest
 	@Test
 	void isNotApplicableWhenCasting()
 	{
+		// noinspection unchecked
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
-				singletonMap(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK)
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TOKTZXILAK)
+				.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
+				.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
+				.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
+				.build()
 		);
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(AttackStyle.MANUAL_CAST);
 		assertFalse(obsidianGearBonus.isApplicable(context));
 	}
 
 	@Test
-	void doesNotGrantBonusForPartialSet()
+	void isNotApplicableForPartialSet()
 	{
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(AttackStyle.builder().attackType(AttackType.STAB).build());
 		// noinspection unchecked
 		when(context.get(equipmentItemIdsComputable)).thenReturn(
-				singletonMap(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET),
-				singletonMap(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY),
-				singletonMap(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS),
-				// Helm + body
-				ImmutableMap.<EquipmentInventorySlot, Integer>builder()
-					.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
-					.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
-					.build(),
-				// Helm + legs
-				ImmutableMap.<EquipmentInventorySlot, Integer>builder()
-						.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
-						.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
-						.build(),
-				// Body + legs
-				ImmutableMap.<EquipmentInventorySlot, Integer>builder()
-						.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
-						.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
-						.build()
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+				.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+				.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+				.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+				.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
+				.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+				.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
+				.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+				.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
+				.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
+				.build(),
+			ImmutableMap.<EquipmentInventorySlot, Integer>builder()
+				.put(EquipmentInventorySlot.WEAPON, ItemID.TZHAARKETOM_T)
+				.build()
 		);
-		assertEquals(GearBonuses.of(1.0, 1.0), obsidianGearBonus.compute(context));
-		assertEquals(GearBonuses.of(1.0, 1.0), obsidianGearBonus.compute(context));
-		assertEquals(GearBonuses.of(1.0, 1.0), obsidianGearBonus.compute(context));
-		assertEquals(GearBonuses.of(1.0, 1.0), obsidianGearBonus.compute(context));
-		assertEquals(GearBonuses.of(1.0, 1.0), obsidianGearBonus.compute(context));
-		assertEquals(GearBonuses.of(1.0, 1.0), obsidianGearBonus.compute(context));
+
+		for (int test = 0; test < 7; test++)
+		{
+			assertFalse(obsidianGearBonus.isApplicable(context));
+		}
 	}
 
 	@Test
-	void grantsBonusForFullSet()
+	void grantsExpectedBonus()
 	{
-		when(context.get(equipmentItemIdsComputable)).thenReturn(ImmutableMap.<EquipmentInventorySlot, Integer>builder()
-				.put(EquipmentInventorySlot.HEAD, ItemID.OBSIDIAN_HELMET)
-				.put(EquipmentInventorySlot.BODY, ItemID.OBSIDIAN_PLATEBODY)
-				.put(EquipmentInventorySlot.LEGS, ItemID.OBSIDIAN_PLATELEGS)
-				.build()
-		);
 		assertEquals(GearBonuses.of(1.1, 1.1), obsidianGearBonus.compute(context));
 	}
 

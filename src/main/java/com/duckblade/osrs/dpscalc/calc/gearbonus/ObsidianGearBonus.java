@@ -48,22 +48,19 @@ public class ObsidianGearBonus implements GearBonusComputable
 	{
 		// Obsidian armour bonuses only apply when attacking i.e. manual casting is forbidden
 		boolean castingSpell = context.get(ComputeInputs.ATTACK_STYLE).getAttackType() == AttackType.MAGIC;
-		return OBSIDIAN_WEAPONS.contains(context.get(equipmentItemIdsComputable).get(EquipmentInventorySlot.WEAPON)) &&
-				!castingSpell;
+		Map<EquipmentInventorySlot, Integer> equipment = context.get(equipmentItemIdsComputable);
+
+		return OBSIDIAN_WEAPONS.contains(equipment.get(EquipmentInventorySlot.WEAPON)) &&
+			OBSIDIAN_HELMETS.contains(equipment.get(EquipmentInventorySlot.HEAD)) &&
+			OBSIDIAN_PLATEBODIES.contains(equipment.get(EquipmentInventorySlot.BODY)) &&
+			OBSIDIAN_PLATELEGS.contains(equipment.get(EquipmentInventorySlot.LEGS)) &&
+			!castingSpell;
 	}
 
 	@Override
 	public GearBonuses compute(ComputeContext context)
 	{
-		Map<EquipmentInventorySlot, Integer> equipment = context.get(equipmentItemIdsComputable);
-
-		if (OBSIDIAN_HELMETS.contains(equipment.get(EquipmentInventorySlot.HEAD)) &&
-			OBSIDIAN_PLATEBODIES.contains(equipment.get(EquipmentInventorySlot.BODY)) &&
-			OBSIDIAN_PLATELEGS.contains(equipment.get(EquipmentInventorySlot.LEGS)))
-		{
-			return GearBonuses.of(1.1, 1.1);
-		}
-		return GearBonuses.EMPTY;
+		return GearBonuses.symmetric(1.1);
 	}
 
 }

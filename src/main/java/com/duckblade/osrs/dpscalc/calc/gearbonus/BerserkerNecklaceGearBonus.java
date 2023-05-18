@@ -40,20 +40,17 @@ public class BerserkerNecklaceGearBonus implements GearBonusComputable
 	public boolean isApplicable(ComputeContext context)
 	{
 		// Obsidian armour bonuses only apply when attacking i.e. manual casting is forbidden
+		Map<EquipmentInventorySlot, Integer> equipment = context.get(equipmentItemIdsComputable);
 		boolean castingSpell = context.get(ComputeInputs.ATTACK_STYLE).getAttackType() == AttackType.MAGIC;
-		return OBSIDIAN_WEAPONS.contains(context.get(equipmentItemIdsComputable).get(EquipmentInventorySlot.WEAPON)) &&
-				!castingSpell;
+		return OBSIDIAN_WEAPONS.contains(equipment.get(EquipmentInventorySlot.WEAPON)) &&
+			BERSERKER_NECKLACES.contains(equipment.get(EquipmentInventorySlot.AMULET)) &&
+			!castingSpell;
 	}
 
 	@Override
 	public GearBonuses compute(ComputeContext context)
 	{
-		Map<EquipmentInventorySlot, Integer> equipment = context.get(equipmentItemIdsComputable);
-		if (BERSERKER_NECKLACES.contains(equipment.get(EquipmentInventorySlot.AMULET)))
-		{
-			return GearBonuses.of(1.0, 1.2);
-		}
-		return GearBonuses.EMPTY;
+		return GearBonuses.of(1.0, 1.2);
 	}
 
 }
