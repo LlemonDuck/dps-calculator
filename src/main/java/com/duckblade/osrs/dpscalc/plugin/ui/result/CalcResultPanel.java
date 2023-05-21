@@ -1,10 +1,8 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.result;
 
-import com.duckblade.osrs.dpscalc.calc.AttackSpeedComputable;
+import com.duckblade.osrs.dpscalc.calc.*;
+import com.duckblade.osrs.dpscalc.calc.defender.DefenderSkillsComputable;
 import com.duckblade.osrs.dpscalc.calc.defender.DefenseRollComputable;
-import com.duckblade.osrs.dpscalc.calc.DpsComputable;
-import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
-import com.duckblade.osrs.dpscalc.calc.TimeToKillComputable;
 import com.duckblade.osrs.dpscalc.calc.attack.AttackRollComputable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.exceptions.DpsComputeException;
@@ -30,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Skill;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.PluginPanel;
@@ -73,9 +72,11 @@ public class CalcResultPanel extends JPanel implements StateBoundComponent
 		BaseMaxHitComputable baseMaxHitComputable,
 		TrueMaxHitComputable trueMaxHitComputable,
 		HitChanceComputable hitChanceComputable,
+		FangHitChanceComputable fangHitChanceComputable,
 		AttackSpeedComputable attackSpeedComputable,
 		TimeToKillComputable timeToKillComputable,
-		PrayerDurationRemainingComputable prayerDurationRemainingComputable
+		PrayerDurationRemainingComputable prayerDurationRemainingComputable,
+		DefenderSkillsComputable defenderSkillsComputable
 	)
 	{
 		this.manager = manager;
@@ -97,7 +98,17 @@ public class CalcResultPanel extends JPanel implements StateBoundComponent
 		resultLabels = Arrays.asList(
 			new CalcResultLabel("Max Attack Roll:", ctx -> ROLL_FORMAT.format(ctx.get(attackRollComputable))),
 			new CalcResultLabel("NPC Defense Roll:", ctx -> ROLL_FORMAT.format(ctx.get(defenseRollComputable))),
-			new CalcResultLabel("Hit Chance:", ctx -> HIT_CHANCE_FORMAT.format(ctx.get(hitChanceComputable))),
+			new CalcResultLabel("Hit Chance:", ctx ->
+			{
+				if (fangHitChanceComputable.isApplicable(ctx))
+				{
+					return HIT_CHANCE_FORMAT.format(ctx.get(fangHitChanceComputable));
+				}
+				else
+				{
+					return HIT_CHANCE_FORMAT.format(ctx.get(hitChanceComputable));
+				}
+			}),
 
 			new CalcResultLabel("Max Hit:", ctx -> String.valueOf(ctx.get(trueMaxHitComputable))),
 			new CalcResultLabel("Base Max Hit:", ctx ->
@@ -111,6 +122,7 @@ public class CalcResultPanel extends JPanel implements StateBoundComponent
 			}),
 
 			new CalcResultLabel("Attack Every:", ctx -> HIT_RATE_FORMAT.format(ctx.get(attackSpeedComputable) / 0.6)),
+			new CalcResultLabel("NPC Hitpoints:", ctx -> String.valueOf(ctx.get(defenderSkillsComputable).getTotals().get(Skill.HITPOINTS))),
 			new CalcResultLabel("Avg TTK:", ctx -> timeFormat(ctx.get(timeToKillComputable))),
 			new CalcResultLabel("Prayer Lasts:", ctx -> timeFormat(ctx.get(prayerDurationRemainingComputable)))
 		);

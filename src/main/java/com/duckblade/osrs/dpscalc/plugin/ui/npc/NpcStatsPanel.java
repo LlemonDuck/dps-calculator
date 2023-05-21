@@ -31,16 +31,20 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	private final NpcSkillsPanel npcSkillsPanel;
 	private final NpcBonusesPanel npcBonusesPanel;
 	private final NpcAttributesPanel npcAttributesPanel;
+	private final ToaInvocationLevelPanel toaInvocationLevelPanel;
+	private final ToaPathLevelPanel toaPathLevelPanel;
 
 	@Inject
 	public NpcStatsPanel(
 		PanelStateManager manager, ClientDataProviderThreadProxy clientDataProviderThreadProxy,
 		NpcSelectPanel npcSelectPanel, RaidPartySizePanel raidPartySizePanel, NpcSkillsPanel npcSkillsPanel,
-		NpcBonusesPanel npcBonusesPanel, NpcAttributesPanel npcAttributesPanel
+		NpcBonusesPanel npcBonusesPanel, NpcAttributesPanel npcAttributesPanel, ToaInvocationLevelPanel toaInvocationLevelPanel, ToaPathLevelPanel toaPathLevelPanel
 	)
 	{
 		this.manager = manager;
 		this.raidPartySizePanel = raidPartySizePanel;
+		this.toaInvocationLevelPanel = toaInvocationLevelPanel;
+		this.toaPathLevelPanel = toaPathLevelPanel;
 		this.clientDataProviderThreadProxy = clientDataProviderThreadProxy;
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -59,6 +63,12 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 
 		raidPartySizePanel.addCallback(this::fromState);
 		add(raidPartySizePanel);
+
+		toaInvocationLevelPanel.addCallback(this::fromState);
+		add(toaInvocationLevelPanel);
+
+		toaPathLevelPanel.addCallback(this::fromState);
+		add(toaPathLevelPanel);
 
 		this.npcSkillsPanel = npcSkillsPanel;
 		add(npcSkillsPanel);
@@ -99,6 +109,8 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	public void toState()
 	{
 		raidPartySizePanel.toState();
+		toaInvocationLevelPanel.toState();
+		toaPathLevelPanel.toState();
 		if (!manualEntry.getValue())
 		{
 			npcSelectPanel.toState();
@@ -116,6 +128,10 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	{
 		raidPartySizePanel.fromState();
 		raidPartySizePanel.updateVisibility();
+		toaInvocationLevelPanel.fromState();
+		toaInvocationLevelPanel.updateVisibility();
+		toaPathLevelPanel.fromState();
+		toaPathLevelPanel.updateVisibility();
 		if (!manualEntry.getValue())
 		{
 			npcSelectPanel.fromState();

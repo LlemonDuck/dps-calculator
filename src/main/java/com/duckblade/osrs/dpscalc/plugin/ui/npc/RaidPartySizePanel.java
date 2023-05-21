@@ -4,6 +4,7 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.defender.skills.TheatreEntryModeSkillScaling;
 import com.duckblade.osrs.dpscalc.calc.defender.skills.TheatreSkillScaling;
+import com.duckblade.osrs.dpscalc.calc.defender.skills.ToaScaling;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateVisibleComponent;
@@ -34,17 +35,19 @@ public class RaidPartySizePanel extends JPanel implements StateBoundComponent, S
 	private final PanelStateManager manager;
 	private final TheatreSkillScaling theatreSkillScaling;
 	private final TheatreEntryModeSkillScaling theatreEntryModeSkillScaling;
+	private final ToaScaling toaScaling;
 
 	private final JTextField partySizeField;
 
 	private final List<Runnable> callbacks = new ArrayList<>();
 
 	@Inject
-	public RaidPartySizePanel(PanelStateManager manager, TheatreSkillScaling theatreSkillScaling, TheatreEntryModeSkillScaling theatreEntryModeSkillScaling)
+	public RaidPartySizePanel(PanelStateManager manager, TheatreSkillScaling theatreSkillScaling, TheatreEntryModeSkillScaling theatreEntryModeSkillScaling, ToaScaling toaScaling)
 	{
 		this.manager = manager;
 		this.theatreSkillScaling = theatreSkillScaling;
 		this.theatreEntryModeSkillScaling = theatreEntryModeSkillScaling;
+		this.toaScaling = toaScaling;
 
 		setMinimumSize(new Dimension(PluginPanel.PANEL_WIDTH - 25, 40));
 		setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH - 25, 40));
@@ -91,7 +94,7 @@ public class RaidPartySizePanel extends JPanel implements StateBoundComponent, S
 			ComputeContext ctx = new ComputeContext();
 			ctx.put(ComputeInputs.DEFENDER_ATTRIBUTES, getState().getDefenderAttributes().toImmutable());
 
-			setVisible(theatreSkillScaling.isApplicable(ctx) || theatreEntryModeSkillScaling.isApplicable(ctx));
+			setVisible(theatreSkillScaling.isApplicable(ctx) || theatreEntryModeSkillScaling.isApplicable(ctx) || toaScaling.isApplicable(ctx));
 		});
 	}
 
