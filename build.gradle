@@ -31,8 +31,12 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 
     testImplementation group: 'com.google.inject.extensions', name: 'guice-grapher', version: '4.1.0'
+
+    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.5.1'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.2'
@@ -44,7 +48,7 @@ dependencies {
 
 group = 'com.duckblade.osrs'
 version = '2.3.2'
-sourceCompatibility = '1.8'
+sourceCompatibility = JavaVersion.VERSION_11
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
