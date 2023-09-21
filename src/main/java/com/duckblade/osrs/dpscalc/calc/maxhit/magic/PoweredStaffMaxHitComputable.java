@@ -54,7 +54,7 @@ public class PoweredStaffMaxHitComputable implements MagicMaxHitComputable
 		.put(ItemID.CORRUPTED_STAFF_ATTUNED, ignored -> 31)
 		.put(ItemID.CRYSTAL_STAFF_PERFECTED, ignored -> 39)
 		.put(ItemID.CORRUPTED_STAFF_PERFECTED, ignored -> 39)
-    .put(ItemID.WARPED_SCEPTRE, WARPED)
+		.put(ItemID.WARPED_SCEPTRE, WARPED)
 		.build();
 
 	private final WeaponComputable weaponComputable;
