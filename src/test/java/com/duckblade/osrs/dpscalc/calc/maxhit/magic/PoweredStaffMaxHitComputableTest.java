@@ -109,8 +109,7 @@ class PoweredStaffMaxHitComputableTest
 	void givesMaxHitForWarpedSceptre()
 	{
 		when(context.get(weaponComputable)).thenReturn(
-				ofItemId(ItemID.WARPED_SCEPTRE),
-				ofItemId(ItemID.WARPED_SCEPTRE_UNCHARGED)
+				ofItemId(ItemID.WARPED_SCEPTRE)
 		);
 		when(context.get(ComputeInputs.ATTACKER_SKILLS)).thenReturn(
 				ofSkill(Skill.MAGIC, 0),
