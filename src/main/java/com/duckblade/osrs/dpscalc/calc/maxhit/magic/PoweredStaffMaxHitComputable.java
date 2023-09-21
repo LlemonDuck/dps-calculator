@@ -29,6 +29,12 @@ public class PoweredStaffMaxHitComputable implements MagicMaxHitComputable
 		int magicLevel = ctx.get(ComputeInputs.ATTACKER_SKILLS).getTotals().get(Skill.MAGIC);
 		return Math.max(1, (magicLevel - 75) / 3 + 20);
 	};
+	private static final StaffMaxHitProvider WARPED = ctx ->
+	{
+		int magicLevel = ctx.get(ComputeInputs.ATTACKER_SKILLS).getTotals().get(Skill.MAGIC);
+		return Math.max(1, ((8 * magicLevel) + 96) / 37);
+	};
+
 	private static final StaffMaxHitProvider SWAMP = ctx -> SEAS.compute(ctx) + 3;
 	private static final StaffMaxHitProvider SANGUINESTI = ctx -> SEAS.compute(ctx) + 4;
 	private static final StaffMaxHitProvider SHADOW = ctx -> SEAS.compute(ctx) + 6;
@@ -48,6 +54,7 @@ public class PoweredStaffMaxHitComputable implements MagicMaxHitComputable
 		.put(ItemID.CORRUPTED_STAFF_ATTUNED, ignored -> 31)
 		.put(ItemID.CRYSTAL_STAFF_PERFECTED, ignored -> 39)
 		.put(ItemID.CORRUPTED_STAFF_PERFECTED, ignored -> 39)
+		.put(ItemID.WARPED_SCEPTRE, WARPED)
 		.build();
 
 	private final WeaponComputable weaponComputable;

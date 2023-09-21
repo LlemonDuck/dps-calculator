@@ -106,6 +106,21 @@ class PoweredStaffMaxHitComputableTest
 	}
 
 	@Test
+	void givesMaxHitForWarpedSceptre()
+	{
+		when(context.get(weaponComputable)).thenReturn(
+				ofItemId(ItemID.WARPED_SCEPTRE)
+		);
+		when(context.get(ComputeInputs.ATTACKER_SKILLS)).thenReturn(
+				ofSkill(Skill.MAGIC, 0),
+				ofSkill(Skill.MAGIC, 99)
+		);
+
+		assertEquals(2, poweredStaffMaxHitComputable.compute(context));
+		assertEquals(24, poweredStaffMaxHitComputable.compute(context));
+	}
+
+	@Test
 	void givesMaxHitForSangStaff()
 	{
 		when(context.get(weaponComputable)).thenReturn(
