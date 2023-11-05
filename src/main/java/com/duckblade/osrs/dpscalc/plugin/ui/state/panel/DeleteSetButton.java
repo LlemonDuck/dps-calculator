@@ -13,7 +13,7 @@ public class DeleteSetButton extends JButton
 {
 
 	private static final ImageIcon DELETE_ICON =
-		new ImageIcon(ImageUtil.resizeImage(ImageUtil.loadImageResource(DeleteSetButton.class, "icon_delete.png"), 25, 25));
+		new ImageIcon(ImageUtil.resizeImage(ImageUtil.loadImageResource(DeleteSetButton.class, "icon_delete.png"), 20, 20));
 
 	@Inject
 	public DeleteSetButton(PanelStateManager manager)

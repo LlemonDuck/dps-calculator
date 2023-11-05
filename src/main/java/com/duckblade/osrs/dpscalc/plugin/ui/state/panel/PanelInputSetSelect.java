@@ -43,7 +43,7 @@ public class PanelInputSetSelect extends CustomJComboBox<PanelInputSet>
 
 	public void createNewSet()
 	{
-		String name = JOptionPane.showInputDialog(this, "New set name:");
+		String name = JOptionPane.showInputDialog(this, "New set name:", "Create Set", JOptionPane.QUESTION_MESSAGE);
 		if (name != null)
 		{
 			manager.createNewSet(name);
