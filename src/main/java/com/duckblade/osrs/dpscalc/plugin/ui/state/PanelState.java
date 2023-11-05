@@ -195,12 +195,8 @@ public class PanelState
 			.build();
 	}
 
-	public PanelState()
-	{
+	public PanelState() { }
 
-	}
-
-	// copy constructor
 	public PanelState(PanelState original)
 	{
 		this.attackerBoosts.putAll(original.attackerBoosts);
