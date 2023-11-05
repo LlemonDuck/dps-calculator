@@ -15,7 +15,6 @@ import net.runelite.api.EquipmentInventorySlot;
 @Singleton
 public class AttackStyleSelectPanel extends StateBoundJComboBox<AttackStyle>
 {
-
 	private WeaponCategory previousWeaponCategory = null;
 
 	@Inject
@@ -37,26 +36,25 @@ public class AttackStyleSelectPanel extends StateBoundJComboBox<AttackStyle>
 	@Override
 	public void fromState()
 	{
-		if (previousWeaponCategory != (previousWeaponCategory = currentWeaponCategory()))
-		{
-			List<AttackStyle> weaponStyles = getState().getAttackerItems()
+		WeaponCategory currentWeaponCategory = getState().getAttackerItems()
 				.getOrDefault(EquipmentInventorySlot.WEAPON, ItemStats.EMPTY)
-				.getWeaponCategory()
-				.getAttackStyles();
+				.getWeaponCategory();
 
-			List<AttackStyle> selectableStyles = new ArrayList<>(weaponStyles.size() + 1);
-			selectableStyles.addAll(weaponStyles);
+		if (previousWeaponCategory != (previousWeaponCategory = currentWeaponCategory))
+		{
+			List<AttackStyle> selectableStyles = new ArrayList<>(currentWeaponCategory.getAttackStyles().size() + 1);
+			selectableStyles.addAll(currentWeaponCategory.getAttackStyles());
+			// No matter the weapon, you can always manually cast spells
 			selectableStyles.add(AttackStyle.MANUAL_CAST);
 			setItems(selectableStyles);
+
+			// reset attack style if it is no longer valid
+			if (!selectableStyles.contains(getState().getAttackStyle()))
+			{
+				getState().setAttackStyle(null);
+			}
 		}
 
 		super.fromState();
-	}
-
-	private WeaponCategory currentWeaponCategory()
-	{
-		return getState().getAttackerItems()
-			.getOrDefault(EquipmentInventorySlot.WEAPON, ItemStats.EMPTY)
-			.getWeaponCategory();
 	}
 }

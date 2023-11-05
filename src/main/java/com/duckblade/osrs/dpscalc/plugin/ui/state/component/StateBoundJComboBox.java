@@ -5,7 +5,6 @@ import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.CustomJComboBox;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import lombok.Getter;
@@ -26,19 +25,6 @@ public class StateBoundJComboBox<T> extends CustomJComboBox<T> implements StateB
 		this.stateWriter = stateWriter;
 		this.stateReader = stateReader;
 		addCallback(this::toState);
-	}
-
-	@Override
-	public void setItems(List<T> newItems)
-	{
-		T prev = getValue();
-		super.setItems(newItems);
-
-		// setItems can update value, so we propagate any changes to state immediately
-		if (!Objects.equals(prev, getValue()))
-		{
-			toState();
-		}
 	}
 
 	@Override

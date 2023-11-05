@@ -152,14 +152,14 @@ public class CustomJComboBox<T> extends JPanel
 	public void setValue(T newValue)
 	{
 		callbackEnabled = false;
+		if (!isValidValue(newValue))
+		{
+			callbackEnabled = true;
+			throw new IllegalArgumentException(newValue + " does not exist in items");
+		}
+
 		if (newValue == null)
 		{
-			if (!allowNull)
-			{
-				callbackEnabled = true;
-				throw new IllegalArgumentException(newValue + " does not exist in items");
-			}
-
 			int nullIx = nullLast ? items.size() : 0;
 			comboBox.setSelectedIndex(nullIx);
 		}
@@ -169,6 +169,16 @@ public class CustomJComboBox<T> extends JPanel
 			comboBox.setSelectedIndex(items.indexOf(newValue) + nullOffset);
 		}
 		callbackEnabled = true;
+	}
+
+	public boolean isValidValue(T newValue)
+	{
+		if (newValue == null)
+		{
+			return allowNull;
+		}
+
+		return items.contains(newValue);
 	}
 
 	public void addBottomPadding(int height)
