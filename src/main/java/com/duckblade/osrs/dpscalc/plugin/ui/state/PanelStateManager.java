@@ -69,6 +69,17 @@ public class PanelStateManager
 		}
 	}
 
+	public void duplicateSet(PanelInputSet set, String name)
+	{
+		PanelInputSet newSet = PanelInputSet.builder()
+				.name(name)
+				.state(new PanelState(set.getState()))
+				.build();
+
+		sets.add(newSet);
+		selectSet(newSet);
+	}
+
 	private void invokeCallbacks()
 	{
 		onSetChangedCallbacks.forEach(Runnable::run);

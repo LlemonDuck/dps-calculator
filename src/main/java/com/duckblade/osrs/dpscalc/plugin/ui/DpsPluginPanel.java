@@ -1,6 +1,7 @@
 package com.duckblade.osrs.dpscalc.plugin.ui;
 
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
+import com.duckblade.osrs.dpscalc.plugin.ui.state.panel.DuplicateSetButton;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.panel.DeleteSetButton;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.panel.PanelInputSetSelect;
 import java.awt.Dimension;
@@ -33,7 +34,7 @@ public class DpsPluginPanel extends PluginPanel
 
 	@Inject
 	public DpsPluginPanel(
-		DpsCalcPanel calcPanel, PanelInputSetSelect panelInputSetSelect, DeleteSetButton deleteSetButton,
+		DpsCalcPanel calcPanel, PanelInputSetSelect panelInputSetSelect, DuplicateSetButton duplicateSetButton, DeleteSetButton deleteSetButton,
 		PanelStateManager manager
 	)
 	{
@@ -57,14 +58,19 @@ public class DpsPluginPanel extends PluginPanel
 		headerPanel.add(homeButton, new GridBagConstraints(0, 0, 1, 1, 0, 0, CENTER, BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		headerPanel.add(panelInputSetSelect, new GridBagConstraints(1, 0, 1, 1, 1, 1, CENTER, BOTH, new Insets(0, 0, 0, 0), 0, 0));
-		headerPanel.add(deleteSetButton, new GridBagConstraints(2, 0, 1, 1, 0, 0, CENTER, BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
+		duplicateSetButton.setPreferredSize(new Dimension(25, 25));
+		headerPanel.add(duplicateSetButton, new GridBagConstraints(2, 0, 1, 1, 0, 0, CENTER, BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
+		deleteSetButton.setPreferredSize(new Dimension(25, 25));
+		headerPanel.add(deleteSetButton, new GridBagConstraints(3, 0, 1, 1, 0, 0, CENTER, BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		ImageIcon ghIcon = new ImageIcon(ImageUtil.resizeImage(ImageUtil.loadImageResource(getClass(), "gh_logo.png"), 25, 25));
 		JButton linkToGh = new JButton(ghIcon);
 		linkToGh.setFocusPainted(false);
 		linkToGh.setPreferredSize(new Dimension(35, 35));
 		linkToGh.addActionListener(e -> openGhLink());
-		headerPanel.add(linkToGh, new GridBagConstraints(3, 0, 1, 1, 0, 0, CENTER, BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		headerPanel.add(linkToGh, new GridBagConstraints(4, 0, 1, 1, 0, 0, CENTER, BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		JScrollPane contentScrollPane = new JScrollPane(calcPanel);
 		contentScrollPane.setBorder(BorderFactory.createEmptyBorder());

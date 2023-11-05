@@ -194,4 +194,30 @@ public class PanelState
 			.raidPartySize(raidPartySize)
 			.build();
 	}
+
+	public PanelState()
+	{
+
+	}
+
+	// copy constructor
+	public PanelState(PanelState original)
+	{
+		this.attackerBoosts.putAll(original.attackerBoosts);
+		this.attackerDistance = original.attackerDistance;
+		this.attackerItems.putAll(original.attackerItems);
+		this.attackerPrayers.addAll(original.attackerPrayers);
+		this.attackerSkills.putAll(original.attackerSkills);
+		this.attackStyle = original.attackStyle;
+		this.blowpipeDarts = original.blowpipeDarts;
+		this.defenderAttributes = MutableDefenderAttributes.fromImmutable(original.defenderAttributes.toImmutable());
+		this.defenderBonuses = MutableDefensiveBonuses.fromImmutable(original.defenderBonuses.toImmutable());
+		this.defenderSkills.putAll(original.defenderSkills);
+		this.inWilderness = original.inWilderness;
+		this.onSlayerTask = original.onSlayerTask;
+		this.raidPartySize = original.raidPartySize;
+		this.spell = original.spell;
+		this.usingChargeSpell = original.usingChargeSpell;
+		this.usingMarkOfDarkness = original.usingMarkOfDarkness;
+	}
 }
