@@ -29,19 +29,6 @@ public class StateBoundJComboBox<T> extends CustomJComboBox<T> implements StateB
 	}
 
 	@Override
-	public void setItems(List<T> newItems)
-	{
-		T prev = getValue();
-		super.setItems(newItems);
-
-		// setItems can update value, so we propagate any changes to state immediately
-		if (!Objects.equals(prev, getValue()))
-		{
-			toState();
-		}
-	}
-
-	@Override
 	public void toState()
 	{
 		if (stateWriter != null)
