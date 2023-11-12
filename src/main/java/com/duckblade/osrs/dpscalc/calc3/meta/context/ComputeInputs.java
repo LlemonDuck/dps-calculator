@@ -1,5 +1,6 @@
 package com.duckblade.osrs.dpscalc.calc3.meta.context;
 
+import com.duckblade.osrs.dpscalc.calc3.model.ScenarioInputs;
 import com.duckblade.osrs.dpscalc.calc3.model.AttackStyle;
 import com.duckblade.osrs.dpscalc.calc3.model.DefenderAttributes;
 import com.duckblade.osrs.dpscalc.calc3.model.DefensiveBonuses;
@@ -35,6 +36,7 @@ public class ComputeInputs<T> implements ContextValue<T>
 	public static ComputeInputs<DefenderAttributes> DEFENDER_ATTRIBUTES = ComputeInputs.of("DefenderAttributes", DefenderAttributes.EMPTY);
 
 	// extras
+	public static ComputeInputs<ScenarioInputs> SCENARIO = ComputeInputs.of("Scenario", ScenarioInputs.EMPTY);
 	public static ComputeInputs<Boolean> ON_SLAYER_TASK = ComputeInputs.of("OnSlayerTask", false);
 	public static ComputeInputs<Boolean> USING_CHARGE_SPELL = ComputeInputs.of("UsingChargeSpell", false);
 	public static ComputeInputs<Boolean> USING_MARK_OF_DARKNESS = ComputeInputs.of("UsingMarkOfDarkness", false);

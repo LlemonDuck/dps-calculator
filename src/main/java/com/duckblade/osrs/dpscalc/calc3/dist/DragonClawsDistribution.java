@@ -4,7 +4,9 @@ import com.duckblade.osrs.dpscalc.calc3.core.Accuracy;
 import com.duckblade.osrs.dpscalc.calc3.core.MaxHit;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ContextValue;
+import com.duckblade.osrs.dpscalc.calc3.meta.math.AttackOutcome;
 import com.duckblade.osrs.dpscalc.calc3.meta.math.HitDistribution;
+import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,65 +33,80 @@ public class DragonClawsDistribution implements ContextValue<List<HitDistributio
 
 		double acc = ctx.get(accuracy);
 		int max = ctx.get(maxHit);
-
+		
 		// attempt 1
 		int low = max * 1 / 1;
-		int high = max * 2 / 1;
-		double partialAcc = (acc * Math.pow(acc, 0)) / (high - low + 1);
+		int high = max * 2 / 1 - 1;
+		double partialAcc = (acc * Math.pow(1 - acc, 0)) / (high - low + 1);
 		for (int hit = low; hit <= high; hit++)
 		{
-			dist.put(List.of(
-				hit * 4 / 8,
-				hit * 2 / 8,
-				hit * 1 / 8,
-				hit * 1 / 8 + 1
-			), partialAcc);
+			dist.addOutcome(new AttackOutcome(
+				partialAcc,
+				List.of(
+					hit * 4 / 8,
+					hit * 2 / 8,
+					hit * 1 / 8,
+					hit * 1 / 8 + 1
+				)
+			));
 		}
 
 		// attempt 2
 		low = max * 3 / 4;
 		high = max * 7 / 4;
-		partialAcc = (acc * Math.pow(acc, 1)) / (high - low + 1);
+		partialAcc = (acc * Math.pow(1 - acc, 1)) / (high - low + 1);
 		for (int hit = low; hit <= high; hit++)
 		{
-			dist.put(List.of(
-				hit * 2 / 4,
-				hit * 1 / 4,
-				hit * 1 / 4 + 1,
-				0
-			), partialAcc);
+			dist.addOutcome(new AttackOutcome(
+				partialAcc,
+				List.of(
+					hit * 2 / 4,
+					hit * 1 / 4,
+					hit * 1 / 4 + 1,
+					0
+				)
+			));
 		}
 
 		// attempt 3
 		low = max * 1 / 2;
 		high = max * 3 / 2;
-		partialAcc = (acc * Math.pow(acc, 2)) / (high - low + 1);
+		partialAcc = (acc * Math.pow(1 - acc, 2)) / (high - low + 1);
 		for (int hit = low; hit <= high; hit++)
 		{
-			dist.put(List.of(
-				hit * 1 / 2,
-				hit * 1 / 2 + 1,
-				0,
-				0
-			), partialAcc);
+			dist.addOutcome(new AttackOutcome(
+				partialAcc,
+				List.of(
+					hit * 1 / 2,
+					hit * 1 / 2 + 1,
+					0,
+					0
+				)
+			));
 		}
 
 		// attempt 4
 		low = max * 1 / 4;
 		high = max * 5 / 4;
-		partialAcc = (acc * Math.pow(acc, 1)) / (high - low + 1);
+		partialAcc = (acc * Math.pow(1 - acc, 3)) / (high - low + 1);
 		for (int hit = low; hit <= high; hit++)
 		{
-			dist.put(List.of(
-				hit + 1
-			), partialAcc);
+			dist.addOutcome(new AttackOutcome(
+				partialAcc,
+				List.of(
+					hit + 1,
+					0,
+					0,
+					0
+				)
+			));
 		}
 
-		double remainingAcc = 1 - (acc * Math.pow(acc, 4));
-		dist.put(List.of(0, 0, 1, 1), remainingAcc * 2 / 3);
-		dist.put(List.of(0, 0, 0, 0), remainingAcc * 1 / 3);
+		double remainingAcc = acc * Math.pow(1 - acc, 4);
+		dist.addOutcome(new AttackOutcome(remainingAcc * 2 / 3, List.of(0, 0, 1, 1)));
+		dist.addOutcome(new AttackOutcome(remainingAcc * 1 / 3, List.of(0, 0, 0, 0)));
 
-		return List.of(dist);
+		return Collections.singletonList(dist);
 	}
 
 }

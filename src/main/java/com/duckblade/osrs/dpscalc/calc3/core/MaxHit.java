@@ -1,31 +1,26 @@
 package com.duckblade.osrs.dpscalc.calc3.core;
 
-import com.duckblade.osrs.dpscalc.calc3.maxhit.MeleeMaxHit;
-import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc3.core.standard.StandardMaxHit;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ContextValue;
+import com.duckblade.osrs.dpscalc.calc3.meta.context.FirstContextValue;
+import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
-import lombok.RequiredArgsConstructor;
 
 @Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
-public class MaxHit implements ContextValue<Integer>
+public class MaxHit extends FirstContextValue<Integer>
 {
 
-	private final MeleeMaxHit meleeMaxHit;
+	public static final String MAX_HIT_PROVIDERS = "MaxHitProviders";
 
-	@Override
-	public Integer compute(ComputeContext ctx)
+	@Inject
+	public MaxHit(
+		@Named(MAX_HIT_PROVIDERS) List<ContextValue<Integer>> providers,
+		StandardMaxHit standardMaxHit
+	)
 	{
-		switch (ctx.get(ComputeInputs.ATTACK_STYLE).getAttackType())
-		{
-			case MELEE:
-				return ctx.get(meleeMaxHit);
-
-			default:
-				throw new RuntimeException("Not implemented");
-		}
+		super(providers, standardMaxHit);
 	}
 
 }

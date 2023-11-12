@@ -11,12 +11,14 @@ import lombok.RequiredArgsConstructor;
 public class Dps implements ContextValue<Double>
 {
 
+	private static final double SECONDS_PER_TICK = 0.6;
+
 	private final Dpt dpt;
 
 	@Override
 	public Double compute(ComputeContext ctx)
 	{
-		return ctx.get(dpt) / 0.6;
+		return ctx.get(dpt) / SECONDS_PER_TICK;
 	}
 
 }

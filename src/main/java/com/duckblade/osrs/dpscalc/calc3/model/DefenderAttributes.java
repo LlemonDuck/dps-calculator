@@ -51,6 +51,9 @@ public class DefenderAttributes
 	@Builder.Default
 	private final int accuracyMagic = 0; // tbow
 
+	@Builder.Default
+	private final boolean inToa = false;
+
 	public boolean isVampyre()
 	{
 		return isVampyre1 ||

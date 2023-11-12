@@ -5,10 +5,11 @@ public interface ContextValue<T> extends Optional
 
 	default String key()
 	{
+		String stripSuffix = "Computable";
 		String key = getClass().getSimpleName();
-		if (key.endsWith("Computable"))
+		if (key.endsWith(stripSuffix))
 		{
-			key = key.substring(0, key.length() - 10);
+			key = key.substring(0, key.length() - stripSuffix.length());
 		}
 
 		return key;

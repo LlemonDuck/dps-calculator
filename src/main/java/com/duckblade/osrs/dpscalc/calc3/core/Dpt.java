@@ -1,6 +1,5 @@
 package com.duckblade.osrs.dpscalc.calc3.core;
 
-import com.duckblade.osrs.dpscalc.calc3.dist.transformers.TransformedHitDistribution;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ContextValue;
 import com.duckblade.osrs.dpscalc.calc3.meta.math.HitDistribution;
@@ -14,21 +13,18 @@ import lombok.RequiredArgsConstructor;
 public class Dpt implements ContextValue<Double>
 {
 
-	private final TransformedHitDistribution hitDistribution;
 	private final Weapon weapon;
+	private final HitDistributions hitDistributions;
 
 	@Override
 	public Double compute(ComputeContext ctx)
 	{
 		int speed = ctx.get(weapon).getSpeed();
+		double expectedHit = ctx.get(hitDistributions).stream()
+			.mapToDouble(HitDistribution::expectedHit)
+			.sum();
 
-		double dpt = 0;
-		for (HitDistribution splat : ctx.get(hitDistribution))
-		{
-			dpt += splat.getAverageHit() / speed;
-		}
-
-		return dpt;
+		return expectedHit / speed;
 	}
 
 }

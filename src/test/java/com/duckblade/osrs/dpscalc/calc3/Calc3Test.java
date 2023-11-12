@@ -1,10 +1,9 @@
 package com.duckblade.osrs.dpscalc.calc3;
 
-import com.duckblade.osrs.dpscalc.calc3.core.Dps;
-import com.duckblade.osrs.dpscalc.calc3.dist.DragonClawsDistribution;
+import com.duckblade.osrs.dpscalc.calc3.core.Dpt;
+import com.duckblade.osrs.dpscalc.calc3.core.MaxHit;
 import com.duckblade.osrs.dpscalc.calc3.meta.DpsComputeModule3;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc3.meta.math.HitDistribution;
 import com.duckblade.osrs.dpscalc.calc3.model.ComputeInput;
 import com.duckblade.osrs.dpscalc.calc3.model.ItemStats;
 import com.duckblade.osrs.dpscalc.calc3.model.Skills;
@@ -13,7 +12,6 @@ import com.google.common.base.Stopwatch;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import java.io.FileWriter;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.ItemID;
@@ -21,12 +19,12 @@ import net.runelite.api.Skill;
 
 public class Calc3Test
 {
+	
+	@Inject
+	private MaxHit maxHit;
 
 	@Inject
-	private Dps dps;
-
-	@Inject
-	private DragonClawsDistribution dClaws;
+	private Dpt dpt;
 
 	public void start() throws Exception
 	{
@@ -51,17 +49,17 @@ public class Calc3Test
 				.accuracyCrush(-4)
 				.strengthMelee(56)
 				.speed(4)
+				.weaponCategory(WeaponCategory.CLAW)
 				.build())
-			.attackStyle(WeaponCategory.SCYTHE.getAttackStyles().get(1))
+			.attackStyle(WeaponCategory.CLAW.getAttackStyles().get(1))
 			.build();
 
 		ComputeContext ctx = new ComputeContext(input);
 		ctx.initDebug();
 
 		Stopwatch sw = Stopwatch.createStarted();
-		List<HitDistribution> hitDistributions = ctx.get(dClaws);
+		double dptOut = ctx.get(dpt);
 		sw.stop();
-		System.out.println(hitDistributions);
 
 		try (FileWriter fw = new FileWriter("graph.md"))
 		{
@@ -74,7 +72,9 @@ public class Calc3Test
 
 	public static void main(String[] args) throws Exception
 	{
-		Guice.createInjector(new DpsComputeModule3()).getInstance(Calc3Test.class).start();
+		Guice.createInjector(new DpsComputeModule3())
+			.getInstance(Calc3Test.class)
+			.start();
 	}
 
 }

@@ -1,64 +1,148 @@
 package com.duckblade.osrs.dpscalc.calc3.meta.math;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class HitDistribution
+public class HitDistribution implements Iterable<AttackOutcome>
 {
 
-	private final Map<List<Integer>, Double> hitProbabilities = new HashMap<>();
+	List<AttackOutcome> outcomes = new ArrayList<>();
 
-	public Set<Map.Entry<List<Integer>, Double>> getEntries()
+	public void addOutcome(AttackOutcome o)
 	{
-		return hitProbabilities.entrySet();
+		this.outcomes.add(o);
 	}
 
-	public void put(int hit, double probability)
+	public HitDistribution zip(HitDistribution other)
 	{
-		this.put(Collections.singletonList(hit), probability);
+		HitDistribution d = new HitDistribution();
+		for (AttackOutcome o : this)
+		{
+			for (AttackOutcome p : other)
+			{
+				d.addOutcome(o.zip(p));
+			}
+		}
+
+		return d;
 	}
 
-	public void put(List<Integer> hits, double probability)
+	public HitDistribution transform(HitTransformer t)
 	{
-		hits.sort(Integer::compareTo);
-		hitProbabilities.put(
-			hits,
-			hitProbabilities.getOrDefault(hits, 0.0) + probability
-		);
+		HitDistribution d = new HitDistribution();
+		for (AttackOutcome o : this)
+		{
+			for (AttackOutcome p : o.transform(t))
+			{
+				d.addOutcome(p);
+			}
+		}
+
+		return d;
 	}
 
-	public double getAverageHit()
+	public HitDistribution flattenDuplicates()
 	{
-		return hitProbabilities.entrySet()
-			.stream()
-			.mapToDouble(e -> sumIntList(e.getKey()) * e.getValue())
-			.sum();
+		System.out.println("Start size " + outcomeCount());
+		Map<List<Integer>, Double> accumulator = new HashMap<>();
+		for (AttackOutcome o : this)
+		{
+			accumulator.compute(o.getHits(), (_k, v) -> (v == null ? 0.0 : v) + o.getProbability());
+		}
+
+		HitDistribution flattened = new HitDistribution();
+		accumulator.entrySet().stream()
+			.map(e -> new AttackOutcome(e.getValue(), e.getKey()))
+			.forEach(flattened::addOutcome);
+		System.out.println("End size " + flattened.outcomeCount());
+		return flattened;
 	}
 
-	public int getMaxHit()
+	public static HitDistribution linear(double accuracy, int minInclusive, int maxInclusive)
 	{
-		return hitProbabilities.keySet()
-			.stream()
-			.mapToInt(HitDistribution::sumIntList)
-			.max()
-			.orElse(0);
+		HitDistribution d = new HitDistribution();
+		double constProb = 1.0 / (maxInclusive - minInclusive + 1);
+		for (int hit = minInclusive; hit <= maxInclusive; hit++)
+		{
+			d.addOutcome(new AttackOutcome(
+				constProb,
+				Collections.singletonList(hit)
+			));
+		}
+		System.out.println(d);
+		d = d.scale(accuracy);
+		d.addOutcome(new AttackOutcome(1.0 - accuracy, Collections.singletonList(0)));
+
+		return d;
+	}
+
+	public static HitDistribution linear(double accuracy, int maxInclusive)
+	{
+		return linear(accuracy, 0, maxInclusive);
+	}
+
+	public static HitDistribution single(double accuracy, int hit)
+	{
+		HitDistribution d = new HitDistribution();
+		d.addOutcome(new AttackOutcome(accuracy, Collections.singletonList(hit)));
+		if (accuracy != 1.0)
+		{
+			d.addOutcome(new AttackOutcome(1 - accuracy, Collections.singletonList(0)));
+		}
+		return d;
+	}
+
+	@Override
+	public Iterator<AttackOutcome> iterator()
+	{
+		return outcomes.iterator();
 	}
 
 	@Override
 	public String toString()
 	{
-		return "HitDist{max=" + getMaxHit() + ",avg=" + getAverageHit() + ",hits=" + hitProbabilities + "}";
+		StringBuilder sb = new StringBuilder();
+		sb.append("Dist(expected=");
+		sb.append(expectedHit());
+		sb.append(", sumProb=");
+		sb.append(sumProbabilities());
+		sb.append(", outcomes=");
+		sb.append(outcomeCount());
+		sb.append(')');
+		return sb.toString();
 	}
 
-	private static int sumIntList(List<Integer> list)
+	public double expectedHit()
 	{
-		return list.stream()
-			.mapToInt(Integer::intValue)
+		return outcomes.stream()
+			.mapToDouble(AttackOutcome::getExpectedValue)
+			.sum();
+	}
+
+	public HitDistribution scale(double probabilityFactor)
+	{
+		HitDistribution d = new HitDistribution();
+		for (AttackOutcome o : this)
+		{
+			d.addOutcome(o.scale(probabilityFactor));
+		}
+
+		return d;
+	}
+
+	public int outcomeCount()
+	{
+		return outcomes.size();
+	}
+
+	public double sumProbabilities()
+	{
+		return outcomes.stream()
+			.mapToDouble(AttackOutcome::getProbability)
 			.sum();
 	}
 

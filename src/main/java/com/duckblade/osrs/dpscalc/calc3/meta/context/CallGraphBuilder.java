@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -42,7 +43,20 @@ public class CallGraphBuilder
 
 		private static String sanitizeObjString(Object val)
 		{
-			return Objects.toString(val)
+			String classPrefix = "";
+			if (val instanceof Set)
+			{
+				classPrefix = "Set";
+			}
+			else if (val instanceof Map)
+			{
+				classPrefix = "Map";
+			}
+			else if (val instanceof List)
+			{
+				classPrefix = "List";
+			}
+			return classPrefix + Objects.toString(val)
 				.replaceAll("\\{", "(")
 				.replaceAll("}", ")")
 				.replaceAll("\\[", "(")
