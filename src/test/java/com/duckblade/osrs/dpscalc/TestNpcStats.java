@@ -31,6 +31,27 @@ public class TestNpcStats
 			.build());
 	}
 
+	public static void sire(ComputeContext context)
+	{
+		context.put(ComputeInputs.DEFENDER_SKILLS, Skills.builder()
+			.level(Skill.HITPOINTS, 400)
+			.level(Skill.DEFENCE, 250)
+			.level(Skill.MAGIC, 200)
+			.build()
+		);
+		context.put(ComputeInputs.DEFENDER_BONUSES, DefensiveBonuses.builder()
+			.defenseStab(40)
+			.defenseSlash(60)
+			.defenseCrush(50)
+			.defenseMagic(20)
+			.defenseRanged(60)
+			.build());
+		context.put(ComputeInputs.DEFENDER_ATTRIBUTES, DefenderAttributes.builder()
+			.size(3)
+			.accuracyMagic(0)
+			.build());
+	}
+
 	public static void kurask(ComputeContext context)
 	{
 		context.put(ComputeInputs.DEFENDER_SKILLS, Skills.builder()

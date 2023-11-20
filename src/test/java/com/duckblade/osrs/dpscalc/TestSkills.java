@@ -9,7 +9,7 @@ public class TestSkills
 {
 
 	public static final Skills MAXED = Skills.builder()
-		.boosts(Arrays.stream(Skill.values()).collect(Collectors.toMap(skill -> skill, skill -> 99)))
+		.levels(Arrays.stream(Skill.values()).collect(Collectors.toMap(skill -> skill, skill -> 99)))
 		.build();
 
 	public static final Skills MAXED_WITH_BOOSTS = MAXED.toBuilderDeep()

@@ -29,6 +29,15 @@ public class ScenarioInputs
 	private final int coxPartySize = 0;
 
 	@Builder.Default
+	private final int coxScale = 0;
+
+	@Builder.Default
+	private final int toaPartySize = -1;
+
+	@Builder.Default
+	private final int toaScale = -1;
+
+	@Builder.Default
 	private final boolean isSpecialAttack = false;
 
 }

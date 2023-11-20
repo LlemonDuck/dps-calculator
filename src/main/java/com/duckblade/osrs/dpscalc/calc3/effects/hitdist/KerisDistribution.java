@@ -1,17 +1,18 @@
 package com.duckblade.osrs.dpscalc.calc3.effects.hitdist;
 
-import com.duckblade.osrs.dpscalc.calc3.core.standard.StandardHitDistributions;
+import com.duckblade.osrs.dpscalc.calc3.core.standard.StandardHitDistribution;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ContextValue;
-import com.duckblade.osrs.dpscalc.calc3.meta.math.AttackOutcome;
-import com.duckblade.osrs.dpscalc.calc3.meta.math.HitDistribution;
+import com.duckblade.osrs.dpscalc.calc3.meta.math.outcomes.AttackDistribution;
+import com.duckblade.osrs.dpscalc.calc3.meta.math.outcomes.HitDistribution;
+import com.duckblade.osrs.dpscalc.calc3.meta.math.outcomes.WeightedHit;
 import com.duckblade.osrs.dpscalc.calc3.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc3.util.Weapon;
 import com.google.common.collect.ImmutableSet;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ import net.runelite.api.ItemID;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
-public class KerisHitDist implements ContextValue<List<HitDistribution>>
+public class KerisDistribution implements ContextValue<AttackDistribution>
 {
 
 	private static final Set<Integer> KERIS_WEAPONS = ImmutableSet.of(
@@ -32,7 +33,7 @@ public class KerisHitDist implements ContextValue<List<HitDistribution>>
 	);
 
 	private final Weapon weapon;
-	private final StandardHitDistributions standardHitDistributions;
+	private final StandardHitDistribution standardHitDistribution;
 
 	@Override
 	public boolean isApplicable(ComputeContext ctx)
@@ -43,25 +44,19 @@ public class KerisHitDist implements ContextValue<List<HitDistribution>>
 	}
 
 	@Override
-	public List<HitDistribution> compute(ComputeContext ctx)
+	public AttackDistribution compute(ComputeContext ctx)
 	{
-		// two assumptions made here: standard distribution is a single dist, and keris only hits once
-		HitDistribution standardDistribution = ctx.get(standardHitDistributions).get(0);
-		HitDistribution typicalHitDistribution = standardDistribution.scale(50.0 / 51.0);
+		HitDistribution standardDistribution = ctx.get(standardHitDistribution);
 
-		HitDistribution tripleDamageDist = new HitDistribution();
-		for (AttackOutcome o : standardDistribution)
-		{
-			tripleDamageDist.addOutcome(new AttackOutcome(
-				o.getProbability() / 51.0,
-				Collections.singletonList(o.getHits().get(0) * 3)
-			));
-		}
+		HitDistribution ret = new HitDistribution();
+		standardDistribution.scaleProbability(50.0 / 51.0)
+			.forEach(ret::addOutcome);
+		standardDistribution.forEach(h -> ret.addOutcome(new WeightedHit(
+			h.getProbability() / 51.0,
+			h.getHits().stream().map(i -> i * 3).collect(Collectors.toList())
+		)));
 
-		return List.of(
-			typicalHitDistribution,
-			tripleDamageDist
-		);
+		return new AttackDistribution(List.of(ret));
 	}
 
 }

@@ -1,7 +1,7 @@
-package com.duckblade.osrs.dpscalc.calc3.meta.math;
+package com.duckblade.osrs.dpscalc.calc3.meta.math.outcomes;
 
+import com.duckblade.osrs.dpscalc.calc3.meta.math.Operation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,13 +10,13 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 @Value
-public class AttackOutcome
+public class WeightedHit
 {
 
 	private final double probability;
 	private final List<Integer> hits;
 
-	public AttackOutcome(double probability, List<Integer> hits)
+	public WeightedHit(double probability, List<Integer> hits)
 	{
 		this.probability = probability;
 		this.hits = hits;
@@ -27,34 +27,44 @@ public class AttackOutcome
 		return this.hits.size();
 	}
 
-	public AttackOutcome scale(double probabilityFactor)
+	public WeightedHit scaleProbability(double probabilityFactor)
 	{
-		return new AttackOutcome(
+		return new WeightedHit(
 			this.probability * probabilityFactor,
 			this.hits
 		);
 	}
 
-	public AttackOutcome zip(AttackOutcome other)
+	public WeightedHit scaleDamage(Operation op)
+	{
+		return new WeightedHit(
+			this.probability,
+			this.hits.stream()
+				.map(op::apply)
+				.collect(Collectors.toList())
+		);
+	}
+
+	public WeightedHit zip(WeightedHit other)
 	{
 		List<Integer> newHits = new ArrayList<>(this.hits);
 		newHits.addAll(other.hits);
 
-		return new AttackOutcome(
+		return new WeightedHit(
 			this.probability * other.probability,
 			newHits
 		);
 	}
 
-	Pair<AttackOutcome, AttackOutcome> shift()
+	Pair<WeightedHit, WeightedHit> shift()
 	{
 		assert this.hits.size() > 1;
 		return new ImmutablePair<>(
-			new AttackOutcome(
+			new WeightedHit(
 				this.probability,
 				Collections.singletonList(this.hits.get(0))
 			),
-			new AttackOutcome(
+			new WeightedHit(
 				1.0,
 				this.hits.subList(1, this.hits.size())
 			)
@@ -65,16 +75,12 @@ public class AttackOutcome
 	{
 		if (dimension() == 1)
 		{
-			HitDistribution d = new HitDistribution();
-			for (AttackOutcome o : t.transform(this.hits.get(0)))
-			{
-				d.addOutcome(o.scale(this.probability));
-			}
-			return d;
+			return t.transform(this.hits.get(0))
+				.scaleProbability(this.probability);
 		}
 
 		// recursive subproblem
-		Pair<AttackOutcome, AttackOutcome> shifted = shift();
+		Pair<WeightedHit, WeightedHit> shifted = shift();
 		return shifted.getLeft().transform(t)
 			.zip(shifted.getRight().transform(t));
 	}

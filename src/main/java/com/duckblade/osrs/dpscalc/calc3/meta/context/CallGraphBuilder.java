@@ -89,6 +89,17 @@ public class CallGraphBuilder
 		workingStack.pop().val = val;
 	}
 
+	public void recordPut(ContextValue<?> output, Object val)
+	{
+		TreeNode current = workingStack.peek();
+		if (current != null && output instanceof ComputeOutput)
+		{
+			TreeNode child = new TreeNode(output.key());
+			child.val = val;
+			current.children.add(child);
+		}
+	}
+
 	public String toString()
 	{
 		Set<String> t = new TreeSet<>(Arrays.asList(root.toString().split("\n")));

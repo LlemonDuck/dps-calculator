@@ -71,8 +71,8 @@ public enum WeaponCategory
 	)),
 	PARTISAN(29, Arrays.asList(
 		new AttackStyle(0, "Stab (Stab/Accurate)", AttackType.MELEE, MeleeAttackType.STAB, CombatStyle.ACCURATE, false),
-		new AttackStyle(0, "Lunge (Stab/Aggressive)", AttackType.MELEE, MeleeAttackType.STAB, CombatStyle.ACCURATE, false),
-		new AttackStyle(0, "Pound (Crush/Aggressive)", AttackType.MELEE, MeleeAttackType.CRUSH, CombatStyle.ACCURATE, false),
+		new AttackStyle(0, "Lunge (Stab/Aggressive)", AttackType.MELEE, MeleeAttackType.STAB, CombatStyle.AGGRESSIVE, false),
+		new AttackStyle(0, "Pound (Crush/Aggressive)", AttackType.MELEE, MeleeAttackType.CRUSH, CombatStyle.AGGRESSIVE, false),
 		new AttackStyle(0, "Block (Stab/Defensive)", AttackType.MELEE, MeleeAttackType.STAB, CombatStyle.ACCURATE, false)
 	)),
 	PICKAXE(11, Arrays.asList(

@@ -1,6 +1,6 @@
 package com.duckblade.osrs.dpscalc.calc3.effects.gearbonus;
 
-import com.duckblade.osrs.dpscalc.calc3.core.standard.SpellbookMaxHit;
+import com.duckblade.osrs.dpscalc.calc3.core.standard.magicmaxhit.SpellbookMaxHit;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeInputs;
 import static com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeInputs.DEFENDER_ATTRIBUTES;

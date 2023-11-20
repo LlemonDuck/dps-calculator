@@ -24,7 +24,7 @@ public class ItemStatsConstants
 		.slot(EquipmentInventorySlot.WEAPON.getSlotIdx())
 		.build();
 
-	public static final ItemStats BERSERKER_RING = ItemStats.builder()
+	public static final ItemStats BERSERKER_RING_I = ItemStats.builder()
 		.strengthMelee(8)
 		.slot(EquipmentInventorySlot.RING.getSlotIdx())
 		.itemId(ItemID.BERSERKER_RING)
@@ -129,7 +129,7 @@ public class ItemStatsConstants
 			.put(EquipmentInventorySlot.LEGS, TORVA_LEGS)
 			.put(EquipmentInventorySlot.GLOVES, FEROCIOUS_GLOVES)
 			.put(EquipmentInventorySlot.BOOTS, PRIMS)
-			.put(EquipmentInventorySlot.RING, BERSERKER_RING);
+			.put(EquipmentInventorySlot.RING, BERSERKER_RING_I);
 
 		if (weapon != null)
 		{

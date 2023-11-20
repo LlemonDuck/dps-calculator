@@ -14,7 +14,7 @@ import net.runelite.api.ItemID;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
-public class KerisGearBonus implements GearBonusOperation
+public class Keris implements GearBonusOperation
 {
 
 	private static final Set<Integer> KERIS_WEAPONS = ImmutableSet.of(

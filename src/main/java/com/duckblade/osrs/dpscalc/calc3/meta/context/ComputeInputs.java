@@ -3,7 +3,7 @@ package com.duckblade.osrs.dpscalc.calc3.meta.context;
 import com.duckblade.osrs.dpscalc.calc3.model.ScenarioInputs;
 import com.duckblade.osrs.dpscalc.calc3.model.AttackStyle;
 import com.duckblade.osrs.dpscalc.calc3.model.DefenderAttributes;
-import com.duckblade.osrs.dpscalc.calc3.model.DefensiveBonuses;
+import com.duckblade.osrs.dpscalc.calc3.model.DefensiveStats;
 import com.duckblade.osrs.dpscalc.calc3.model.ItemStats;
 import com.duckblade.osrs.dpscalc.calc3.model.Prayer;
 import com.duckblade.osrs.dpscalc.calc3.model.Skills;
@@ -31,8 +31,7 @@ public class ComputeInputs<T> implements ContextValue<T>
 	public static ComputeInputs<Integer> ATTACK_DISTANCE = ComputeInputs.of("AttackDistance");
 
 	// defender
-	public static ComputeInputs<Skills> DEFENDER_SKILLS = ComputeInputs.of("DefenderSkillsInput");
-	public static ComputeInputs<DefensiveBonuses> DEFENDER_BONUSES = ComputeInputs.of("DefenderBonuses");
+	public static ComputeInputs<DefensiveStats> DEFENDER_STATS = ComputeInputs.of("DefenderBonuses");
 	public static ComputeInputs<DefenderAttributes> DEFENDER_ATTRIBUTES = ComputeInputs.of("DefenderAttributes", DefenderAttributes.EMPTY);
 
 	// extras

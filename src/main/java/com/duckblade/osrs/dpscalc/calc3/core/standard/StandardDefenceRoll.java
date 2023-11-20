@@ -1,33 +1,34 @@
 package com.duckblade.osrs.dpscalc.calc3.core.standard;
 
+import com.duckblade.osrs.dpscalc.calc3.core.DefenderStats;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ContextValue;
 import com.duckblade.osrs.dpscalc.calc3.model.AttackStyle;
 import com.duckblade.osrs.dpscalc.calc3.model.AttackType;
-import com.duckblade.osrs.dpscalc.calc3.model.DefensiveBonuses;
-import java.util.Map;
+import com.duckblade.osrs.dpscalc.calc3.model.DefensiveStats;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
-import net.runelite.api.Skill;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class StandardDefenceRoll implements ContextValue<Integer>
 {
 
+	private final DefenderStats defenderStats;
+
 	@Override
 	public Integer compute(ComputeContext ctx)
 	{
-		Map<Skill, Integer> totals = ctx.get(ComputeInputs.DEFENDER_SKILLS).getTotals();
 		int defenceBonus = getEquipmentBonus(ctx);
-		int defenceLevel = totals.get(Skill.DEFENCE);
+
+		DefensiveStats stats = ctx.get(ComputeInputs.DEFENDER_STATS);
+		int defenceLevel = stats.getLevelDefence();
 		if (ctx.get(ComputeInputs.ATTACK_STYLE).getAttackType() == AttackType.MAGIC)
 		{
-			defenceLevel = totals.get(Skill.MAGIC);
+			defenceLevel = stats.getLevelMagic();
 		}
-
 
 		return (defenceLevel + 9) * (defenceBonus + 64);
 	}
@@ -35,27 +36,27 @@ public class StandardDefenceRoll implements ContextValue<Integer>
 	private int getEquipmentBonus(ComputeContext ctx)
 	{
 		AttackStyle attackStyle = ctx.get(ComputeInputs.ATTACK_STYLE);
-		DefensiveBonuses equipment = ctx.get(ComputeInputs.DEFENDER_BONUSES);
+		DefensiveStats defensiveStats = ctx.get(defenderStats);
 		switch (attackStyle.getAttackType())
 		{
 			case MELEE:
 				switch (attackStyle.getMeleeAttackType())
 				{
 					case STAB:
-						return equipment.getDefenseStab();
+						return defensiveStats.getDefenceStab();
 
 					case SLASH:
-						return equipment.getDefenseSlash();
+						return defensiveStats.getDefenceSlash();
 
 					case CRUSH:
-						return equipment.getDefenseCrush();
+						return defensiveStats.getDefenceCrush();
 				}
 
 			case RANGED:
-				return equipment.getDefenseRanged();
+				return defensiveStats.getDefenceRanged();
 
 			case MAGIC:
-				return equipment.getDefenseMagic();
+				return defensiveStats.getDefenceMagic();
 		}
 
 		return 0;

@@ -1,4 +1,4 @@
-package com.duckblade.osrs.dpscalc.calc3.effects.barrows;
+package com.duckblade.osrs.dpscalc.calc3.effects.gearbonus;
 
 import com.duckblade.osrs.dpscalc.calc3.effects.gearbonus.GearBonus;
 import com.duckblade.osrs.dpscalc.calc3.effects.gearbonus.GearBonusOperation;

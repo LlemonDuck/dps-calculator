@@ -8,7 +8,9 @@ import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeOutput;
 import com.duckblade.osrs.dpscalc.calc3.meta.math.Operation;
 import com.duckblade.osrs.dpscalc.calc3.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc3.model.Prayer;
+import javax.inject.Singleton;
 
+@Singleton
 public class PrayerBonus implements GearBonusOperation
 {
 

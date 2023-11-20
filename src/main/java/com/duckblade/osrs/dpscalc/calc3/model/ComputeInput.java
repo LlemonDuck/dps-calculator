@@ -45,7 +45,7 @@ public class ComputeInput
 	private final Skills defenderSkills = Skills.EMPTY;
 
 	@Builder.Default
-	private final DefensiveBonuses defenderBonuses = DefensiveBonuses.EMPTY;
+	private final DefensiveStats defenderBonuses = DefensiveStats.EMPTY;
 
 	@Builder.Default
 	private final DefenderAttributes defenderAttributes = DefenderAttributes.EMPTY;

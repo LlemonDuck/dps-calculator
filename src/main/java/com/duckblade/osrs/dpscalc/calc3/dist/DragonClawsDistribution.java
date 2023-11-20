@@ -4,8 +4,8 @@ import com.duckblade.osrs.dpscalc.calc3.core.Accuracy;
 import com.duckblade.osrs.dpscalc.calc3.core.MaxHit;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ContextValue;
-import com.duckblade.osrs.dpscalc.calc3.meta.math.AttackOutcome;
-import com.duckblade.osrs.dpscalc.calc3.meta.math.HitDistribution;
+import com.duckblade.osrs.dpscalc.calc3.meta.math.outcomes.WeightedHit;
+import com.duckblade.osrs.dpscalc.calc3.meta.math.outcomes.HitDistribution;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
@@ -40,7 +40,7 @@ public class DragonClawsDistribution implements ContextValue<List<HitDistributio
 		double partialAcc = (acc * Math.pow(1 - acc, 0)) / (high - low + 1);
 		for (int hit = low; hit <= high; hit++)
 		{
-			dist.addOutcome(new AttackOutcome(
+			dist.addOutcome(new WeightedHit(
 				partialAcc,
 				List.of(
 					hit * 4 / 8,
@@ -57,7 +57,7 @@ public class DragonClawsDistribution implements ContextValue<List<HitDistributio
 		partialAcc = (acc * Math.pow(1 - acc, 1)) / (high - low + 1);
 		for (int hit = low; hit <= high; hit++)
 		{
-			dist.addOutcome(new AttackOutcome(
+			dist.addOutcome(new WeightedHit(
 				partialAcc,
 				List.of(
 					hit * 2 / 4,
@@ -74,7 +74,7 @@ public class DragonClawsDistribution implements ContextValue<List<HitDistributio
 		partialAcc = (acc * Math.pow(1 - acc, 2)) / (high - low + 1);
 		for (int hit = low; hit <= high; hit++)
 		{
-			dist.addOutcome(new AttackOutcome(
+			dist.addOutcome(new WeightedHit(
 				partialAcc,
 				List.of(
 					hit * 1 / 2,
@@ -91,7 +91,7 @@ public class DragonClawsDistribution implements ContextValue<List<HitDistributio
 		partialAcc = (acc * Math.pow(1 - acc, 3)) / (high - low + 1);
 		for (int hit = low; hit <= high; hit++)
 		{
-			dist.addOutcome(new AttackOutcome(
+			dist.addOutcome(new WeightedHit(
 				partialAcc,
 				List.of(
 					hit + 1,
@@ -103,8 +103,8 @@ public class DragonClawsDistribution implements ContextValue<List<HitDistributio
 		}
 
 		double remainingAcc = acc * Math.pow(1 - acc, 4);
-		dist.addOutcome(new AttackOutcome(remainingAcc * 2 / 3, List.of(0, 0, 1, 1)));
-		dist.addOutcome(new AttackOutcome(remainingAcc * 1 / 3, List.of(0, 0, 0, 0)));
+		dist.addOutcome(new WeightedHit(remainingAcc * 2 / 3, List.of(0, 0, 1, 1)));
+		dist.addOutcome(new WeightedHit(remainingAcc * 1 / 3, List.of(0, 0, 0, 0)));
 
 		return Collections.singletonList(dist);
 	}

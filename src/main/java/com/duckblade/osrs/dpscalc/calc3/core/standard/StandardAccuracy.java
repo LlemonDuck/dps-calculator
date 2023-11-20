@@ -19,12 +19,12 @@ public class StandardAccuracy implements ContextValue<Double>
 	@Override
 	public Double compute(ComputeContext ctx)
 	{
-		int att = ctx.get(attackRoll);
-		int def = ctx.get(defenceRoll);
+		double att = (double) ctx.get(attackRoll);
+		double def = (double) ctx.get(defenceRoll);
 
-		return (double) (att > def
+		return att > def
 			? 1 - ((def + 2) / (2 * (att + 1)))
-			: att / (2 * (def + 1)));
+			: att / (2 * (def + 1));
 	}
 
 }

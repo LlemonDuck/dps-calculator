@@ -33,8 +33,7 @@ public class ComputeContext
 		this.put(ComputeInputs.SPELL, input.getSpell());
 		this.put(ComputeInputs.BLOWPIPE_DARTS, input.getBlowpipeDarts());
 		this.put(ComputeInputs.ATTACK_DISTANCE, input.getAttackerDistance());
-		this.put(ComputeInputs.DEFENDER_SKILLS, input.getDefenderSkills());
-		this.put(ComputeInputs.DEFENDER_BONUSES, input.getDefenderBonuses());
+		this.put(ComputeInputs.DEFENDER_STATS, input.getDefenderBonuses());
 		this.put(ComputeInputs.DEFENDER_ATTRIBUTES, input.getDefenderAttributes());
 		this.put(ComputeInputs.ON_SLAYER_TASK, input.isOnSlayerTask());
 		this.put(ComputeInputs.USING_CHARGE_SPELL, input.isUsingChargeSpell());
@@ -101,6 +100,11 @@ public class ComputeContext
 	public <T> void put(ContextValue<T> computable, T override)
 	{
 		computedValueCache.put(computable.key(), override);
+
+		if (graphBuilder != null)
+		{
+			graphBuilder.recordPut(computable, override);
+		}
 	}
 
 	public void warn(String warning)

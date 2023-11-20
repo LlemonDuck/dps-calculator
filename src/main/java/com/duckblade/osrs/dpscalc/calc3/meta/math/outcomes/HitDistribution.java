@@ -1,18 +1,20 @@
-package com.duckblade.osrs.dpscalc.calc3.meta.math;
+package com.duckblade.osrs.dpscalc.calc3.meta.math.outcomes;
 
+import com.duckblade.osrs.dpscalc.calc3.meta.math.Operation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
-public class HitDistribution implements Iterable<AttackOutcome>
+public class HitDistribution implements Iterable<WeightedHit>
 {
 
-	List<AttackOutcome> outcomes = new ArrayList<>();
+	List<WeightedHit> outcomes = new ArrayList<>();
 
-	public void addOutcome(AttackOutcome o)
+	public void addOutcome(WeightedHit o)
 	{
 		this.outcomes.add(o);
 	}
@@ -20,9 +22,9 @@ public class HitDistribution implements Iterable<AttackOutcome>
 	public HitDistribution zip(HitDistribution other)
 	{
 		HitDistribution d = new HitDistribution();
-		for (AttackOutcome o : this)
+		for (WeightedHit o : this)
 		{
-			for (AttackOutcome p : other)
+			for (WeightedHit p : other)
 			{
 				d.addOutcome(o.zip(p));
 			}
@@ -34,9 +36,9 @@ public class HitDistribution implements Iterable<AttackOutcome>
 	public HitDistribution transform(HitTransformer t)
 	{
 		HitDistribution d = new HitDistribution();
-		for (AttackOutcome o : this)
+		for (WeightedHit o : this)
 		{
-			for (AttackOutcome p : o.transform(t))
+			for (WeightedHit p : o.transform(t))
 			{
 				d.addOutcome(p);
 			}
@@ -49,14 +51,14 @@ public class HitDistribution implements Iterable<AttackOutcome>
 	{
 		System.out.println("Start size " + outcomeCount());
 		Map<List<Integer>, Double> accumulator = new HashMap<>();
-		for (AttackOutcome o : this)
+		for (WeightedHit o : this)
 		{
 			accumulator.compute(o.getHits(), (_k, v) -> (v == null ? 0.0 : v) + o.getProbability());
 		}
 
 		HitDistribution flattened = new HitDistribution();
 		accumulator.entrySet().stream()
-			.map(e -> new AttackOutcome(e.getValue(), e.getKey()))
+			.map(e -> new WeightedHit(e.getValue(), e.getKey()))
 			.forEach(flattened::addOutcome);
 		System.out.println("End size " + flattened.outcomeCount());
 		return flattened;
@@ -65,17 +67,15 @@ public class HitDistribution implements Iterable<AttackOutcome>
 	public static HitDistribution linear(double accuracy, int minInclusive, int maxInclusive)
 	{
 		HitDistribution d = new HitDistribution();
-		double constProb = 1.0 / (maxInclusive - minInclusive + 1);
+		double constProb = accuracy / (maxInclusive - minInclusive + 1);
 		for (int hit = minInclusive; hit <= maxInclusive; hit++)
 		{
-			d.addOutcome(new AttackOutcome(
+			d.addOutcome(new WeightedHit(
 				constProb,
 				Collections.singletonList(hit)
 			));
 		}
-		System.out.println(d);
-		d = d.scale(accuracy);
-		d.addOutcome(new AttackOutcome(1.0 - accuracy, Collections.singletonList(0)));
+		d.addOutcome(new WeightedHit(1.0 - accuracy, Collections.singletonList(0)));
 
 		return d;
 	}
@@ -88,16 +88,17 @@ public class HitDistribution implements Iterable<AttackOutcome>
 	public static HitDistribution single(double accuracy, int hit)
 	{
 		HitDistribution d = new HitDistribution();
-		d.addOutcome(new AttackOutcome(accuracy, Collections.singletonList(hit)));
+		d.addOutcome(new WeightedHit(accuracy, Collections.singletonList(hit)));
 		if (accuracy != 1.0)
 		{
-			d.addOutcome(new AttackOutcome(1 - accuracy, Collections.singletonList(0)));
+			d.addOutcome(new WeightedHit(1 - accuracy, Collections.singletonList(0)));
 		}
 		return d;
 	}
 
+	@Nonnull
 	@Override
-	public Iterator<AttackOutcome> iterator()
+	public Iterator<WeightedHit> iterator()
 	{
 		return outcomes.iterator();
 	}
@@ -119,16 +120,27 @@ public class HitDistribution implements Iterable<AttackOutcome>
 	public double expectedHit()
 	{
 		return outcomes.stream()
-			.mapToDouble(AttackOutcome::getExpectedValue)
+			.mapToDouble(WeightedHit::getExpectedValue)
 			.sum();
 	}
 
-	public HitDistribution scale(double probabilityFactor)
+	public HitDistribution scaleProbability(double probabilityFactor)
 	{
 		HitDistribution d = new HitDistribution();
-		for (AttackOutcome o : this)
+		for (WeightedHit o : this)
 		{
-			d.addOutcome(o.scale(probabilityFactor));
+			d.addOutcome(o.scaleProbability(probabilityFactor));
+		}
+
+		return d;
+	}
+
+	public HitDistribution scaleDamage(Operation op)
+	{
+		HitDistribution d = new HitDistribution();
+		for (WeightedHit o : this)
+		{
+			d.addOutcome(o.scaleDamage(op));
 		}
 
 		return d;
@@ -142,8 +154,16 @@ public class HitDistribution implements Iterable<AttackOutcome>
 	public double sumProbabilities()
 	{
 		return outcomes.stream()
-			.mapToDouble(AttackOutcome::getProbability)
+			.mapToDouble(WeightedHit::getProbability)
 			.sum();
+	}
+
+	public int getMax()
+	{
+		return outcomes.stream()
+			.mapToInt(WeightedHit::getSum)
+			.max()
+			.orElse(0);
 	}
 
 }

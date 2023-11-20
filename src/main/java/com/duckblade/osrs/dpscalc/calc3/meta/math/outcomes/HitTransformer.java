@@ -1,4 +1,4 @@
-package com.duckblade.osrs.dpscalc.calc3.meta.math;
+package com.duckblade.osrs.dpscalc.calc3.meta.math.outcomes;
 
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public abstract class HitTransformer
 			HitDistribution d = new HitDistribution();
 			for (int limit = 0; limit <= maxLimit; limit++)
 			{
-				d.addOutcome(new AttackOutcome(
+				d.addOutcome(new WeightedHit(
 					constProb,
 					Collections.singletonList(Math.min(hitsplat, limit))
 				));

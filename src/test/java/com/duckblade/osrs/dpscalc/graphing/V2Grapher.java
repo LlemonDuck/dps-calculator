@@ -40,7 +40,7 @@ public class V2Grapher
 		context.put(ComputeInputs.ATTACKER_SKILLS, TestSkills.MAXED_WITH_BOOSTS);
 		context.put(ComputeInputs.ATTACKER_PRAYERS, Collections.singleton(Prayer.PIETY));
 
-		TestNpcStats.verzikP2(context);
+		TestNpcStats.sire(context);
 	}
 
 	public static void main(String[] args) throws Exception

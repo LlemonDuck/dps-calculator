@@ -1,4 +1,4 @@
-package com.duckblade.osrs.dpscalc.calc3.util;
+package com.duckblade.osrs.dpscalc.calc3.core.standard;
 
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeInputs;
@@ -13,7 +13,7 @@ import net.runelite.api.EquipmentInventorySlot;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
-public class EquipmentStats implements ContextValue<ItemStats>
+public class StandardEquipmentStats implements ContextValue<ItemStats>
 {
 
 	// todo
@@ -28,7 +28,7 @@ public class EquipmentStats implements ContextValue<ItemStats>
 			.filter(is -> is.getKey() != EquipmentInventorySlot.AMMO)
 			.map(Map.Entry::getValue)
 			.filter(Objects::nonNull)
-			.reduce(EquipmentStats::reduce)
+			.reduce(StandardEquipmentStats::reduce)
 			.orElse(ItemStats.EMPTY);
 
 //		ItemStats ammoSlot = ctx.get(ammoStats);

@@ -1,4 +1,4 @@
-package com.duckblade.osrs.dpscalc.calc3.core.standard;
+package com.duckblade.osrs.dpscalc.calc3.core.standard.magicmaxhit;
 
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc3.meta.context.ComputeInputs;
