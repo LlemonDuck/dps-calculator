@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ComputeContext
 {
 
+	private final Map<String, Boolean> computedApplicabilityCache = new HashMap<>();
 	private final Map<String, Object> computedValueCache = new HashMap<>();
 	private final List<String> warnings = new ArrayList<>();
 
@@ -45,6 +46,21 @@ public class ComputeContext
 	public void initDebug()
 	{
 		graphBuilder = new CallGraphBuilder();
+	}
+
+	public boolean isApplicable(ContextValue<?> computable)
+	{
+		// hit cache first
+		String key = computable.key();
+		Boolean value = computedApplicabilityCache.get(key);
+		if (value != null)
+		{
+			return value;
+		}
+
+		value = computable.isApplicable(this);
+		computedApplicabilityCache.put(key, value);
+		return value;
 	}
 
 	public <T> T get(ContextValue<T> computable)

@@ -26,10 +26,10 @@ public class MageDemonbane implements GearBonusOperation
 	private final SpellbookMaxHit spellbookMaxHit;
 
 	@Override
-	public boolean isApplicable(ComputeContext context)
+	public boolean isApplicable(ComputeContext ctx)
 	{
-		return spellbookMaxHit.isApplicable(context) &&
-			DEMONBANE_SPELLS.contains(context.get(ComputeInputs.SPELL));
+		return ctx.isApplicable(this) &&
+			DEMONBANE_SPELLS.contains(ctx.get(ComputeInputs.SPELL));
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public abstract class FirstContextValue<T> implements ContextValue<T>
 	{
 		for (ContextValue<T> provider : providers)
 		{
-			if (provider.isApplicable(ctx))
+			if (ctx.isApplicable(provider))
 			{
 				return ctx.get(provider);
 			}

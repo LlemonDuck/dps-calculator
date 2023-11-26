@@ -9,7 +9,7 @@ public interface ContextOperation extends ContextValue<Operation>
 	default int apply(ComputeContext ctx, int previous)
 	{
 		Operation op;
-		if (this.isApplicable(ctx) && (op = ctx.get(this)) != null)
+		if (ctx.isApplicable(this) && (op = ctx.get(this)) != null)
 		{
 			return op.apply(previous);
 		}

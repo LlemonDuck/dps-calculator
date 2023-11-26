@@ -11,7 +11,7 @@ public interface GearBonusOperation extends ContextValue<GearBonus>
 	default int applyAccuracy(ComputeContext ctx, int previous)
 	{
 		GearBonus gb;
-		if (this.isApplicable(ctx) && (gb = ctx.get(this)) != null)
+		if (ctx.isApplicable(this) && (gb = ctx.get(this)) != null)
 		{
 			return gb.applyAccuracy(previous);
 		}
@@ -22,7 +22,7 @@ public interface GearBonusOperation extends ContextValue<GearBonus>
 	default int applyStrength(ComputeContext ctx, int previous)
 	{
 		GearBonus gb;
-		if (this.isApplicable(ctx) && (gb = ctx.get(this)) != null)
+		if (ctx.isApplicable(this) && (gb = ctx.get(this)) != null)
 		{
 			return gb.applyStrength(previous);
 		}
