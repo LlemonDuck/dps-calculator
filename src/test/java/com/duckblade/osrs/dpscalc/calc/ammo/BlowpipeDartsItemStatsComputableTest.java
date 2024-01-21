@@ -43,6 +43,15 @@ class BlowpipeDartsItemStatsComputableTest
 	}
 
 	@Test
+	void isApplicableWhenUsingBlazingBlowpipe()
+	{
+		when(context.get(weaponComputable)).thenReturn(ofItemId(ItemID.BLAZING_BLOWPIPE));
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.RANGED));
+
+		assertTrue(blowpipeDartsItemStatsComputable.isApplicable(context));
+	}
+
+	@Test
 	void isNotApplicableWhenNotUsingRanged()
 	{
 		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));

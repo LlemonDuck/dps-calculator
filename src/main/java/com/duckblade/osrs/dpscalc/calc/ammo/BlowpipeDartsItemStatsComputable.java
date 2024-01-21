@@ -19,7 +19,7 @@ public class BlowpipeDartsItemStatsComputable implements AmmoItemStatsComputable
 {
 
 	private static final Set<Integer> BLOWPIPE_IDS = ImmutableSet.of(
-		ItemID.TOXIC_BLOWPIPE
+		ItemID.TOXIC_BLOWPIPE, ItemID.BLAZING_BLOWPIPE
 	);
 
 	private final WeaponComputable weaponComputable;
