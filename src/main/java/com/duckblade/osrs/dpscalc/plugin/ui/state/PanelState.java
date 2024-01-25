@@ -77,6 +77,8 @@ public class PanelState
 		private int size = 1; // scythe
 		private int accuracyMagic = 0; // tbow
 		private int raidPartySize = 0;
+		private int toaInvocationLevel = 0;
+		private int toaPathLevel = 0;
 
 		public DefenderAttributes toImmutable()
 		{
@@ -153,6 +155,10 @@ public class PanelState
 
 	private int raidPartySize = 1;
 
+	private int toaInvocationLevel = 0;
+
+	private int toaPathLevel = 0;
+
 	public void loadNpcData(NpcData npc)
 	{
 		if (npc == null)
@@ -192,6 +198,8 @@ public class PanelState
 			.usingMarkOfDarkness(usingMarkOfDarkness)
 			.inWilderness(inWilderness)
 			.raidPartySize(raidPartySize)
+			.toaInvocationLevel(toaInvocationLevel)
+			.toaPathLevel(toaPathLevel)
 			.build();
 	}
 

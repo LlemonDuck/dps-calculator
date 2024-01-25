@@ -40,6 +40,8 @@ public class ComputeInputs<T> implements Computable<T>
 	public static ComputeInputs<Boolean> USING_MARK_OF_DARKNESS = ComputeInputs.of("UsingMarkOfDarkness", false);
 	public static ComputeInputs<Boolean> IN_WILDERNESS = ComputeInputs.of("InWilderness", false);
 	public static ComputeInputs<Integer> RAID_PARTY_SIZE = ComputeInputs.of("RaidPartySize");
+	public static ComputeInputs<Integer> TOA_INVOCATION_LEVEL = ComputeInputs.of("ToAInvocationLevel");
+	public static ComputeInputs<Integer> TOA_PATH_LEVEL = ComputeInputs.of("ToAPathLevel");
 
 	private final String key;
 

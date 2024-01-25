@@ -6,6 +6,7 @@ import com.duckblade.osrs.dpscalc.calc.ammo.BlowpipeDartsItemStatsComputable;
 import com.duckblade.osrs.dpscalc.calc.defender.skills.SkillScaling;
 import com.duckblade.osrs.dpscalc.calc.defender.skills.TheatreSkillScaling;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeOutput;
+import com.duckblade.osrs.dpscalc.calc.defender.skills.ToaScaling;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.AhrimsAutocastGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.BlackMaskGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.ChinchompaDistanceGearBonus;
@@ -33,13 +34,7 @@ import com.duckblade.osrs.dpscalc.calc.maxhit.magic.MagicMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.maxhit.magic.MagicSalamanderMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.maxhit.magic.PoweredStaffMaxHitComputable;
 import com.duckblade.osrs.dpscalc.calc.maxhit.magic.SpellMaxHitComputable;
-import com.duckblade.osrs.dpscalc.calc.multihit.ColossalBladeDptComputable;
-import com.duckblade.osrs.dpscalc.calc.multihit.DharoksDptComputable;
-import com.duckblade.osrs.dpscalc.calc.multihit.KarilsDptComputable;
-import com.duckblade.osrs.dpscalc.calc.multihit.KerisDptComputable;
-import com.duckblade.osrs.dpscalc.calc.multihit.MultiHitDptComputable;
-import com.duckblade.osrs.dpscalc.calc.multihit.ScytheDptComputable;
-import com.duckblade.osrs.dpscalc.calc.multihit.VeracsDptComputable;
+import com.duckblade.osrs.dpscalc.calc.multihit.*;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
@@ -59,6 +54,7 @@ public class DpsComputeModule extends AbstractModule
 
 		Multibinder<SkillScaling> defenderSkillsTransformers = Multibinder.newSetBinder(binder(), SkillScaling.class);
 		defenderSkillsTransformers.addBinding().to(TheatreSkillScaling.class);
+		defenderSkillsTransformers.addBinding().to(ToaScaling.class);
 
 		Multibinder<GearBonusComputable> gearBonusComputables = Multibinder.newSetBinder(binder(), GearBonusComputable.class);
 		gearBonusComputables.addBinding().to(AhrimsAutocastGearBonus.class);
@@ -97,6 +93,7 @@ public class DpsComputeModule extends AbstractModule
 		multiHitDptComputables.addBinding().to(KerisDptComputable.class);
 		multiHitDptComputables.addBinding().to(ScytheDptComputable.class);
 		multiHitDptComputables.addBinding().to(VeracsDptComputable.class);
+		multiHitDptComputables.addBinding().to(OsmumtensFangDptComputable.class);
 
 		// CHECKSTYLE:OFF
 		bind(new TypeLiteral<List<ComputeOutput<Integer>>>() {})

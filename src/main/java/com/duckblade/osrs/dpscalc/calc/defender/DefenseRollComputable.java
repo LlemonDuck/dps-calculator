@@ -3,6 +3,7 @@ package com.duckblade.osrs.dpscalc.calc.defender;
 import com.duckblade.osrs.dpscalc.calc.compute.Computable;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
+import com.duckblade.osrs.dpscalc.calc.defender.skills.ToaScaling;
 import com.duckblade.osrs.dpscalc.calc.model.DefensiveBonuses;
 import com.duckblade.osrs.dpscalc.calc.model.Skills;
 import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
@@ -17,6 +18,7 @@ public class DefenseRollComputable implements Computable<Integer>
 {
 
 	private final DefenderSkillsComputable defenderSkillsComputable;
+	private final ToaScaling invocationComputable;
 
 	@Override
 	public Integer compute(ComputeContext context)
@@ -56,6 +58,18 @@ public class DefenseRollComputable implements Computable<Integer>
 				break;
 		}
 
-		return (defenseLevel + 9) * (defenseBonus + 64);
+		return (int) ((defenseLevel + 9) * (defenseBonus + 64) * toaInvocationMultiplier(context));
+	}
+
+	private Double toaInvocationMultiplier(ComputeContext context)
+	{
+		if (invocationComputable.isApplicable(context))
+		{
+			return invocationComputable.invocationMultiplier(context);
+		}
+		else
+		{
+			return 1.0;
+		}
 	}
 }
