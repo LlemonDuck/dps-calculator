@@ -27,9 +27,6 @@ import net.runelite.api.Client;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.ui.FontManager;
-import net.runelite.client.ui.skin.SubstanceRuneLiteLookAndFeel;
-import net.runelite.client.util.SwingUtil;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 
@@ -64,9 +61,10 @@ public class DPSCalcUITest
 		SwingUtilities.invokeAndWait(() ->
 		{
 			// roughly copied from RuneLite's ClientUI.java init()
-			SwingUtil.setupDefaults();
-			SwingUtil.setTheme(new SubstanceRuneLiteLookAndFeel());
-			SwingUtil.setFont(FontManager.getRunescapeFont());
+			// todo?
+//			SwingUtil.setupDefaults();
+//			SwingUtil.setTheme(new SubstanceRuneLiteLookAndFeel());
+//			SwingUtil.setFont(FontManager.getRunescapeFont());
 
 			JFrame frame = new JFrame();
 			frame.getLayeredPane().setCursor(Cursor.getDefaultCursor());
