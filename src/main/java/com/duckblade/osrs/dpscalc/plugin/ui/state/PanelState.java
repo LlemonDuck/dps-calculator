@@ -195,7 +195,9 @@ public class PanelState
 			.build();
 	}
 
-	public PanelState() { }
+	public PanelState()
+	{
+	}
 
 	public PanelState(PanelState original)
 	{
