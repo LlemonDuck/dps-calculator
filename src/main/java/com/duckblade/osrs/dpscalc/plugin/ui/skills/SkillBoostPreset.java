@@ -31,6 +31,7 @@ public enum SkillBoostPreset
 	BATTLEMAGE_POTION("Battlemage potion", MAGIC_POTION, SUPER_DEFENSE_POTION),
 
 	IMBUED_HEART("Imbued Heart", Skill.MAGIC, 0.10f, 1),
+	SATURATED_HEART("Saturated Heart", Skill.MAGIC, 0.10f, 4),
 
 	COX_OVERLOAD_MINUS("Overload (-)",
 		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
@@ -52,7 +53,11 @@ public enum SkillBoostPreset
 		new float[]{0.15f, 0.15f, 0.15f, 0.15f, 0.15f},
 		new int[]{5, 5, 5, 5, 5}
 	),
-
+	SMELLING_SALTS("Smelling salts",
+		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
+		new float[]{0.16f, 0.16f, 0.16f, 0.16f, 0.16f},
+		new int[]{11, 11, 11, 11, 11}
+	),
 	SARADOMIN_BREW("Saradomin brew",
 		new Skill[]{Skill.DEFENCE, Skill.ATTACK, Skill.STRENGTH, Skill.RANGED, Skill.MAGIC},
 		new float[]{0.20f, -0.10f, -0.10f, -0.10f, -0.10f},
