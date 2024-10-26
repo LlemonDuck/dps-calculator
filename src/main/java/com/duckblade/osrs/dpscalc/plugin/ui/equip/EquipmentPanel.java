@@ -11,6 +11,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -28,6 +29,20 @@ import net.runelite.client.ui.PluginPanel;
 @Singleton
 public class EquipmentPanel extends JPanel implements StateBoundComponent
 {
+
+	private static final List<EquipmentInventorySlot> RELEVANT_EQUIP_SLOTS = List.of(
+		EquipmentInventorySlot.HEAD,
+		EquipmentInventorySlot.CAPE,
+		EquipmentInventorySlot.AMULET,
+		EquipmentInventorySlot.WEAPON,
+		EquipmentInventorySlot.BODY,
+		EquipmentInventorySlot.SHIELD,
+		EquipmentInventorySlot.LEGS,
+		EquipmentInventorySlot.GLOVES,
+		EquipmentInventorySlot.BOOTS,
+		EquipmentInventorySlot.RING,
+		EquipmentInventorySlot.AMMO
+	);
 
 	@Getter
 	private final PanelStateManager manager;
@@ -67,7 +82,7 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 		slotPanel.setAlignmentX(CENTER_ALIGNMENT);
 		add(slotPanel);
 
-		for (EquipmentInventorySlot slot : EquipmentInventorySlot.values())
+		for (EquipmentInventorySlot slot : RELEVANT_EQUIP_SLOTS)
 		{
 			EquipmentSlotPanel innerPanel = new EquipmentSlotPanel(manager, rlItemManager, slot, itemStatsProvider);
 			innerPanel.addCallback(this::fromState);
