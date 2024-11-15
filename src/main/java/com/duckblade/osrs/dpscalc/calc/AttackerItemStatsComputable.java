@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import lombok.RequiredArgsConstructor;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.ItemID;
@@ -20,6 +21,8 @@ public class AttackerItemStatsComputable implements Computable<ItemStats>
 
 	// this one is a bit more complicated since it depends whether you're using an ammo-based weapon
 	private final AmmoSlotItemStatsComputable ammoSlotItemStatsComputable;
+
+	private final ToaArenaComputable toaArenaComputable;
 
 	@Override
 	public ItemStats compute(ComputeContext context)
@@ -40,13 +43,30 @@ public class AttackerItemStatsComputable implements Computable<ItemStats>
 		ItemStats weapon = itemStats.get(EquipmentInventorySlot.WEAPON);
 		if (weapon != null && weapon.getItemId() == ItemID.TUMEKENS_SHADOW)
 		{
-			return preShadow.toBuilder()
-				.accuracyMagic(3 * preShadow.getAccuracyMagic())
-				.strengthMagic(3 * preShadow.getStrengthMagic())
+			return applyTumekensShadow(context, preShadow);
+		}
+		else
+		{
+			return preShadow;
+		}
+	}
+
+	private ItemStats applyTumekensShadow(ComputeContext context, ItemStats itemStats)
+	{
+		if (context.get(toaArenaComputable) == ToaArena.FIGHTING_OUTSIDE_TOA)
+		{
+			return itemStats.toBuilder()
+				.accuracyMagic(3 * itemStats.getAccuracyMagic())
+				.strengthMagic(3 * itemStats.getStrengthMagic())
 				.build();
 		}
-
-		return preShadow;
+		else
+		{
+			return itemStats.toBuilder()
+				.accuracyMagic(4 * itemStats.getAccuracyMagic())
+				.strengthMagic(4 * itemStats.getStrengthMagic())
+				.build();
+		}
 	}
 
 	public static ItemStats reduce(ItemStats a, ItemStats b)
