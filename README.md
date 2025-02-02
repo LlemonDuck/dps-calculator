@@ -1,3 +1,7 @@
+# Archived as of Feb. 1, 2025
+
+As of writing, an upcoming RuneLite API change will break the plugin, and I have not had any interest in keeping it up to date for a while. If you care about this plugin and want to see it continued, join in on [this archival issue](#136).
+
 # DPS Calculator
 
 [![Active Installs](http://img.shields.io/endpoint?url=https://i.pluginhub.info/shields/installs/plugin/dps-calculator)](https://runelite.net/plugin-hub/show/dps-calculator)
