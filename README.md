@@ -4,8 +4,8 @@ As of writing, an upcoming RuneLite API change will break the plugin, and I have
 
 # DPS Calculator
 
-[![Active Installs](http://img.shields.io/endpoint?url=https://i.pluginhub.info/shields/installs/plugin/dps-calculator)](https://runelite.net/plugin-hub/show/dps-calculator)
-[![Plugin Rank](http://img.shields.io/endpoint?url=https://i.pluginhub.info/shields/rank/plugin/dps-calculator)](https://runelite.net/plugin-hub/show/dps-calculator)
+[![Active Installs](http://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/installs/plugin/dps-calculator)](https://runelite.net/plugin-hub/show/dps-calculator)
+[![Plugin Rank](http://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/rank/plugin/dps-calculator)](https://runelite.net/plugin-hub/show/dps-calculator)
 ![Build and Test](https://github.com/LlemonDuck/dps-calculator/actions/workflows/build_and_test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/LlemonDuck/dps-calculator/branch/master/graph/badge.svg)](https://codecov.io/gh/LlemonDuck/dps-calculator)
 
