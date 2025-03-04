@@ -39,6 +39,8 @@ public class ComputeContext
 		this.put(ComputeInputs.USING_MARK_OF_DARKNESS, input.isUsingMarkOfDarkness());
 		this.put(ComputeInputs.IN_WILDERNESS, input.isInWilderness());
 		this.put(ComputeInputs.RAID_PARTY_SIZE, input.getRaidPartySize());
+		this.put(ComputeInputs.TOA_INVOCATION_LEVEL, input.getToaInvocationLevel());
+		this.put(ComputeInputs.TOA_PATH_LEVEL, input.getToaPathLevel());
 	}
 
 	public <T> T get(Computable<T> computable)

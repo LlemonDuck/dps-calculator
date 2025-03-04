@@ -66,6 +66,12 @@ public class ComputeInput
 	@Builder.Default
 	private final int raidPartySize = 1;
 
+	@Builder.Default
+	private final int toaInvocationLevel = 0;
+
+	@Builder.Default
+	private final int toaPathLevel = 0;
+
 	public ComputeInputBuilder toBuilderDeep()
 	{
 		return toBuilder()

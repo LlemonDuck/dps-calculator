@@ -32,6 +32,12 @@ public enum SkillBoostPreset
 
 	IMBUED_HEART("Imbued Heart", Skill.MAGIC, 0.10f, 1),
 
+	SMELLING_SALTS("Smelling Salts",
+		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
+		new float[]{0.16f, 0.16f, 0.16f, 0.16f, 0.16f},
+		new int[]{11, 11, 11, 11, 11}
+	),
+
 	COX_OVERLOAD_MINUS("Overload (-)",
 		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
 		new float[]{0.10f, 0.10f, 0.10f, 0.10f, 0.10f},

@@ -4,6 +4,7 @@ import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.defender.DefenderSkillsComputable;
 import com.duckblade.osrs.dpscalc.calc.defender.DefenseRollComputable;
+import com.duckblade.osrs.dpscalc.calc.defender.skills.ToaScaling;
 import com.duckblade.osrs.dpscalc.calc.model.AttackType;
 import com.duckblade.osrs.dpscalc.calc.model.DefensiveBonuses;
 import com.duckblade.osrs.dpscalc.calc.model.Skills;
@@ -39,6 +40,9 @@ class DefenseRollComputableTest
 	private DefenderSkillsComputable defenderSkillsComputable;
 
 	@Mock
+	private ToaScaling toaScaling;
+
+	@Mock
 	private ComputeContext context;
 
 	@InjectMocks
@@ -49,6 +53,7 @@ class DefenseRollComputableTest
 	{
 		when(context.get(defenderSkillsComputable)).thenReturn(SKILLS);
 		when(context.get(ComputeInputs.DEFENDER_BONUSES)).thenReturn(BONUSES);
+		when(toaScaling.isApplicable(context)).thenReturn(false);
 	}
 
 	@Test
@@ -91,4 +96,13 @@ class DefenseRollComputableTest
 		assertEquals((12 + 9) * (56 + 64), defenseRollComputable.compute(context));
 	}
 
+	@Test
+	void appliesToaScalingToDefenseRoll()
+	{
+		when(toaScaling.isApplicable(context)).thenReturn(true);
+		when(toaScaling.invocationMultiplier(context)).thenReturn(2.0);
+		when(context.get(ComputeInputs.ATTACK_STYLE)).thenReturn(ofAttackType(AttackType.MAGIC));
+
+		assertEquals((34 + 9) * (90 + 64) * 2, defenseRollComputable.compute(context));
+	}
 }

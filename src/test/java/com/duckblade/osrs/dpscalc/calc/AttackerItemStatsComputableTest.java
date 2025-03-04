@@ -103,6 +103,9 @@ class AttackerItemStatsComputableTest
 	private ComputeContext context;
 
 	@Mock
+	private ToaArenaComputable toaArenaComputable;
+
+	@Mock
 	private AmmoSlotItemStatsComputable ammoSlotItemStatsComputable;
 
 	@InjectMocks
@@ -215,15 +218,29 @@ class AttackerItemStatsComputableTest
 	{
 		when(context.get(ComputeInputs.ATTACKER_ITEMS)).thenReturn(Collections.singletonMap(EquipmentInventorySlot.WEAPON, SHADOW));
 		when(context.get(ammoSlotItemStatsComputable)).thenReturn(ItemStats.EMPTY);
+		when(context.get(toaArenaComputable)).thenReturn(
+			ToaArena.FIGHTING_OUTSIDE_TOA,
+			ToaArena.FIGHTING_PATH_NPC,
+			ToaArena.FIGHTING_WARDENS
+		);
 
-		ItemStats expected = SHADOW.toBuilder()
+		ItemStats expectedOutsideToa = SHADOW.toBuilder()
 			.itemId(-1)
 			.name(null)
 			.accuracyMagic(3 * SHADOW.getAccuracyMagic())
 			.strengthMagic(3 * SHADOW.getStrengthMagic())
 			.build();
 
-		assertEquals(expected, attackerItemStatsComputable.compute(context));
+		ItemStats expectedInsideToa = SHADOW.toBuilder()
+			.itemId(-1)
+			.name(null)
+			.accuracyMagic(4 * SHADOW.getAccuracyMagic())
+			.strengthMagic(4 * SHADOW.getStrengthMagic())
+			.build();
+
+		assertEquals(expectedOutsideToa, attackerItemStatsComputable.compute(context));
+		assertEquals(expectedInsideToa, attackerItemStatsComputable.compute(context));
+		assertEquals(expectedInsideToa, attackerItemStatsComputable.compute(context));
 	}
 
 }
