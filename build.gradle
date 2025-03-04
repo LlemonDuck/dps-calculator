@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'idea'
     id 'checkstyle'
-    id 'jacoco'
 }
 
 idea {
@@ -24,15 +23,12 @@ def runeLiteVersion = 'latest.release'
 
 dependencies {
     compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
-    compileOnly group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5'
-    implementation group: 'com.google.inject.extensions', name: 'guice-multibindings', version: '4.1.0', {
-        exclude group: 'com.google.inject'
-    }
 
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-    testImplementation group: 'com.google.inject.extensions', name: 'guice-grapher', version: '4.1.0'
+    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.5.1'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.2'
@@ -44,7 +40,7 @@ dependencies {
 
 group = 'com.duckblade.osrs'
 version = '2.3.3'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -54,29 +50,6 @@ test {
     useJUnitPlatform()
 }
 
-jacoco {
-    toolVersion = "0.8.6"
-}
-
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
-}
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.required = true
-        csv.required = false
-        html.required = true
-    }
-    afterEvaluate {
-        classDirectories.from = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                    '**/com/duckblade/osrs/dpscalc/plugin/**',
-                    '**/com/duckblade/osrs/dpscalc/calc/model/**',
-                    '**/com/duckblade/osrs/dpscalc/calc/DpsComputeModule**',
-            ])
-        })
-    }
 }

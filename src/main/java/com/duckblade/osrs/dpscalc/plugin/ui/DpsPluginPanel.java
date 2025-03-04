@@ -1,5 +1,8 @@
 package com.duckblade.osrs.dpscalc.plugin.ui;
 
+import com.duckblade.osrs.dpscalc.plugin.DpsCalcPlugin;
+import com.duckblade.osrs.dpscalc.plugin.module.PluginLifecycleComponent;
+import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.DpsDataLoaded;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.panel.DeleteSetButton;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.panel.PanelInputSetSelect;
@@ -19,26 +22,45 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
 
 @Singleton
-public class DpsPluginPanel extends PluginPanel
+public class DpsPluginPanel extends PluginPanel implements PluginLifecycleComponent
 {
-
-	private final DpsCalcPanel calcPanel;
 
 	private static final String GITHUB_LINK = "https://github.com/LlemonDuck/dps-calculator";
 
+	private final DpsCalcPlugin plugin;
+	private final EventBus eventBus;
+	private DpsCalcPanel calcPanel; // lateinit
+
+	private final JScrollPane contentScrollPane;
+
+	@Override
+	public void startUp()
+	{
+		eventBus.register(this);
+	}
+
+	@Override
+	public void shutDown()
+	{
+		eventBus.unregister(this);
+	}
+
 	@Inject
 	public DpsPluginPanel(
-		DpsCalcPanel calcPanel, PanelInputSetSelect panelInputSetSelect, DeleteSetButton deleteSetButton,
-		PanelStateManager manager
+		DpsCalcPlugin plugin, EventBus eventBus, PanelInputSetSelect panelInputSetSelect, DeleteSetButton deleteSetButton,
+		PanelStateManager manager, LoadingScreen loadingScreen
 	)
 	{
 		super(false);
-		this.calcPanel = calcPanel;
+		this.plugin = plugin;
+		this.eventBus = eventBus;
 		manager.addOnSetChangedListener(this::showHome);
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -66,7 +88,7 @@ public class DpsPluginPanel extends PluginPanel
 		linkToGh.addActionListener(e -> openGhLink());
 		headerPanel.add(linkToGh, new GridBagConstraints(3, 0, 1, 1, 0, 0, CENTER, BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-		JScrollPane contentScrollPane = new JScrollPane(calcPanel);
+		contentScrollPane = new JScrollPane(loadingScreen);
 		contentScrollPane.setBorder(BorderFactory.createEmptyBorder());
 		contentScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		contentScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -81,7 +103,28 @@ public class DpsPluginPanel extends PluginPanel
 
 	private void showHome()
 	{
-		SwingUtilities.invokeLater(calcPanel::openMenu);
+		if (calcPanel != null)
+		{
+			SwingUtilities.invokeLater(calcPanel::openMenu);
+		}
+	}
+
+	public void showMonster()
+	{
+		if (calcPanel != null)
+		{
+			SwingUtilities.invokeLater(calcPanel::openNpcPanel);
+		}
+	}
+
+	@Subscribe
+	public void onDpsDataLoaded(DpsDataLoaded e)
+	{
+		SwingUtilities.invokeLater(() ->
+		{
+			calcPanel = plugin.getInjector().getInstance(DpsCalcPanel.class);
+			contentScrollPane.setViewportView(calcPanel);
+		});
 	}
 
 }

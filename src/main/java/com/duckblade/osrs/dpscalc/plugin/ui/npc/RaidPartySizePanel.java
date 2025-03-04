@@ -1,13 +1,8 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.npc;
 
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.defender.skills.TheatreEntryModeSkillScaling;
-import com.duckblade.osrs.dpscalc.calc.defender.skills.TheatreSkillScaling;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateVisibleComponent;
-import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.FocusLostAdapter;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.JTextFieldIntOnlyKeyAdapter;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.SelectAllFocusListener;
@@ -32,19 +27,15 @@ public class RaidPartySizePanel extends JPanel implements StateBoundComponent, S
 
 	@Getter
 	private final PanelStateManager manager;
-	private final TheatreSkillScaling theatreSkillScaling;
-	private final TheatreEntryModeSkillScaling theatreEntryModeSkillScaling;
 
 	private final JTextField partySizeField;
 
 	private final List<Runnable> callbacks = new ArrayList<>();
 
 	@Inject
-	public RaidPartySizePanel(PanelStateManager manager, TheatreSkillScaling theatreSkillScaling, TheatreEntryModeSkillScaling theatreEntryModeSkillScaling)
+	public RaidPartySizePanel(PanelStateManager manager)
 	{
 		this.manager = manager;
-		this.theatreSkillScaling = theatreSkillScaling;
-		this.theatreEntryModeSkillScaling = theatreEntryModeSkillScaling;
 
 		setMinimumSize(new Dimension(PluginPanel.PANEL_WIDTH - 25, 40));
 		setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH - 25, 40));
@@ -74,25 +65,20 @@ public class RaidPartySizePanel extends JPanel implements StateBoundComponent, S
 	public void toState()
 	{
 		coerce();
-		getState().setRaidPartySize(Integer.parseInt(partySizeField.getText()));
+		getState().getMonster().getInputs().setPartySize(Integer.parseInt(partySizeField.getText()));
 	}
 
 	@Override
 	public void fromState()
 	{
-		partySizeField.setText(String.valueOf(getState().getRaidPartySize()));
+		partySizeField.setText(String.valueOf(getState().getMonster().getInputs().getPartySize()));
 	}
 
 	@Override
 	public void updateVisibility()
 	{
-		ComputeUtil.computeSilent(() ->
-		{
-			ComputeContext ctx = new ComputeContext();
-			ctx.put(ComputeInputs.DEFENDER_ATTRIBUTES, getState().getDefenderAttributes().toImmutable());
-
-			setVisible(theatreSkillScaling.isApplicable(ctx) || theatreEntryModeSkillScaling.isApplicable(ctx));
-		});
+		// todo
+		setVisible(true);
 	}
 
 	private void coerce()

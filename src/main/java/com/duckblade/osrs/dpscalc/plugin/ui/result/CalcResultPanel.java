@@ -1,17 +1,10 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.result;
 
-import com.duckblade.osrs.dpscalc.calc.AttackSpeedComputable;
-import com.duckblade.osrs.dpscalc.calc.defender.DefenseRollComputable;
-import com.duckblade.osrs.dpscalc.calc.DpsComputable;
-import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
-import com.duckblade.osrs.dpscalc.calc.TimeToKillComputable;
-import com.duckblade.osrs.dpscalc.calc.attack.AttackRollComputable;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.exceptions.DpsComputeException;
-import com.duckblade.osrs.dpscalc.calc.exceptions.MissingInputException;
-import com.duckblade.osrs.dpscalc.calc.maxhit.BaseMaxHitComputable;
-import com.duckblade.osrs.dpscalc.calc.maxhit.TrueMaxHitComputable;
-import com.duckblade.osrs.dpscalc.calc.prayer.PrayerDurationRemainingComputable;
+import com.duckblade.osrs.dpscalc.calc.CalcOpts;
+import com.duckblade.osrs.dpscalc.calc.DpsCalc;
+import com.duckblade.osrs.dpscalc.calc.DpsResultCache;
+import com.duckblade.osrs.dpscalc.calc.model.Monster;
+import com.duckblade.osrs.dpscalc.calc.model.Player;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import java.awt.Color;
@@ -56,7 +49,6 @@ public class CalcResultPanel extends JPanel implements StateBoundComponent
 
 	@Getter
 	private final PanelStateManager manager;
-	private final DpsComputable dpsComputable;
 
 	private final JLabel dpsValue;
 	private static final String DPS_CALC_FAIL = "DPS: ???";
@@ -66,20 +58,10 @@ public class CalcResultPanel extends JPanel implements StateBoundComponent
 
 	@Inject
 	public CalcResultPanel(
-		PanelStateManager manager,
-		DpsComputable dpsComputable,
-		AttackRollComputable attackRollComputable,
-		DefenseRollComputable defenseRollComputable,
-		BaseMaxHitComputable baseMaxHitComputable,
-		TrueMaxHitComputable trueMaxHitComputable,
-		HitChanceComputable hitChanceComputable,
-		AttackSpeedComputable attackSpeedComputable,
-		TimeToKillComputable timeToKillComputable,
-		PrayerDurationRemainingComputable prayerDurationRemainingComputable
+		PanelStateManager manager
 	)
 	{
 		this.manager = manager;
-		this.dpsComputable = dpsComputable;
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -95,24 +77,26 @@ public class CalcResultPanel extends JPanel implements StateBoundComponent
 		add(Box.createVerticalStrut(5));
 
 		resultLabels = Arrays.asList(
-			new CalcResultLabel("Max Attack Roll:", ctx -> ROLL_FORMAT.format(ctx.get(attackRollComputable))),
-			new CalcResultLabel("NPC Defense Roll:", ctx -> ROLL_FORMAT.format(ctx.get(defenseRollComputable))),
-			new CalcResultLabel("Hit Chance:", ctx -> HIT_CHANCE_FORMAT.format(ctx.get(hitChanceComputable))),
+			new CalcResultLabel("Max Attack Roll:", dpsResultCache -> ROLL_FORMAT.format(dpsResultCache.getAttackRoll())),
+			new CalcResultLabel("NPC Defense Roll:", dpsResultCache -> ROLL_FORMAT.format(dpsResultCache.getDefenceRoll())),
+			new CalcResultLabel("Hit Chance:", dpsResultCache -> HIT_CHANCE_FORMAT.format(dpsResultCache.getHitChance())),
 
-			new CalcResultLabel("Max Hit:", ctx -> String.valueOf(ctx.get(trueMaxHitComputable))),
-			new CalcResultLabel("Base Max Hit:", ctx ->
+			new CalcResultLabel("Max Hit:", dpsResultCache -> String.valueOf(dpsResultCache.getDistribution().getMax())),
+			new CalcResultLabel(
+				"Base Max Hit:", dpsResultCache ->
 			{
-				int baseMaxHit = ctx.get(baseMaxHitComputable);
-				if (baseMaxHit < ctx.get(trueMaxHitComputable))
+				int baseMaxHit = dpsResultCache.getMinMax().getMax();
+				if (baseMaxHit != dpsResultCache.getDistribution().getMax())
 				{
 					return String.valueOf(baseMaxHit);
 				}
 				return null;
-			}),
+			}
+			),
 
-			new CalcResultLabel("Attack Every:", ctx -> HIT_RATE_FORMAT.format(ctx.get(attackSpeedComputable) / 0.6)),
-			new CalcResultLabel("Avg TTK:", ctx -> timeFormat(ctx.get(timeToKillComputable))),
-			new CalcResultLabel("Prayer Lasts:", ctx -> timeFormat(ctx.get(prayerDurationRemainingComputable)))
+			new CalcResultLabel("Attack Every:", dpsResultCache -> HIT_RATE_FORMAT.format(dpsResultCache.getAttackSpeed() / 0.6)),
+			new CalcResultLabel("Avg TTK:", dpsResultCache -> timeFormat(dpsResultCache.getTtkP50())),
+			new CalcResultLabel("Prayer Lasts:", dpsResultCache -> timeFormat(dpsResultCache.getPrayerDuration()))
 		);
 
 		resultLabels.subList(0, 3).forEach(this::add);
@@ -139,24 +123,29 @@ public class CalcResultPanel extends JPanel implements StateBoundComponent
 	{
 		try
 		{
-			ComputeContext ctx = new ComputeContext(getState().toComputeInput());
-			double dps = ctx.get(dpsComputable);
-			dpsValue.setText(DPS_FORMAT.format(dps));
-			resultLabels.forEach(l -> l.setValue(ctx));
+			Player player = getState().getPlayer();
+			Monster monster = getState().getMonster();
+			if (player == null || monster == null)
+			{
+				log.debug("Clearing results due to insufficient inputs");
+				clear();
+				return;
+			}
 
-			List<String> warnings = ctx.getWarnings();
+			DpsCalc dpsCalc = new DpsCalc(player, monster, CalcOpts.builder().build());
+			DpsResultCache dpsResultCache = new DpsResultCache(dpsCalc);
+			double dps = dpsResultCache.getDps();
+			dpsValue.setText(DPS_FORMAT.format(dps));
+			resultLabels.forEach(l -> l.setValue(dpsResultCache));
+
+			List<String> warnings = dpsCalc.getIssues();
 			warningsLabel.setText(String.join("\n\n", warnings));
 			warningsLabel.setVisible(!warnings.isEmpty());
 		}
-		catch (DpsComputeException e)
+		catch (Exception e)
 		{
 			log.debug("Failed compute: ", e);
 			clear();
-
-			if (!(e.getCause() instanceof MissingInputException))
-			{
-				throw e;
-			}
 		}
 	}
 

@@ -1,17 +1,9 @@
 package com.duckblade.osrs.dpscalc;
 
-import com.duckblade.osrs.dpscalc.calc.DpsComputeModule;
-import com.duckblade.osrs.dpscalc.devbindings.LocalItemStatsProvider;
-import com.duckblade.osrs.dpscalc.devbindings.LocalNpcDataProvider;
-import com.duckblade.osrs.dpscalc.devbindings.MockClientDataProvider;
 import com.duckblade.osrs.dpscalc.plugin.config.DpsCalcConfig;
+import com.duckblade.osrs.dpscalc.plugin.live.overlay.LiveDpsOverlay;
 import com.duckblade.osrs.dpscalc.plugin.live.party.PartyDpsService;
 import com.duckblade.osrs.dpscalc.plugin.module.DpsPluginModule;
-import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProvider;
-import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThreadProxy;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcDataProvider;
-import com.duckblade.osrs.dpscalc.plugin.live.overlay.LiveDpsOverlay;
 import com.duckblade.osrs.dpscalc.plugin.ui.DpsPluginPanel;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -20,26 +12,28 @@ import com.google.inject.util.Providers;
 import java.awt.Cursor;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.ui.FontManager;
-import net.runelite.client.ui.skin.SubstanceRuneLiteLookAndFeel;
-import net.runelite.client.util.SwingUtil;
+import net.runelite.client.ui.ClientUI;
+import net.runelite.client.ui.laf.RuneLiteLAF;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 
+@Slf4j
 public class DPSCalcUITest
 {
 
 	public static void main(String[] args) throws InterruptedException, InvocationTargetException
 	{
 		Injector testInjector = Guice.createInjector(
-			Modules.override(new DpsComputeModule(), new DpsPluginModule())
+			Modules.override(new DpsPluginModule())
 				.with(i ->
 				{
 					i.bind(Client.class).toProvider(Providers.of(null));
@@ -52,10 +46,6 @@ public class DPSCalcUITest
 					{
 					});
 
-					i.bind(ItemStatsProvider.class).to(LocalItemStatsProvider.class).asEagerSingleton();
-					i.bind(NpcDataProvider.class).to(LocalNpcDataProvider.class).asEagerSingleton();
-					i.bind(ClientDataProvider.class).to(MockClientDataProvider.class).asEagerSingleton();
-					i.bind(ClientDataProviderThreadProxy.class).to(MockClientDataProvider.MockClientDataProviderThreadProxy.class);
 					i.bind(LiveDpsOverlay.class).toProvider(Providers.of(null));
 					i.bind(PartyDpsService.class).toProvider(Providers.of(null));
 				})
@@ -64,9 +54,17 @@ public class DPSCalcUITest
 		SwingUtilities.invokeAndWait(() ->
 		{
 			// roughly copied from RuneLite's ClientUI.java init()
-			SwingUtil.setupDefaults();
-			SwingUtil.setTheme(new SubstanceRuneLiteLookAndFeel());
-			SwingUtil.setFont(FontManager.getRunescapeFont());
+			try
+			{
+				Method init = ClientUI.class.getMethod("init");
+				init.setAccessible(true);
+				init.invoke(null);
+			}
+			catch (Exception e)
+			{
+				log.error("", e);
+			}
+			RuneLiteLAF.setup();
 
 			JFrame frame = new JFrame();
 			frame.getLayeredPane().setCursor(Cursor.getDefaultCursor());

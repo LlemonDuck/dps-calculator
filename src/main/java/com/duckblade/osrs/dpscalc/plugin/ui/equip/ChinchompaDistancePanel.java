@@ -1,12 +1,9 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.equip;
 
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.gearbonus.ChinchompaDistanceGearBonus;
+import com.duckblade.osrs.dpscalc.calc.model.EquipmentPiece;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateVisibleComponent;
-import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.FocusLostAdapter;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.JTextFieldIntOnlyKeyAdapter;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.SelectAllFocusListener;
@@ -29,15 +26,13 @@ public class ChinchompaDistancePanel extends JPanel implements StateBoundCompone
 
 	@Getter
 	private final PanelStateManager manager;
-	private final ChinchompaDistanceGearBonus chinchompaDistanceGearBonus;
 
 	private final JTextField distanceField;
 
 	@Inject
-	public ChinchompaDistancePanel(PanelStateManager manager, ChinchompaDistanceGearBonus chinchompaDistanceGearBonus)
+	public ChinchompaDistancePanel(PanelStateManager manager)
 	{
 		this.manager = manager;
-		this.chinchompaDistanceGearBonus = chinchompaDistanceGearBonus;
 
 		setMinimumSize(new Dimension(PluginPanel.PANEL_WIDTH - 20, 40));
 		setMaximumSize(new Dimension(PluginPanel.PANEL_WIDTH - 20, 40));
@@ -61,26 +56,20 @@ public class ChinchompaDistancePanel extends JPanel implements StateBoundCompone
 	public void toState()
 	{
 		coerce();
-		getState().setAttackerDistance(Integer.parseInt(distanceField.getText()));
+		getState().getPlayer().getBuffs().setChinchompaDistance(Integer.parseInt(distanceField.getText()));
 	}
 
 	@Override
 	public void fromState()
 	{
-		distanceField.setText(String.valueOf(getState().getAttackerDistance()));
+		distanceField.setText(String.valueOf(getState().getPlayer().getBuffs().getChinchompaDistance()));
 	}
 
 	@Override
 	public void updateVisibility()
 	{
-		ComputeUtil.computeSilent(() ->
-		{
-			ComputeContext ctx = new ComputeContext();
-			ctx.put(ComputeInputs.ATTACKER_ITEMS, getState().getAttackerItems());
-			ctx.put(ComputeInputs.ATTACK_STYLE, getState().getAttackStyle());
-
-			setVisible(chinchompaDistanceGearBonus.isApplicable(ctx));
-		});
+		EquipmentPiece weapon = getState().getPlayer().getEquipment().getWeapon();
+		setVisible(weapon != null && weapon.getName().contains("chinchompa"));
 	}
 
 	private void coerce()

@@ -1,7 +1,6 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.equip;
 
-import com.duckblade.osrs.dpscalc.calc.maxhit.magic.SpellcastingMaxHitBonusComputable;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
+import com.duckblade.osrs.dpscalc.calc.model.Spell;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateVisibleComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundJCheckBox;
@@ -17,10 +16,10 @@ public class UsingChargeCheckBox extends StateBoundJCheckBox implements StateVis
 	public UsingChargeCheckBox(PanelStateManager manager)
 	{
 		super(
-			"Using Mark of Darkness",
+			"Using Charge",
 			manager,
-			PanelState::setUsingMarkOfDarkness,
-			PanelState::isUsingMarkOfDarkness
+			(ps, v) -> ps.getPlayer().getBuffs().setChargeSpell(v),
+			ps -> ps.getPlayer().getBuffs().isChargeSpell()
 		);
 
 		setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
@@ -32,6 +31,7 @@ public class UsingChargeCheckBox extends StateBoundJCheckBox implements StateVis
 	@Override
 	public void updateVisibility()
 	{
-		setVisible(SpellcastingMaxHitBonusComputable.GOD_SPELLS.contains(getState().getSpell()));
+		Spell spell = getState().getPlayer().getSpell();
+		setVisible(spell != null && spell.getName().contains("Demonbane"));
 	}
 }

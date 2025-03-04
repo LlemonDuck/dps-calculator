@@ -8,13 +8,15 @@ import com.duckblade.osrs.dpscalc.plugin.live.party.PartyDpsService;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProvider;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.InteractingNpcTracker;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.RuneLiteClientDataProvider;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcDataProvider;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiItemStatsProvider;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiNpcDataProvider;
+import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ScraperWikiDataProvider;
+import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiDataProvider;
+import com.duckblade.osrs.dpscalc.plugin.ui.DpsCalcPanel;
+import com.duckblade.osrs.dpscalc.plugin.ui.DpsPluginPanel;
 import com.duckblade.osrs.dpscalc.plugin.ui.NavButtonManager;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
+import com.google.inject.Provides;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,18 +26,32 @@ public class DpsPluginModule extends AbstractModule
 	@Override
 	protected void configure()
 	{
-		Multibinder<PluginLifecycleComponent> lifecycleComponents = Multibinder.newSetBinder(binder(), PluginLifecycleComponent.class);
-		lifecycleComponents.addBinding().to(DpsMenuActionListener.class);
-		lifecycleComponents.addBinding().to(InteractingNpcTracker.class);
-		lifecycleComponents.addBinding().to(LiveDpsService.class);
-		lifecycleComponents.addBinding().to(LiveDpsOverlay.class);
-		lifecycleComponents.addBinding().to(PartyDpsService.class);
-		lifecycleComponents.addBinding().to(NavButtonManager.class);
-		lifecycleComponents.addBinding().to(OverlayMinimizerService.class);
-
-		bind(ItemStatsProvider.class).to(WikiItemStatsProvider.class);
-		bind(NpcDataProvider.class).to(WikiNpcDataProvider.class);
 		bind(ClientDataProvider.class).to(RuneLiteClientDataProvider.class);
+		bind(WikiDataProvider.class).to(ScraperWikiDataProvider.class);
+	}
+
+	@Provides
+	public Set<PluginLifecycleComponent> provideLifecycleComponents(
+		DpsPluginPanel dpsPluginPanel,
+		DpsMenuActionListener dpsMenuActionListener,
+		InteractingNpcTracker interactingNpcTracker,
+		LiveDpsService liveDpsService,
+		LiveDpsOverlay liveDpsOverlay,
+		PartyDpsService partyDpsService,
+		NavButtonManager navButtonManager,
+		OverlayMinimizerService overlayMinimizerService
+	)
+	{
+		return ImmutableSet.of(
+			dpsPluginPanel,
+			dpsMenuActionListener,
+			interactingNpcTracker,
+			liveDpsService,
+			liveDpsOverlay,
+			partyDpsService,
+			navButtonManager,
+			overlayMinimizerService
+		);
 	}
 
 }

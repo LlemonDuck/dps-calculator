@@ -1,8 +1,9 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.skills;
 
-import com.duckblade.osrs.dpscalc.calc.model.Skills;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
-import java.util.Map;
+import com.duckblade.osrs.dpscalc.calc.model.Factor;
+import static com.duckblade.osrs.dpscalc.calc.model.Factor.of;
+import com.duckblade.osrs.dpscalc.calc.model.PlayerSkills;
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
 import java.util.function.Consumer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,121 +12,133 @@ import net.runelite.api.Skill;
 @RequiredArgsConstructor
 public enum SkillBoostPreset
 {
-	ATTACK_POTION("Attack potion", Skill.ATTACK, 0.10f, 3),
-	STRENGTH_POTION("Strength potion", Skill.STRENGTH, 0.10f, 3),
-	DEFENSE_POTION("Defence potion", Skill.DEFENCE, 0.10f, 3),
+	ATTACK_POTION("Attack potion", Skill.ATTACK, of(1, 10), 3),
+	STRENGTH_POTION("Strength potion", Skill.STRENGTH, of(1, 10), 3),
+	DEFENSE_POTION("Defence potion", Skill.DEFENCE, of(1, 10), 3),
 	COMBAT_POTION("Combat potion", ATTACK_POTION, STRENGTH_POTION, DEFENSE_POTION),
 
-	SUPER_ATTACK_POTION("Super attack potion", Skill.ATTACK, 0.15f, 5),
-	SUPER_STRENGTH_POTION("Super strength potion", Skill.STRENGTH, 0.15f, 5),
-	SUPER_DEFENSE_POTION("Super defence potion", Skill.DEFENCE, 0.15f, 5),
+	SUPER_ATTACK_POTION("Super attack potion", Skill.ATTACK, of(3, 20), 5),
+	SUPER_STRENGTH_POTION("Super strength potion", Skill.STRENGTH, of(3, 20), 5),
+	SUPER_DEFENSE_POTION("Super defence potion", Skill.DEFENCE, of(3, 20), 5),
 	SUPER_COMBAT_POTION("Super combat potion", SUPER_ATTACK_POTION, SUPER_STRENGTH_POTION, SUPER_DEFENSE_POTION),
 
-	RANGING_POTION("Ranging potion", Skill.RANGED, 0.10f, 4),
-	SUPER_RANGING_POTION("Super ranging potion (NMZ)", Skill.RANGED, 0.15f, 5),
+	RANGING_POTION("Ranging potion", Skill.RANGED, of(1, 10), 4),
+	SUPER_RANGING_POTION("Super ranging potion (NMZ)", Skill.RANGED, of(3, 20), 5),
 	BASTION_POTION("Bastion potion", SUPER_DEFENSE_POTION, RANGING_POTION),
 
-	ANCIENT_BREW("Ancient brew", Skill.MAGIC, 0.05f, 2),
-	MAGIC_POTION("Magic potion", Skill.MAGIC, 0f, 4),
-	SUPER_MAGIC_POTION("Super magic potion (NMZ)", Skill.MAGIC, 0.15f, 5),
+	ANCIENT_BREW("Ancient brew", Skill.MAGIC, of(1, 20), 2),
+	MAGIC_POTION("Magic potion", Skill.MAGIC, of(0, 20), 4),
+	SUPER_MAGIC_POTION("Super magic potion (NMZ)", Skill.MAGIC, of(3, 20), 5),
 	BATTLEMAGE_POTION("Battlemage potion", MAGIC_POTION, SUPER_DEFENSE_POTION),
 
-	IMBUED_HEART("Imbued Heart", Skill.MAGIC, 0.10f, 1),
+	IMBUED_HEART("Imbued Heart", Skill.MAGIC, of(1, 10), 1),
 
-	COX_OVERLOAD_MINUS("Overload (-)",
+	COX_OVERLOAD_MINUS(
+		"Overload (-)",
 		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
-		new float[]{0.10f, 0.10f, 0.10f, 0.10f, 0.10f},
+		new Factor[]{of(1, 10), of(1, 10), of(1, 10), of(1, 10), of(1, 10)},
 		new int[]{4, 4, 4, 4, 4}
 	),
-	COX_OVERLOAD("Overload",
+	COX_OVERLOAD(
+		"Overload",
 		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
-		new float[]{0.13f, 0.13f, 0.13f, 0.13f, 0.13f},
+		new Factor[]{of(13, 100), of(13, 100), of(13, 100), of(13, 100), of(13, 100)},
 		new int[]{5, 5, 5, 5, 5}
 	),
-	COX_OVERLOAD_PLUS("Overload (+)",
+	COX_OVERLOAD_PLUS(
+		"Overload (+)",
 		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
-		new float[]{0.16f, 0.16f, 0.16f, 0.16f, 0.16f},
+		new Factor[]{of(16, 100), of(16, 100), of(16, 100), of(16, 100), of(16, 100)},
 		new int[]{6, 6, 6, 6, 6}
 	),
-	NMZ_OVERLOAD("Overload (NMZ)",
+	NMZ_OVERLOAD(
+		"Overload (NMZ)",
 		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED, Skill.MAGIC},
-		new float[]{0.15f, 0.15f, 0.15f, 0.15f, 0.15f},
+		new Factor[]{of(3, 20), of(3, 20), of(3, 20), of(3, 20), of(3, 20)},
 		new int[]{5, 5, 5, 5, 5}
 	),
 
-	SARADOMIN_BREW("Saradomin brew",
+	SARADOMIN_BREW(
+		"Saradomin brew",
 		new Skill[]{Skill.DEFENCE, Skill.ATTACK, Skill.STRENGTH, Skill.RANGED, Skill.MAGIC},
-		new float[]{0.20f, -0.10f, -0.10f, -0.10f, -0.10f},
+		new Factor[]{of(6, 5), of(-1, 10), of(-1, 10), of(-1, 10), of(-1, 10)},
 		new int[]{2, -2, -2, -2, -2}
 	),
-	ZAMORAK_BREW("Zamorak brew",
+	ZAMORAK_BREW(
+		"Zamorak brew",
 		new Skill[]{Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE},
-		new float[]{0.20f, 0.12f, -0.10f},
+		new Factor[]{of(6, 5), of(12, 100), of(-1, 10)},
 		new int[]{2, 2, -2}
 	),
 
-	D_BAXE_SPEC("Dragon battleaxe spec", state ->
+	D_BAXE_SPEC(
+		"Dragon battleaxe spec", state ->
 	{
-		Map<Skill, Integer> totals = Skills.builder()
-			.levels(state.getAttackerSkills())
-			.boosts(state.getAttackerBoosts())
-			.build()
-			.getTotals();
+		PlayerSkills totals = state.getPlayer().getSkillTotals();
+		PlayerSkills boosts = state.getPlayer().getBoosts();
 
-		int attDrain = (int) (totals.get(Skill.ATTACK) * 0.10f);
-		state.getAttackerBoosts().put(Skill.ATTACK, -attDrain);
+		int attDrain = totals.getAtk() / 10;
+		boosts.setAtk(boosts.getAtk() - attDrain);
 
-		int defDrain = (int) (totals.get(Skill.DEFENCE) * 0.10f);
-		state.getAttackerBoosts().put(Skill.DEFENCE, -defDrain);
+		int defDrain = totals.getDef() / 10;
+		boosts.setDef(boosts.getDef() - defDrain);
 
-		int rngDrain = (int) (totals.get(Skill.RANGED) * 0.10f);
-		state.getAttackerBoosts().put(Skill.RANGED, -rngDrain);
+		int rngDrain = totals.getRanged() / 10;
+		boosts.setRanged(boosts.getRanged() - rngDrain);
 
-		int magDrain = (int) (totals.get(Skill.MAGIC) * 0.10f);
-		state.getAttackerBoosts().put(Skill.MAGIC, -magDrain);
+		int magDrain = totals.getMagic() / 10;
+		boosts.setMagic(boosts.getMagic() - magDrain);
 
 		int strBoost = 10 + (attDrain + defDrain + rngDrain + magDrain) / 4;
-		state.getAttackerBoosts().put(Skill.STRENGTH, strBoost);
-	}),
+		if (boosts.getStr() < strBoost)
+		{
+			boosts.setStr(Math.min(strBoost, boosts.getStr() + strBoost));
+		}
+	}
+	),
 	;
 
 	@Getter
 	private final String displayName;
-	private final Consumer<PanelState> mapFunction;
+	private final Consumer<ComputeInput> mapFunction;
 
 	// lvl * factor + base
-	SkillBoostPreset(String displayName, Skill skill, float percent, int base)
+	SkillBoostPreset(String displayName, Skill skill, Factor factor, int base)
 	{
-		this(displayName, new Skill[] {skill}, new float[] {percent}, new int[] {base});
+		this(displayName, new Skill[]{skill}, new Factor[]{factor}, new int[]{base});
 	}
 
 	// lvl * factor + base for multiple skills
-	SkillBoostPreset(String displayName, Skill[] skills, float[] percents, int[] bases)
+	SkillBoostPreset(String displayName, Skill[] skills, Factor[] factors, int[] bases)
 	{
-		this(displayName, state ->
-		{
-			for (int i = 0; i < skills.length; i++)
+		this(
+			displayName, state ->
 			{
-				int lvl = state.getAttackerSkills().getOrDefault(skills[i], 0);
-				int targetBoost = (int) (lvl * percents[i]) + bases[i];
-				state.getAttackerBoosts().put(skills[i], targetBoost);
+				for (int i = 0; i < skills.length; i++)
+				{
+					int lvl = state.getPlayer().getSkills().get(skills[i]);
+					int targetBoost = (int) (factors[i].apply(lvl)) + bases[i];
+					state.getPlayer().getBoosts().set(skills[i], targetBoost);
+				}
 			}
-		});
+		);
 	}
 
 	// compositional
 	SkillBoostPreset(String displayName, SkillBoostPreset... compositions)
 	{
-		this(displayName, state ->
-		{
-			for (SkillBoostPreset p : compositions)
+		this(
+			displayName, state ->
 			{
-				p.apply(state);
+				for (SkillBoostPreset p : compositions)
+				{
+					p.apply(state);
+				}
 			}
-		});
+		);
 	}
 
-	public void apply(PanelState state)
+	public void apply(ComputeInput state)
 	{
 		mapFunction.accept(state);
 	}

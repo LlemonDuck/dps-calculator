@@ -1,9 +1,6 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.npc;
 
-import com.duckblade.osrs.dpscalc.calc.model.Skills;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThreadProxy;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState.MutableDefenderAttributes;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState.MutableDefensiveBonuses;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.CustomJCheckBox;
@@ -26,7 +23,7 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	private final ClientDataProviderThreadProxy clientDataProviderThreadProxy;
 
 	private final CustomJCheckBox manualEntry;
-	private final NpcSelectPanel npcSelectPanel;
+	private final MonsterSelectPanel monsterSelectPanel;
 	private final RaidPartySizePanel raidPartySizePanel;
 	private final NpcSkillsPanel npcSkillsPanel;
 	private final NpcBonusesPanel npcBonusesPanel;
@@ -35,7 +32,7 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	@Inject
 	public NpcStatsPanel(
 		PanelStateManager manager, ClientDataProviderThreadProxy clientDataProviderThreadProxy,
-		NpcSelectPanel npcSelectPanel, RaidPartySizePanel raidPartySizePanel, NpcSkillsPanel npcSkillsPanel,
+		MonsterSelectPanel monsterSelectPanel, RaidPartySizePanel raidPartySizePanel, NpcSkillsPanel npcSkillsPanel,
 		NpcBonusesPanel npcBonusesPanel, NpcAttributesPanel npcAttributesPanel
 	)
 	{
@@ -53,9 +50,9 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 		add(manualEntry);
 		add(Box.createVerticalStrut(5));
 
-		this.npcSelectPanel = npcSelectPanel;
-		npcSelectPanel.addCallback(this::fromState);
-		add(npcSelectPanel);
+		this.monsterSelectPanel = monsterSelectPanel;
+		monsterSelectPanel.addCallback(this::fromState);
+		add(monsterSelectPanel);
 
 		raidPartySizePanel.addCallback(this::fromState);
 		add(raidPartySizePanel);
@@ -74,9 +71,9 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	{
 		if (!manualMode)
 		{
-			npcSelectPanel.setValue(null);
+			monsterSelectPanel.setValue(null);
 		}
-		npcSelectPanel.setVisible(!manualMode);
+		monsterSelectPanel.setVisible(!manualMode);
 
 		npcSkillsPanel.setEditable(manualMode);
 		npcBonusesPanel.setEditable(manualMode);
@@ -87,10 +84,7 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	{
 		clientDataProviderThreadProxy.tryAcquire(clientDataProvider ->
 		{
-			Skills s = clientDataProvider.getNpcTargetSkills();
-			getState().setDefenderSkills(s != null ? s.getTotals() : Skills.EMPTY.getTotals());
-			getState().setDefenderBonuses(MutableDefensiveBonuses.fromImmutable(clientDataProvider.getNpcTargetBonuses()));
-			getState().setDefenderAttributes(MutableDefenderAttributes.fromImmutable(clientDataProvider.getNpcTargetAttributes()));
+			getState().setMonster(clientDataProvider.getMonster());
 			SwingUtilities.invokeLater(this::fromState);
 		});
 	}
@@ -101,9 +95,11 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 		raidPartySizePanel.toState();
 		if (!manualEntry.getValue())
 		{
-			npcSelectPanel.toState();
+			monsterSelectPanel.toState();
 
-			npcSkillsPanel.fromScaled();
+			npcSkillsPanel.fromState();
+			npcBonusesPanel.fromState();
+			npcAttributesPanel.fromState();
 			return;
 		}
 		npcSkillsPanel.toState();
@@ -114,17 +110,11 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 	@Override
 	public void fromState()
 	{
-		raidPartySizePanel.fromState();
-		raidPartySizePanel.updateVisibility();
 		if (!manualEntry.getValue())
 		{
-			npcSelectPanel.fromState();
-
-			npcSkillsPanel.fromScaled();
-			npcBonusesPanel.fromState();
-			npcAttributesPanel.fromState();
-			return;
+			monsterSelectPanel.fromState();
 		}
+
 		npcSkillsPanel.fromState();
 		npcBonusesPanel.fromState();
 		npcAttributesPanel.fromState();
@@ -132,7 +122,7 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 
 	public boolean isReady()
 	{
-		return manualEntry.getValue() || npcSelectPanel.getValue() != null;
+		return manualEntry.getValue() || monsterSelectPanel.getValue() != null;
 	}
 
 	public String getSummary()
@@ -147,7 +137,7 @@ public class NpcStatsPanel extends JPanel implements StateBoundComponent
 			return "Entered Manually";
 		}
 
-		return getState().getDefenderAttributes().getName();
+		return getState().getMonster().getName();
 	}
 
 }

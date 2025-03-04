@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -82,20 +83,21 @@ public class PrayerButton extends JPanel implements StateBoundComponent
 	@Override
 	public void toState()
 	{
+		Set<Prayer> prayers = getState().getPlayer().getPrayers();
 		if (selected)
 		{
-			getState().getAttackerPrayers().add(prayer);
+			prayers.add(prayer);
 		}
 		else
 		{
-			getState().getAttackerPrayers().remove(prayer);
+			prayers.remove(prayer);
 		}
 	}
 
 	@Override
 	public void fromState()
 	{
-		setSelected(getState().getAttackerPrayers().contains(prayer));
+		setSelected(getState().getPlayer().getPrayers().contains(prayer));
 	}
 
 	public void addCallback(Runnable r)

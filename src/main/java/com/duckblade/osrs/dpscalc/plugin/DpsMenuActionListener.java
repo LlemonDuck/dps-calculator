@@ -1,12 +1,12 @@
 package com.duckblade.osrs.dpscalc.plugin;
 
+import com.duckblade.osrs.dpscalc.calc.model.Monster;
 import com.duckblade.osrs.dpscalc.plugin.config.DpsCalcConfig;
 import com.duckblade.osrs.dpscalc.plugin.module.PluginLifecycleComponent;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcData;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcDataProvider;
-import com.duckblade.osrs.dpscalc.plugin.ui.DpsCalcPanel;
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
+import static com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiDataProvider.ALL_MONSTERS;
+import com.duckblade.osrs.dpscalc.plugin.ui.DpsPluginPanel;
 import com.duckblade.osrs.dpscalc.plugin.ui.NavButtonManager;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import java.util.function.Predicate;
 import javax.inject.Inject;
@@ -28,11 +28,10 @@ public class DpsMenuActionListener implements PluginLifecycleComponent
 	private final EventBus eventBus;
 	private final Client client;
 
-	private final NpcDataProvider npcDataProvider;
 	private final NavButtonManager navButtonManager;
 
 	private final PanelStateManager panelStateManager;
-	private final DpsCalcPanel dpsCalcPanel;
+	private final DpsPluginPanel dpsPluginPanel;
 
 	@Override
 	public Predicate<DpsCalcConfig> isConfigEnabled()
@@ -57,32 +56,33 @@ public class DpsMenuActionListener implements PluginLifecycleComponent
 	{
 		if (MenuAction.of(e.getType()) == MenuAction.EXAMINE_NPC)
 		{
-			NPC npc = client.getCachedNPCs()[e.getIdentifier()];
+			NPC npc = client.getTopLevelWorldView().npcs().byIndex(e.getIdentifier());
 			int npcId = npc.getId();
 
-			NpcData npcData = npcDataProvider.getById(npcId);
-			if (npcData != null)
+			Monster monster = ALL_MONSTERS.get(npcId);
+			if (monster != null)
 			{
-				client.createMenuEntry(-1)
-					.setOption("Dps")
+				client.getMenu()
+					.createMenuEntry(-1)
+					.setOption("View DPS")
 					.setTarget(e.getTarget())
 					.setType(MenuAction.RUNELITE)
 					.setParam0(e.getActionParam0())
 					.setParam1(e.getActionParam1())
 					.setIdentifier(e.getIdentifier())
-					.onClick(me -> onMenuOptionClicked(npcData));
+					.onClick(me -> onMenuOptionClicked(monster));
 			}
 		}
 	}
 
-	public void onMenuOptionClicked(NpcData npcData)
+	public void onMenuOptionClicked(Monster monster)
 	{
 		SwingUtilities.invokeLater(() ->
 		{
-			PanelState panelState = panelStateManager.currentState();
-			panelState.loadNpcData(npcData);
+			ComputeInput panelState = panelStateManager.currentState();
+			panelState.setMonster(monster);
 
-			dpsCalcPanel.openNpcPanel();
+			dpsPluginPanel.showMonster();
 			navButtonManager.openPanel();
 		});
 	}

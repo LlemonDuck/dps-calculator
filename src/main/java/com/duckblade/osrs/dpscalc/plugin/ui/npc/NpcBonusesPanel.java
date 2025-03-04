@@ -1,8 +1,8 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.npc;
 
+import com.duckblade.osrs.dpscalc.calc.model.MonsterDefensive;
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
 import com.duckblade.osrs.dpscalc.plugin.ui.skills.StatCategory;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState.MutableDefensiveBonuses;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundStatBox;
@@ -21,14 +21,14 @@ import lombok.Getter;
 public class NpcBonusesPanel extends JPanel implements StateBoundComponent
 {
 
-	private static ObjIntConsumer<PanelState> writer(ObjIntConsumer<MutableDefensiveBonuses> inner)
+	private static ObjIntConsumer<ComputeInput> writer(ObjIntConsumer<MonsterDefensive> inner)
 	{
-		return (state, value) -> inner.accept(state.getDefenderBonuses(), value);
+		return (state, value) -> inner.accept(state.getMonster().getDefensive(), value);
 	}
 
-	private static ToIntFunction<PanelState> reader(ToIntFunction<MutableDefensiveBonuses> inner)
+	private static ToIntFunction<ComputeInput> reader(ToIntFunction<MonsterDefensive> inner)
 	{
-		return state -> inner.applyAsInt(state.getDefenderBonuses());
+		return state -> inner.applyAsInt(state.getMonster().getDefensive());
 	}
 
 	@Getter
@@ -40,11 +40,62 @@ public class NpcBonusesPanel extends JPanel implements StateBoundComponent
 	{
 		this.manager = manager;
 
-		statBoxes.add(new StateBoundStatBox(manager, "dstab", "Stab", false, writer(MutableDefensiveBonuses::setDefenseStab), reader(MutableDefensiveBonuses::getDefenseStab)));
-		statBoxes.add(new StateBoundStatBox(manager, "dslash", "Slash", false, writer(MutableDefensiveBonuses::setDefenseSlash), reader(MutableDefensiveBonuses::getDefenseSlash)));
-		statBoxes.add(new StateBoundStatBox(manager, "dcrush", "Crush", false, writer(MutableDefensiveBonuses::setDefenseCrush), reader(MutableDefensiveBonuses::getDefenseCrush)));
-		statBoxes.add(new StateBoundStatBox(manager, "dmagic", "Magic", false, writer(MutableDefensiveBonuses::setDefenseMagic), reader(MutableDefensiveBonuses::getDefenseMagic)));
-		statBoxes.add(new StateBoundStatBox(manager, "drange", "Ranged", false, writer(MutableDefensiveBonuses::setDefenseRanged), reader(MutableDefensiveBonuses::getDefenseRanged)));
+		statBoxes.add(new StateBoundStatBox(
+			manager,
+			"dstab",
+			"Stab",
+			false,
+			writer(MonsterDefensive::setStab),
+			reader(MonsterDefensive::getStab)
+		));
+		statBoxes.add(new StateBoundStatBox(
+			manager,
+			"dslash",
+			"Slash",
+			false,
+			writer(MonsterDefensive::setSlash),
+			reader(MonsterDefensive::getSlash)
+		));
+		statBoxes.add(new StateBoundStatBox(
+			manager,
+			"dcrush",
+			"Crush",
+			false,
+			writer(MonsterDefensive::setCrush),
+			reader(MonsterDefensive::getCrush)
+		));
+		statBoxes.add(new StateBoundStatBox(
+			manager,
+			"dlight",
+			"Light",
+			false,
+			writer(MonsterDefensive::setLight),
+			reader(MonsterDefensive::getLight)
+		));
+		statBoxes.add(new StateBoundStatBox(
+			manager,
+			"dstandard",
+			"Standard",
+			false,
+			writer(MonsterDefensive::setStandard),
+			reader(MonsterDefensive::getStandard)
+		));
+		statBoxes.add(new StateBoundStatBox(
+			manager,
+			"dheavy",
+			"Heavy",
+			false,
+			writer(MonsterDefensive::setHeavy),
+			reader(MonsterDefensive::getHeavy)
+		));
+		statBoxes.add(new StateBoundStatBox(
+			manager,
+			"dmagic",
+			"Magic",
+			false,
+			writer(MonsterDefensive::setMagic),
+			reader(MonsterDefensive::getMagic)
+		));
 		add(new StatCategory("Defensive Bonuses", statBoxes));
 
 		add(Box.createVerticalStrut(5));

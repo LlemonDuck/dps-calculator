@@ -1,18 +1,17 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.equip;
 
-import com.duckblade.osrs.dpscalc.calc.AttackerItemStatsComputable;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.model.AttackStyle;
-import com.duckblade.osrs.dpscalc.calc.model.ItemStats;
+import static com.duckblade.osrs.dpscalc.calc.Constants.DEFAULT_ATTACK_SPEED;
+import com.duckblade.osrs.dpscalc.calc.model.EquipmentPiece;
+import com.duckblade.osrs.dpscalc.calc.model.Player;
+import com.duckblade.osrs.dpscalc.calc.model.PlayerBonuses;
+import com.duckblade.osrs.dpscalc.calc.model.PlayerCombatStyleStats;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
-import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
 import java.awt.Dimension;
 import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.Box;
@@ -20,7 +19,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import lombok.Getter;
-import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.client.ui.PluginPanel;
 
 @Singleton
@@ -32,85 +30,76 @@ public class EquipmentTotalsPanel extends JPanel implements StateBoundComponent
 		private static final DecimalFormat STAT_LABEL_FORMAT = new DecimalFormat(": #.#");
 
 		private final String title;
-		private final ToDoubleFunction<ItemStats> getter;
+		private final ToIntFunction<Player> getter;
 
-		public StatLine(String title, ToDoubleFunction<ItemStats> getter)
+		public StatLine(String title, ToIntFunction<Player> getter)
 		{
 			super(title + ": 0");
 			this.title = title;
 			this.getter = getter;
 		}
 
-		public void update(ItemStats itemStats)
+		public void update(Player stats)
 		{
-			setText(title + STAT_LABEL_FORMAT.format(getter.applyAsDouble(itemStats)));
+			setText(title + STAT_LABEL_FORMAT.format(getter.applyAsInt(stats)));
 		}
 	}
 
 	@Getter
 	private final PanelStateManager manager;
-	private final AttackerItemStatsComputable attackerItemStatsComputable;
 
 	private final Set<StatLine> statLines = new HashSet<>();
 
 	@Inject
-	public EquipmentTotalsPanel(PanelStateManager manager, AttackerItemStatsComputable attackerItemStatsComputable)
+	public EquipmentTotalsPanel(PanelStateManager manager)
 	{
 		this.manager = manager;
-		this.attackerItemStatsComputable = attackerItemStatsComputable;
 
 		setMinimumSize(new Dimension(PluginPanel.PANEL_WIDTH, 0));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setAlignmentX(CENTER_ALIGNMENT);
 		add(Box.createHorizontalGlue());
 
-		addLine("Stab Accuracy", ItemStats::getAccuracyStab);
-		addLine("Slash Accuracy", ItemStats::getAccuracySlash);
-		addLine("Crush Accuracy", ItemStats::getAccuracyCrush);
-		addLine("Magic Accuracy", ItemStats::getAccuracyMagic);
-		addLine("Ranged Accuracy", ItemStats::getAccuracyRanged);
+		addStyleLine("Stab Accuracy", PlayerCombatStyleStats::getStab);
+		addStyleLine("Slash Accuracy", PlayerCombatStyleStats::getSlash);
+		addStyleLine("Crush Accuracy", PlayerCombatStyleStats::getCrush);
+		addStyleLine("Magic Accuracy", PlayerCombatStyleStats::getMagic);
+		addStyleLine("Ranged Accuracy", PlayerCombatStyleStats::getRanged);
 		add(Box.createVerticalStrut(10));
 
-		addLine("Melee Strength", ItemStats::getStrengthMelee);
-		addLine("Ranged Strength", ItemStats::getStrengthRanged);
-		addLine("Magic Damage Bonus", ItemStats::getStrengthMagic);
+		addBonusesLine("Melee Strength", PlayerBonuses::getStr);
+		addBonusesLine("Ranged Strength", PlayerBonuses::getRangedStr);
+		addBonusesLine("Magic Damage Bonus", PlayerBonuses::getMagicStr);
 		add(Box.createVerticalStrut(10));
 
-		addLine("Weapon Speed", ItemStats::getSpeed);
-		addLine("Prayer", ItemStats::getPrayer);
+		addLine("Weapon Speed", p ->
+		{
+			EquipmentPiece weapon = p.getEquipment().getWeapon();
+			return weapon != null ? weapon.getSpeed() : DEFAULT_ATTACK_SPEED;
+		});
+		addBonusesLine("Prayer", PlayerBonuses::getPrayer);
 	}
 
-	private void addLine(String title, ToDoubleFunction<ItemStats> getter)
+	private void addLine(String title, ToIntFunction<Player> getter)
 	{
 		StatLine line = new StatLine(title, getter);
 		statLines.add(line);
 		add(line);
 	}
 
+	private void addStyleLine(String title, ToIntFunction<PlayerCombatStyleStats> getter)
+	{
+		addLine(title, p -> getter.applyAsInt(p.getEquipment().getStats().getOffensive()));
+	}
+
+	private void addBonusesLine(String title, ToIntFunction<PlayerBonuses> getter)
+	{
+		addLine(title, p -> getter.applyAsInt(p.getEquipment().getStats().getBonuses()));
+	}
+
 	@Override
 	public void fromState()
 	{
-		ComputeUtil.computeSilent(() ->
-		{
-			// force an attack style so that the stats panel updates whether the user has selected one or not
-			AttackStyle attackStyle = getState().getAttackStyle();
-			if (attackStyle == null)
-			{
-				attackStyle = getState().getAttackerItems()
-					.getOrDefault(EquipmentInventorySlot.WEAPON, ItemStats.EMPTY)
-					.getWeaponCategory()
-					.getAttackStyles()
-					.get(0);
-			}
-
-			ComputeContext ctx = new ComputeContext();
-
-			ctx.put(ComputeInputs.ATTACKER_ITEMS, getState().getAttackerItems());
-			ctx.put(ComputeInputs.ATTACK_STYLE, attackStyle);
-			ctx.put(ComputeInputs.BLOWPIPE_DARTS, getState().getBlowpipeDarts());
-
-			ItemStats aggregate = ctx.get(attackerItemStatsComputable);
-			statLines.forEach(sl -> sl.update(aggregate));
-		});
+		statLines.forEach(sl -> sl.update(getState().getPlayer()));
 	}
 }

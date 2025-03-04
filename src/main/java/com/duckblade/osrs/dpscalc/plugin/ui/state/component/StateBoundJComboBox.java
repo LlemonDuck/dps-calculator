@@ -1,6 +1,6 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.state.component;
 
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.CustomJComboBox;
@@ -16,10 +16,10 @@ public class StateBoundJComboBox<T> extends CustomJComboBox<T> implements StateB
 	@Getter
 	private final PanelStateManager manager;
 
-	private final BiConsumer<PanelState, T> stateWriter;
-	private final Function<PanelState, T> stateReader;
+	private final BiConsumer<ComputeInput, T> stateWriter;
+	private final Function<ComputeInput, T> stateReader;
 
-	public StateBoundJComboBox(List<T> items, Function<T, String> displayMapper, String title, PanelStateManager manager, BiConsumer<PanelState, T> stateWriter, Function<PanelState, T> stateReader)
+	public StateBoundJComboBox(List<T> items, Function<T, String> displayMapper, String title, PanelStateManager manager, BiConsumer<ComputeInput, T> stateWriter, Function<ComputeInput, T> stateReader)
 	{
 		super(items, displayMapper, title);
 		this.manager = manager;

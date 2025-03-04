@@ -1,6 +1,5 @@
 package com.duckblade.osrs.dpscalc.plugin.osdata.clientdata;
 
-import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProvider;
 import java.util.function.Consumer;
 import javax.inject.Inject;
 import javax.inject.Singleton;

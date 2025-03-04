@@ -1,15 +1,10 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.npc;
 
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.defender.DefenderSkillsComputable;
-import com.duckblade.osrs.dpscalc.calc.model.Skills;
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
 import com.duckblade.osrs.dpscalc.plugin.ui.skills.StatCategory;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundStatBox;
-import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,28 +22,26 @@ import net.runelite.api.Skill;
 public class NpcSkillsPanel extends JPanel implements StateBoundComponent
 {
 
-	private static ObjIntConsumer<PanelState> writer(Skill skill)
+	private static ObjIntConsumer<ComputeInput> writer(Skill skill)
 	{
-		return (state, lvl) -> state.getDefenderSkills().put(skill, lvl);
+		return (state, lvl) -> state.getMonster().getSkills().set(skill, lvl);
 	}
 
-	private static ToIntFunction<PanelState> reader(Skill skill)
+	private static ToIntFunction<ComputeInput> reader(Skill skill)
 	{
-		return state -> state.getDefenderSkills().getOrDefault(skill, 0);
+		return state -> state.getMonster().getSkills().get(skill);
 	}
 
 	@Getter
 	private final PanelStateManager manager;
 	private final Map<Skill, StateBoundStatBox> skillBoxes = new HashMap<>(6);
-	private final DefenderSkillsComputable defenderSkillsComputable;
 
 	@Inject
-	public NpcSkillsPanel(PanelStateManager manager, DefenderSkillsComputable defenderSkillsComputable)
+	public NpcSkillsPanel(PanelStateManager manager)
 	{
 		this.manager = manager;
-		this.defenderSkillsComputable = defenderSkillsComputable;
 
-		skillBoxes.put(Skill.HITPOINTS, new StateBoundStatBox(manager, "hitpoints", "Hitpoints", false, writer(Skill.HITPOINTS), reader(Skill.HITPOINTS)));
+		skillBoxes.put(Skill.HITPOINTS, new StateBoundStatBox(manager, "hp", "Hitpoints", false, writer(Skill.HITPOINTS), reader(Skill.HITPOINTS)));
 		skillBoxes.put(Skill.ATTACK, new StateBoundStatBox(manager, "att", "Attack", false, writer(Skill.ATTACK), reader(Skill.ATTACK)));
 		skillBoxes.put(Skill.STRENGTH, new StateBoundStatBox(manager, "str", "Strength", false, writer(Skill.STRENGTH), reader(Skill.STRENGTH)));
 		skillBoxes.put(Skill.DEFENCE, new StateBoundStatBox(manager, "def", "Defence", false, writer(Skill.DEFENCE), reader(Skill.DEFENCE)));
@@ -69,28 +62,6 @@ public class NpcSkillsPanel extends JPanel implements StateBoundComponent
 	public void fromState()
 	{
 		skillBoxes.values().forEach(StateBoundStatBox::fromState);
-	}
-
-	public void fromScaled()
-	{
-		Skills scaled = ComputeUtil.tryCompute(() ->
-		{
-			ComputeContext ctx = new ComputeContext();
-			ctx.put(ComputeInputs.DEFENDER_ATTRIBUTES, getState().getDefenderAttributes().toImmutable());
-			ctx.put(ComputeInputs.DEFENDER_SKILLS, Skills.builder().levels(getState().getDefenderSkills()).build());
-			ctx.put(ComputeInputs.RAID_PARTY_SIZE, getState().getRaidPartySize());
-
-			return ctx.get(defenderSkillsComputable);
-		});
-
-		if (scaled != null)
-		{
-			skillBoxes.forEach((s, sbsb) -> sbsb.setValue(scaled.getTotals().getOrDefault(s, 0)));
-		}
-		else
-		{
-			fromState();
-		}
 	}
 
 	public void setEditable(boolean editable)

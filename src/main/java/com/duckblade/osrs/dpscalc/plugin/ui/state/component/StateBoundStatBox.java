@@ -1,7 +1,7 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.state.component;
 
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
 import com.duckblade.osrs.dpscalc.plugin.ui.skills.StatBox;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import java.util.function.ObjIntConsumer;
@@ -14,10 +14,10 @@ public class StateBoundStatBox extends StatBox implements StateBoundComponent
 	@Getter
 	private final PanelStateManager manager;
 
-	private final ObjIntConsumer<PanelState> stateWriter;
-	private final ToIntFunction<PanelState> stateReader;
+	private final ObjIntConsumer<ComputeInput> stateWriter;
+	private final ToIntFunction<ComputeInput> stateReader;
 
-	public StateBoundStatBox(PanelStateManager manager, String iconName, String title, boolean editable, ObjIntConsumer<PanelState> stateWriter, ToIntFunction<PanelState> stateReader)
+	public StateBoundStatBox(PanelStateManager manager, String iconName, String title, boolean editable, ObjIntConsumer<ComputeInput> stateWriter, ToIntFunction<ComputeInput> stateReader)
 	{
 		super(iconName, title, editable);
 		this.manager = manager;

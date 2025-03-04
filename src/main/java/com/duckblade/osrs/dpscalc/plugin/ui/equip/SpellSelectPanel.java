@@ -1,15 +1,14 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.equip;
 
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.maxhit.magic.SpellMaxHitComputable;
+import static com.duckblade.osrs.dpscalc.calc.Constants.CAST_STANCES;
+import com.duckblade.osrs.dpscalc.calc.model.PlayerCombatStyle;
 import com.duckblade.osrs.dpscalc.calc.model.Spell;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
+import static com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiDataProvider.ALL_SPELLS;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateVisibleComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundJComboBox;
-import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
-import java.util.Arrays;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -17,20 +16,19 @@ import javax.inject.Singleton;
 public class SpellSelectPanel extends StateBoundJComboBox<Spell> implements StateVisibleComponent
 {
 
-	private final SpellMaxHitComputable spellMaxHitComputable;
-
 	@Inject
-	public SpellSelectPanel(PanelStateManager manager, SpellMaxHitComputable spellMaxHitComputable)
+	public SpellSelectPanel(PanelStateManager manager)
 	{
 		super(
-			Arrays.asList(Spell.values()),
-			Spell::getDisplayName,
+			ALL_SPELLS.stream()
+				.sorted(Comparator.comparing(Spell::getName))
+				.collect(Collectors.toList()),
+			Spell::getName,
 			"Spell",
 			manager,
-			PanelState::setSpell,
-			PanelState::getSpell
+			(ps, v) -> ps.getPlayer().setSpell(v),
+			ps -> ps.getPlayer().getSpell()
 		);
-		this.spellMaxHitComputable = spellMaxHitComputable;
 
 		setAlignmentX(CENTER_ALIGNMENT);
 		setVisible(false);
@@ -40,16 +38,13 @@ public class SpellSelectPanel extends StateBoundJComboBox<Spell> implements Stat
 	@Override
 	public void updateVisibility()
 	{
-		Boolean visibleOpt = ComputeUtil.tryCompute(() ->
+		PlayerCombatStyle style = getState().getPlayer().getStyle();
+		if (style == null)
 		{
-			ComputeContext context = new ComputeContext();
-			context.put(ComputeInputs.ATTACKER_ITEMS, getState().getAttackerItems());
-			context.put(ComputeInputs.ATTACK_STYLE, getState().getAttackStyle());
+			return;
+		}
 
-			return spellMaxHitComputable.isApplicable(context);
-		});
-
-		boolean visible = visibleOpt != null && visibleOpt;
+		boolean visible = CAST_STANCES.contains(style.getStance());
 		setVisible(visible);
 		if (!visible)
 		{

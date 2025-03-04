@@ -1,8 +1,10 @@
 package com.duckblade.osrs.dpscalc.plugin.osdata.clientdata;
 
+import com.duckblade.osrs.dpscalc.calc.model.Monster;
 import com.duckblade.osrs.dpscalc.plugin.module.PluginLifecycleComponent;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcData;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.NpcDataProvider;
+import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.DpsDataLoaded;
+import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiDataProvider;
+import static com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiDataProvider.ALL_MONSTERS;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -23,10 +25,10 @@ public class InteractingNpcTracker implements PluginLifecycleComponent
 	private final EventBus eventBus;
 	private final Client client;
 
-	private final NpcDataProvider npcDataProvider;
+	private final WikiDataProvider dataProvider;
 
 	@Getter
-	private NpcData lastInteracted = null;
+	private Monster lastInteracted = null;
 
 	@Getter
 	private int lastInteractedIndex = -1;
@@ -58,8 +60,21 @@ public class InteractingNpcTracker implements PluginLifecycleComponent
 
 		NPC npc = (NPC) e.getTarget();
 		lastInteractedIndex = npc.getIndex();
-		lastInteracted = npcDataProvider.getById(npc.getId());
 
-		log.debug("Setting last interacted to {}", lastInteracted == null ? "null" : lastInteracted.getAttributes().getName());
+		if (dataProvider.isLoaded())
+		{
+			lastInteracted = ALL_MONSTERS.get(lastInteractedIndex);
+		}
+
+		log.debug("Setting last interacted to {}", lastInteracted == null ? "null" : lastInteracted.getName());
+	}
+
+	@Subscribe
+	public void onDpsDataLoaded(DpsDataLoaded e)
+	{
+		if (lastInteractedIndex != -1)
+		{
+			lastInteracted = ALL_MONSTERS.get(lastInteractedIndex);
+		}
 	}
 }

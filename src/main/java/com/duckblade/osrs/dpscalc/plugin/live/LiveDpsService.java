@@ -1,13 +1,15 @@
 package com.duckblade.osrs.dpscalc.plugin.live;
 
-import com.duckblade.osrs.dpscalc.calc.DpsComputable;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.exceptions.MissingInputException;
-import com.duckblade.osrs.dpscalc.calc.model.ComputeInput;
-import com.duckblade.osrs.dpscalc.calc.model.DefenderAttributes;
+import com.duckblade.osrs.dpscalc.calc.CalcOpts;
+import com.duckblade.osrs.dpscalc.calc.DpsCalc;
+import com.duckblade.osrs.dpscalc.calc.DpsResultCache;
 import com.duckblade.osrs.dpscalc.plugin.module.PluginLifecycleComponent;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProvider;
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.InteractingNpcTracker;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +25,19 @@ public class LiveDpsService implements PluginLifecycleComponent
 	private final EventBus eventBus;
 
 	private final ClientDataProvider clientDataProvider;
-	private final DpsComputable dpsComputable;
 	private final InteractingNpcTracker interactingNpcTracker;
 
+	private ExecutorService dpsEs;
 	private ComputeInput lastInput;
 	private int lastNpcIndex;
 
 	@Override
 	public void startUp()
 	{
+		dpsEs = Executors.newSingleThreadExecutor(
+			new ThreadFactoryBuilder()
+				.setNameFormat("dps-calc-worker")
+				.build());
 		eventBus.register(this);
 	}
 
@@ -39,6 +45,7 @@ public class LiveDpsService implements PluginLifecycleComponent
 	public void shutDown()
 	{
 		eventBus.unregister(this);
+		dpsEs.shutdown();
 	}
 
 	@Subscribe
@@ -50,33 +57,31 @@ public class LiveDpsService implements PluginLifecycleComponent
 		{
 			lastNpcIndex = npcIndex;
 			lastInput = input;
-			ComputeContext context = new ComputeContext(input);
+
 			try
 			{
-				DefenderAttributes defenderAttributes = input.getDefenderAttributes();
-				if (defenderAttributes == null || defenderAttributes.getNpcId() == -1)
+				DpsCalc dpsCalc = new DpsCalc(input.getPlayer(), input.getMonster(), CalcOpts.builder().build());
+				DpsResultCache resultCache = new DpsResultCache(dpsCalc);
+
+				if (input.getMonster() == null || input.getPlayer() == null)
 				{
-					setDps(null, input, context);
+					setDps(null, input, null);
 				}
 				else
 				{
-					TargetedDps newDps = new TargetedDps(npcIndex, context.get(dpsComputable));
-					setDps(newDps, input, context);
+					TargetedDps newDps = new TargetedDps(npcIndex, resultCache.getDps());
+					setDps(newDps, input, resultCache);
 				}
 			}
 			catch (Exception e)
 			{
-				setDps(null, input, context);
-				if (!(e.getCause() instanceof MissingInputException))
-				{
-					throw e;
-				}
+				setDps(null, input, null);
 			}
 		}
 	}
 
-	public void setDps(TargetedDps newValue, ComputeInput input, ComputeContext context)
+	public void setDps(TargetedDps newValue, ComputeInput input, DpsResultCache dpsResultCache)
 	{
-		eventBus.post(new TargetedDpsChanged(newValue, input, context));
+		eventBus.post(new TargetedDpsChanged(newValue, input, dpsResultCache));
 	}
 }

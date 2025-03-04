@@ -1,16 +1,12 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.equip;
 
-import com.duckblade.osrs.dpscalc.calc.ammo.BlowpipeDartsItemStatsComputable;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
-import com.duckblade.osrs.dpscalc.calc.model.ItemStats;
+import static com.duckblade.osrs.dpscalc.calc.Constants.BLOWPIPE_IDS;
+import com.duckblade.osrs.dpscalc.calc.model.EquipmentPiece;
 import com.duckblade.osrs.dpscalc.plugin.config.BlowpipeDarts;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
+import static com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiDataProvider.ALL_EQUIPMENT;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateVisibleComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundJComboBox;
-import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,31 +14,40 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class BlowpipeDartsSelectPanel extends StateBoundJComboBox<ItemStats> implements StateVisibleComponent
+public class BlowpipeDartsSelectPanel extends StateBoundJComboBox<EquipmentPiece> implements StateVisibleComponent
 {
 
-	private final BlowpipeDartsItemStatsComputable blowpipeDartsItemStatsComputable;
-
-	private static List<ItemStats> getDarts(ItemStatsProvider itemStatsProvider)
-	{
-		return Arrays.stream(BlowpipeDarts.values())
-			.map(BlowpipeDarts::getItemId)
-			.map(itemStatsProvider::getById)
-			.collect(Collectors.toList());
-	}
-
 	@Inject
-	public BlowpipeDartsSelectPanel(PanelStateManager manager, ItemStatsProvider itemStatsProvider, BlowpipeDartsItemStatsComputable blowpipeDartsItemStatsComputable)
+	public BlowpipeDartsSelectPanel(PanelStateManager manager)
 	{
 		super(
-			getDarts(itemStatsProvider),
-			ItemStats::getName,
+			Arrays.stream(BlowpipeDarts.values())
+				.map(BlowpipeDarts::getItemId)
+				.map(ALL_EQUIPMENT::get)
+				.collect(Collectors.toList()),
+			EquipmentPiece::getName,
 			"Blowpipe Darts",
 			manager,
-			PanelState::setBlowpipeDarts,
-			PanelState::getBlowpipeDarts
+			(ps, v) ->
+			{
+				EquipmentPiece weapon = ps.getPlayer().getEquipment().getWeapon();
+				if (weapon != null)
+				{
+					weapon.setVars(weapon.getVars()
+						.withBlowpipeDart(v));
+				}
+			},
+			(ps) ->
+			{
+				EquipmentPiece weapon = ps.getPlayer().getEquipment().getWeapon();
+				if (weapon == null || weapon.getVars() == null)
+				{
+					return null;
+				}
+
+				return weapon.getVars().getBlowpipeDart();
+			}
 		);
-		this.blowpipeDartsItemStatsComputable = blowpipeDartsItemStatsComputable;
 
 		setAlignmentX(CENTER_ALIGNMENT);
 		setVisible(false);
@@ -51,13 +56,15 @@ public class BlowpipeDartsSelectPanel extends StateBoundJComboBox<ItemStats> imp
 
 	public void updateVisibility()
 	{
-		ComputeUtil.computeSilent(() ->
+		EquipmentPiece weapon = getState().getPlayer().getEquipment().getWeapon();
+		if (weapon == null || weapon.getVars() == null || weapon.getVars().getBlowpipeDart() == null)
 		{
-			ComputeContext ctx = new ComputeContext();
-			ctx.put(ComputeInputs.ATTACKER_ITEMS, getState().getAttackerItems());
-			ctx.put(ComputeInputs.ATTACK_STYLE, getState().getAttackStyle());
+			setVisible(false);
+			return;
+		}
 
-			setVisible(blowpipeDartsItemStatsComputable.isApplicable(ctx));
-		});
+		setVisible(
+			BLOWPIPE_IDS.contains(weapon.getVars().getBlowpipeDart().getId())
+		);
 	}
 }

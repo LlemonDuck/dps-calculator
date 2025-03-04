@@ -1,8 +1,9 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.skills;
 
-import com.duckblade.osrs.dpscalc.calc.model.Skills;
+import com.duckblade.osrs.dpscalc.calc.model.Player;
+import com.duckblade.osrs.dpscalc.calc.model.PlayerSkills;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThreadProxy;
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundStatBox;
@@ -14,10 +15,10 @@ import java.awt.GridLayout;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 import java.util.function.ToIntFunction;
+import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.Box;
@@ -29,7 +30,10 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 import static net.runelite.api.Skill.ATTACK;
 import static net.runelite.api.Skill.DEFENCE;
+import static net.runelite.api.Skill.HERBLORE;
+import static net.runelite.api.Skill.HITPOINTS;
 import static net.runelite.api.Skill.MAGIC;
+import static net.runelite.api.Skill.MINING;
 import static net.runelite.api.Skill.PRAYER;
 import static net.runelite.api.Skill.RANGED;
 import static net.runelite.api.Skill.STRENGTH;
@@ -39,14 +43,14 @@ import net.runelite.client.ui.PluginPanel;
 public class SkillsPanel extends JPanel implements StateBoundComponent
 {
 
-	private static ObjIntConsumer<PanelState> writer(Function<PanelState, Map<Skill, Integer>> mapSelector, Skill skill)
+	private static ObjIntConsumer<ComputeInput> writer(Function<Player, PlayerSkills> mapSelector, Skill skill)
 	{
-		return (state, lvl) -> mapSelector.apply(state).put(skill, lvl);
+		return (state, lvl) -> mapSelector.apply(state.getPlayer()).set(skill, lvl);
 	}
 
-	private static ToIntFunction<PanelState> reader(Function<PanelState, Map<Skill, Integer>> mapSelector, Skill skill)
+	private static ToIntFunction<ComputeInput> reader(Function<Player, PlayerSkills> mapSelector, Skill skill)
 	{
-		return state -> mapSelector.apply(state).getOrDefault(skill, 0);
+		return state -> mapSelector.apply(state.getPlayer()).get(skill);
 	}
 
 	@Getter
@@ -66,24 +70,156 @@ public class SkillsPanel extends JPanel implements StateBoundComponent
 		add(new LoadFromClientButton(this::loadFromClient));
 
 		statBoxes = Arrays.asList(
-			new StateBoundStatBox(manager, "att", "Attack", true, writer(PanelState::getAttackerSkills, ATTACK), reader(PanelState::getAttackerSkills, ATTACK)),
-			new StateBoundStatBox(manager, "str", "Strength", true, writer(PanelState::getAttackerSkills, STRENGTH), reader(PanelState::getAttackerSkills, STRENGTH)),
-			new StateBoundStatBox(manager, "def", "Defence", true, writer(PanelState::getAttackerSkills, DEFENCE), reader(PanelState::getAttackerSkills, DEFENCE)),
-			new StateBoundStatBox(manager, "mage", "Magic", true, writer(PanelState::getAttackerSkills, MAGIC), reader(PanelState::getAttackerSkills, MAGIC)),
-			new StateBoundStatBox(manager, "range", "Ranged", true, writer(PanelState::getAttackerSkills, RANGED), reader(PanelState::getAttackerSkills, RANGED)),
-			new StateBoundStatBox(manager, "prayer", "Prayer", true, writer(PanelState::getAttackerSkills, PRAYER), reader(PanelState::getAttackerSkills, PRAYER))
+			new StateBoundStatBox(
+				manager,
+				"hp",
+				"Hitpoints",
+				true,
+				writer(Player::getSkills, HITPOINTS),
+				reader(Player::getSkills, HITPOINTS)
+			),
+			new StateBoundStatBox(
+				manager,
+				"att",
+				"Attack",
+				true,
+				writer(Player::getSkills, ATTACK),
+				reader(Player::getSkills, ATTACK)
+			),
+			new StateBoundStatBox(
+				manager,
+				"str",
+				"Strength",
+				true,
+				writer(Player::getSkills, STRENGTH),
+				reader(Player::getSkills, STRENGTH)
+			),
+			new StateBoundStatBox(
+				manager,
+				"def",
+				"Defence",
+				true,
+				writer(Player::getSkills, DEFENCE),
+				reader(Player::getSkills, DEFENCE)
+			),
+			new StateBoundStatBox(
+				manager,
+				"range",
+				"Ranged",
+				true,
+				writer(Player::getSkills, RANGED),
+				reader(Player::getSkills, RANGED)
+			),
+			new StateBoundStatBox(
+				manager,
+				"mage",
+				"Magic",
+				true,
+				writer(Player::getSkills, MAGIC),
+				reader(Player::getSkills, MAGIC)
+			),
+			new StateBoundStatBox(
+				manager,
+				"prayer",
+				"Prayer",
+				true,
+				writer(Player::getSkills, PRAYER),
+				reader(Player::getSkills, PRAYER)
+			),
+			new StateBoundStatBox(
+				manager,
+				"mining",
+				"Mining",
+				true,
+				writer(Player::getSkills, MINING),
+				reader(Player::getSkills, MINING)
+			),
+			new StateBoundStatBox(
+				manager,
+				"herblore",
+				"Herblore",
+				true,
+				writer(Player::getSkills, HERBLORE),
+				reader(Player::getSkills, HERBLORE)
+			)
 		);
 		add(new StatCategory("Player Stats", statBoxes));
 
 		add(Box.createVerticalStrut(10));
 
 		boostBoxes = Arrays.asList(
-			new StateBoundStatBox(manager, "att", "Attack", true, writer(PanelState::getAttackerBoosts, ATTACK), reader(PanelState::getAttackerBoosts, ATTACK)),
-			new StateBoundStatBox(manager, "str", "Strength", true, writer(PanelState::getAttackerBoosts, STRENGTH), reader(PanelState::getAttackerBoosts, STRENGTH)),
-			new StateBoundStatBox(manager, "def", "Defence", true, writer(PanelState::getAttackerBoosts, DEFENCE), reader(PanelState::getAttackerBoosts, DEFENCE)),
-			new StateBoundStatBox(manager, "mage", "Magic", true, writer(PanelState::getAttackerBoosts, MAGIC), reader(PanelState::getAttackerBoosts, MAGIC)),
-			new StateBoundStatBox(manager, "range", "Ranged", true, writer(PanelState::getAttackerBoosts, RANGED), reader(PanelState::getAttackerBoosts, RANGED)),
-			new StateBoundStatBox(manager, "prayer", "Prayer", true, writer(PanelState::getAttackerBoosts, PRAYER), reader(PanelState::getAttackerBoosts, PRAYER))
+			new StateBoundStatBox(
+				manager,
+				"hp",
+				"Hitpoints",
+				true,
+				writer(Player::getBoosts, HITPOINTS),
+				reader(Player::getBoosts, HITPOINTS)
+			),
+			new StateBoundStatBox(
+				manager,
+				"att",
+				"Attack",
+				true,
+				writer(Player::getBoosts, ATTACK),
+				reader(Player::getBoosts, ATTACK)
+			),
+			new StateBoundStatBox(
+				manager,
+				"str",
+				"Strength",
+				true,
+				writer(Player::getBoosts, STRENGTH),
+				reader(Player::getBoosts, STRENGTH)
+			),
+			new StateBoundStatBox(
+				manager,
+				"def",
+				"Defence",
+				true,
+				writer(Player::getBoosts, DEFENCE),
+				reader(Player::getBoosts, DEFENCE)
+			),
+			new StateBoundStatBox(
+				manager,
+				"range",
+				"Ranged",
+				true,
+				writer(Player::getBoosts, RANGED),
+				reader(Player::getBoosts, RANGED)
+			),
+			new StateBoundStatBox(
+				manager,
+				"mage",
+				"Magic",
+				true,
+				writer(Player::getBoosts, MAGIC),
+				reader(Player::getBoosts, MAGIC)
+			),
+			new StateBoundStatBox(
+				manager,
+				"prayer",
+				"Prayer",
+				true,
+				writer(Player::getBoosts, PRAYER),
+				reader(Player::getBoosts, PRAYER)
+			),
+			new StateBoundStatBox(
+				manager,
+				"mining",
+				"Mining",
+				true,
+				writer(Player::getBoosts, MINING),
+				reader(Player::getBoosts, MINING)
+			),
+			new StateBoundStatBox(
+				manager,
+				"herblore",
+				"Herblore",
+				true,
+				writer(Player::getBoosts, HERBLORE),
+				reader(Player::getBoosts, HERBLORE)
+			)
 		);
 		add(new StatCategory("Boosts", boostBoxes));
 
@@ -120,12 +256,12 @@ public class SkillsPanel extends JPanel implements StateBoundComponent
 	{
 		clientDataProviderThreadProxy.tryAcquire(clientDataProvider ->
 		{
-			Skills playerSkills = clientDataProvider.getPlayerSkills();
-			for (Skill s : new Skill[]{ATTACK, STRENGTH, DEFENCE, MAGIC, RANGED, PRAYER})
-			{
-				getState().getAttackerSkills().put(s, playerSkills.getLevels().getOrDefault(s, 0));
-				getState().getAttackerBoosts().put(s, playerSkills.getBoosts().getOrDefault(s, 0));
-			}
+			PlayerSkills skills = clientDataProvider.getPlayer().getSkills();
+			getState().getPlayer().setSkills(skills);
+
+			PlayerSkills boosts = clientDataProvider.getPlayer().getBoosts();
+			getState().getPlayer().setBoosts(boosts);
+
 			SwingUtilities.invokeLater(this::fromState);
 		});
 	}
@@ -146,10 +282,8 @@ public class SkillsPanel extends JPanel implements StateBoundComponent
 
 	public boolean isReady()
 	{
-		return getState().getAttackerSkills()
-			.values()
-			.stream()
-			.anyMatch(i -> i != 0);
+		return !Stream.of(HITPOINTS, ATTACK, STRENGTH, DEFENCE, RANGED, MAGIC)
+			.anyMatch(s -> getState().getPlayer().getSkills().get(s) == 0);
 	}
 
 	public String getSummary()

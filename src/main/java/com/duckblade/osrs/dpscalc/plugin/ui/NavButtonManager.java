@@ -40,12 +40,6 @@ public class NavButtonManager implements PluginLifecycleComponent
 
 	public void openPanel()
 	{
-		SwingUtilities.invokeLater(() ->
-		{
-			if (!navButton.isSelected())
-			{
-				navButton.getOnSelect().run();
-			}
-		});
+		SwingUtilities.invokeLater(() -> clientToolbar.openPanel(navButton));
 	}
 }

@@ -1,5 +1,6 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.state;
 
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,7 @@ public class PanelStateManager
 
 	public void createNewSet(String name)
 	{
-		PanelInputSet newSet = PanelInputSet.builder()
-			.name(name)
-			.build();
+		PanelInputSet newSet = new PanelInputSet(name);
 
 		sets.add(newSet);
 		selectSet(newSet);
@@ -40,7 +39,7 @@ public class PanelStateManager
 		return currentSet;
 	}
 
-	public PanelState currentState()
+	public ComputeInput currentState()
 	{
 		return currentSet.getState();
 	}

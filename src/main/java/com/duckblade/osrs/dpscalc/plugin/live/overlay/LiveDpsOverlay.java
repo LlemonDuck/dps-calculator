@@ -1,14 +1,11 @@
 package com.duckblade.osrs.dpscalc.plugin.live.overlay;
 
-import com.duckblade.osrs.dpscalc.calc.HitChanceComputable;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.maxhit.TrueMaxHitComputable;
+import com.duckblade.osrs.dpscalc.calc.DpsResultCache;
 import com.duckblade.osrs.dpscalc.plugin.config.DpsCalcConfig;
 import com.duckblade.osrs.dpscalc.plugin.live.TargetedDps;
 import com.duckblade.osrs.dpscalc.plugin.live.TargetedDpsChanged;
 import com.duckblade.osrs.dpscalc.plugin.live.party.PartyDpsService;
 import com.duckblade.osrs.dpscalc.plugin.module.PluginLifecycleComponent;
-import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.text.DecimalFormat;
@@ -40,9 +37,6 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	private final OverlayMinimizerService overlayMinimizerService;
 	private final PartyDpsService partyDpsService;
 
-	private final TrueMaxHitComputable trueMaxHitComputable;
-	private final HitChanceComputable hitChanceComputable;
-
 	// boxed types so we can store null
 	private TargetedDps targetedDps;
 	private Integer maxHit;
@@ -51,8 +45,7 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	@Inject
 	public LiveDpsOverlay(
 		OverlayManager overlayManager, EventBus eventBus, DpsCalcConfig config,
-		OverlayMinimizerService overlayMinimizerService, PartyDpsService partyDpsService,
-		TrueMaxHitComputable trueMaxHitComputable, HitChanceComputable hitChanceComputable
+		OverlayMinimizerService overlayMinimizerService, PartyDpsService partyDpsService
 	)
 	{
 		this.eventBus = eventBus;
@@ -61,9 +54,6 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 
 		this.overlayMinimizerService = overlayMinimizerService;
 		this.partyDpsService = partyDpsService;
-
-		this.trueMaxHitComputable = trueMaxHitComputable;
-		this.hitChanceComputable = hitChanceComputable;
 
 		setPosition(OverlayPosition.BOTTOM_LEFT);
 	}
@@ -92,10 +82,16 @@ public class LiveDpsOverlay extends OverlayPanel implements PluginLifecycleCompo
 	public void onTargetedDpsChanged(TargetedDpsChanged e)
 	{
 		targetedDps = e.getTargetedDps();
+		if (targetedDps == null)
+		{
+			maxHit = null;
+			hitChance = null;
+			return;
+		}
 
-		ComputeContext context = e.getContext();
-		maxHit = ComputeUtil.tryCompute(() -> context.get(trueMaxHitComputable));
-		hitChance = ComputeUtil.tryCompute(() -> context.get(hitChanceComputable));
+		DpsResultCache dpsResultCache = e.getDpsResultCache();
+		maxHit = dpsResultCache.getMinMax().getMax();
+		hitChance = dpsResultCache.getHitChance();
 	}
 
 	@Override

@@ -1,23 +1,24 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.state;
 
+import com.duckblade.osrs.dpscalc.calc.model.Monster;
+import com.duckblade.osrs.dpscalc.calc.model.Player;
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
 import java.util.UUID;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.extern.jackson.Jacksonized;
 
 @Data
-@Jacksonized
-@Builder(toBuilder = true)
+@AllArgsConstructor
 public class PanelInputSet
 {
 
-	@Builder.Default
 	private final String uuid = UUID.randomUUID().toString();
 
-	@Builder.Default
 	private String name = "Default Set";
 
-	@Builder.Default
-	private final PanelState state = new PanelState();
+	private final ComputeInput state = ComputeInput.builder()
+		.player(Player.builder().build())
+		.monster(Monster.builder().build())
+		.build();
 
 }

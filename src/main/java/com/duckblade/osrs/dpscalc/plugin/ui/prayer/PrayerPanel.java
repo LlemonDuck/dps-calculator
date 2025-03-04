@@ -1,19 +1,13 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.prayer;
 
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeInputs;
 import com.duckblade.osrs.dpscalc.calc.model.Prayer;
-import com.duckblade.osrs.dpscalc.calc.prayer.PrayerDrainComputable;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThreadProxy;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
-import com.duckblade.osrs.dpscalc.plugin.ui.util.ComputeUtil;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.LoadFromClientButton;
 import com.google.common.collect.ImmutableList;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
@@ -32,17 +26,15 @@ public class PrayerPanel extends JPanel implements StateBoundComponent
 	@Getter
 	private final PanelStateManager manager;
 	private final ClientDataProviderThreadProxy clientDataProviderThreadProxy;
-	private final PrayerDrainComputable prayerDrainComputable;
 
 	private final JLabel drainLabel;
 	private final List<PrayerButton> prayerButtons;
 
 	@Inject
-	public PrayerPanel(PanelStateManager manager, ClientDataProviderThreadProxy clientDataProviderThreadProxy, PrayerDrainComputable prayerDrainComputable)
+	public PrayerPanel(PanelStateManager manager, ClientDataProviderThreadProxy clientDataProviderThreadProxy)
 	{
 		this.manager = manager;
 		this.clientDataProviderThreadProxy = clientDataProviderThreadProxy;
-		this.prayerDrainComputable = prayerDrainComputable;
 
 		add(new LoadFromClientButton(this::loadFromClient));
 
@@ -74,7 +66,7 @@ public class PrayerPanel extends JPanel implements StateBoundComponent
 	{
 		clientDataProviderThreadProxy.tryAcquire(clientDataProvider ->
 		{
-			getState().setAttackerPrayers(new HashSet<>(clientDataProvider.getPlayerActivePrayers()));
+			getState().getPlayer().setPrayers(clientDataProvider.getPlayer().getPrayers());
 			SwingUtilities.invokeLater(this::fromState);
 		});
 	}
@@ -88,19 +80,18 @@ public class PrayerPanel extends JPanel implements StateBoundComponent
 
 	private void calculateDrain()
 	{
-		ComputeUtil.computeSilent(() ->
-		{
-			ComputeContext ctx = new ComputeContext();
-			ctx.put(ComputeInputs.ATTACKER_PRAYERS, getState().getAttackerPrayers());
+		int drain = getState().getPlayer()
+			.getPrayers()
+			.stream()
+			.mapToInt(Prayer::getDrainRate)
+			.sum();
 
-			int drain = ctx.get(prayerDrainComputable);
-			drainLabel.setText("Total Drain: " + drain);
-		});
+		drainLabel.setText("Total Drain: " + drain);
 	}
 
 	public String getSummary()
 	{
-		Set<Prayer> enabled = getState().getAttackerPrayers();
+		Set<Prayer> enabled = getState().getPlayer().getPrayers();
 		if (enabled.isEmpty())
 		{
 			return "None";
@@ -108,10 +99,7 @@ public class PrayerPanel extends JPanel implements StateBoundComponent
 
 		if (enabled.size() == 1)
 		{
-			return enabled.stream()
-				.max(Comparator.comparing(Prayer::getDrainRate))
-				.get()
-				.getDisplayName();
+			return enabled.iterator().next().getName();
 		}
 		else
 		{

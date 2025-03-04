@@ -1,15 +1,15 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.equip;
 
-import com.duckblade.osrs.dpscalc.calc.model.ItemStats;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
+import com.duckblade.osrs.dpscalc.calc.model.EquipmentPiece;
+import static com.duckblade.osrs.dpscalc.plugin.osdata.wiki.WikiDataProvider.EQUIPMENT_BY_SLOT;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.component.StateBoundJComboBox;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -30,24 +30,15 @@ public class EquipmentSlotPanel extends JPanel implements StateBoundComponent
 
 	private static final ImageIcon CLEAR_ICON = new ImageIcon(ImageUtil.loadImageResource(EquipmentSlotPanel.class, "icon_clear.png"));
 
-	private static List<ItemStats> getItemsForSlot(ItemStatsProvider itemStatsProvider, int slotIx)
-	{
-		return itemStatsProvider.getAll()
-			.stream()
-			.filter(is -> is.getSlot() == slotIx)
-			.sorted(Comparator.comparing(ItemStats::getName))
-			.collect(Collectors.toList());
-	}
-
 	@Getter
 	private final PanelStateManager manager;
 	private final ItemManager rlItemManager;
 
 	private final ImageIcon defaultIcon;
 	private final JLabel imageLabel;
-	private final StateBoundJComboBox<ItemStats> comboBox;
+	private final StateBoundJComboBox<EquipmentPiece> comboBox;
 
-	public EquipmentSlotPanel(PanelStateManager manager, ItemManager rlItemManager, EquipmentInventorySlot slot, ItemStatsProvider itemStatsProvider)
+	public EquipmentSlotPanel(PanelStateManager manager, ItemManager rlItemManager, EquipmentInventorySlot slot)
 	{
 		this.manager = manager;
 		this.rlItemManager = rlItemManager;
@@ -62,22 +53,15 @@ public class EquipmentSlotPanel extends JPanel implements StateBoundComponent
 		add(imageLabel, BorderLayout.WEST);
 
 		comboBox = new StateBoundJComboBox<>(
-			getItemsForSlot(itemStatsProvider, slot.getSlotIdx()),
-			ItemStats::getName,
+			EQUIPMENT_BY_SLOT.getOrDefault(slot, Collections.emptyList())
+				.stream()
+				.sorted(Comparator.comparing(EquipmentPiece::getName))
+				.collect(Collectors.toList()),
+			EquipmentPiece::getName,
 			null,
 			manager,
-			(ps, v) ->
-			{
-				if (v == null)
-				{
-					ps.getAttackerItems().remove(slot);
-				}
-				else
-				{
-					ps.getAttackerItems().put(slot, v);
-				}
-			},
-			ps -> ps.getAttackerItems().get(slot)
+			(ps, v) -> ps.getPlayer().getEquipment().set(slot, v),
+			ps -> ps.getPlayer().getEquipment().get(slot)
 		);
 		comboBox.enableAutocomplete();
 		comboBox.setPreferredSize(new Dimension(PluginPanel.PANEL_WIDTH - 75, 25));
@@ -89,7 +73,7 @@ public class EquipmentSlotPanel extends JPanel implements StateBoundComponent
 		SwingUtil.removeButtonDecorations(clearButton);
 		clearButton.addActionListener(e ->
 		{
-			getState().getAttackerItems().remove(slot);
+			getState().getPlayer().getEquipment().set(slot, null);
 			fromState();
 		});
 		add(clearButton, BorderLayout.EAST);
@@ -99,14 +83,14 @@ public class EquipmentSlotPanel extends JPanel implements StateBoundComponent
 	{
 		SwingUtilities.invokeLater(() ->
 		{
-			ItemStats newValue = comboBox.getValue();
+			EquipmentPiece newValue = comboBox.getValue();
 			if (newValue == null)
 			{
 				imageLabel.setIcon(defaultIcon);
 			}
 			else if (rlItemManager != null)
 			{
-				AsyncBufferedImage newIcon = rlItemManager.getImage(newValue.getItemId());
+				AsyncBufferedImage newIcon = rlItemManager.getImage(newValue.getId());
 				BufferedImage resized = ImageUtil.resizeImage(newIcon, 25, 25); // if async, this does nothing
 				newIcon.onLoaded(() ->
 				{

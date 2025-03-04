@@ -1,8 +1,6 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.result;
 
-import com.duckblade.osrs.dpscalc.calc.compute.ComputeContext;
-import com.duckblade.osrs.dpscalc.calc.exceptions.DpsComputeException;
-import com.duckblade.osrs.dpscalc.calc.exceptions.MissingInputException;
+import com.duckblade.osrs.dpscalc.calc.DpsResultCache;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -17,10 +15,10 @@ import net.runelite.client.ui.PluginPanel;
 public class CalcResultLabel extends JPanel
 {
 
-	private final Function<ComputeContext, String> getter;
+	private final Function<DpsResultCache, String> getter;
 	private final JLabel valueLabel;
 
-	public CalcResultLabel(String title, Function<ComputeContext, String> getter)
+	public CalcResultLabel(String title, Function<DpsResultCache, String> getter)
 	{
 		this.getter = getter;
 
@@ -43,9 +41,9 @@ public class CalcResultLabel extends JPanel
 		add(valueLabel);
 	}
 
-	public void setValue(ComputeContext context)
+	public void setValue(DpsResultCache dpsResultCache)
 	{
-		if (context == null)
+		if (dpsResultCache == null)
 		{
 			setDisplay(null);
 			return;
@@ -53,16 +51,11 @@ public class CalcResultLabel extends JPanel
 
 		try
 		{
-			setDisplay(getter.apply(context));
+			setDisplay(getter.apply(dpsResultCache));
 		}
-		catch (DpsComputeException e)
+		catch (Exception e)
 		{
 			setDisplay(null);
-
-			if (!(e.getCause() instanceof MissingInputException))
-			{
-				throw e;
-			}
 		}
 	}
 

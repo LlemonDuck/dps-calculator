@@ -1,6 +1,6 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.state.component;
 
-import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelState;
+import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ComputeInput;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.CustomJCheckBox;
@@ -14,10 +14,10 @@ public class StateBoundJCheckBox extends CustomJCheckBox implements StateBoundCo
 	@Getter
 	private final PanelStateManager manager;
 
-	private final BiConsumer<PanelState, Boolean> stateWriter;
-	private final Predicate<PanelState> stateReader;
+	private final BiConsumer<ComputeInput, Boolean> stateWriter;
+	private final Predicate<ComputeInput> stateReader;
 
-	public StateBoundJCheckBox(String text, PanelStateManager manager, BiConsumer<PanelState, Boolean> stateWriter, Predicate<PanelState> stateReader)
+	public StateBoundJCheckBox(String text, PanelStateManager manager, BiConsumer<ComputeInput, Boolean> stateWriter, Predicate<ComputeInput> stateReader)
 	{
 		super(text);
 		this.manager = manager;

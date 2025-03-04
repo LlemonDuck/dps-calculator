@@ -1,15 +1,15 @@
 package com.duckblade.osrs.dpscalc.plugin.ui.equip;
 
-import com.duckblade.osrs.dpscalc.calc.model.ItemStats;
+import com.duckblade.osrs.dpscalc.calc.model.EquipmentPiece;
+import com.duckblade.osrs.dpscalc.calc.model.Player;
 import com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.ClientDataProviderThreadProxy;
-import com.duckblade.osrs.dpscalc.plugin.osdata.wiki.ItemStatsProvider;
+import static com.duckblade.osrs.dpscalc.plugin.osdata.clientdata.RuneLiteClientDataProvider.ALL_SLOTS;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.PanelStateManager;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateBoundComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.state.StateVisibleComponent;
 import com.duckblade.osrs.dpscalc.plugin.ui.util.LoadFromClientButton;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
 import net.runelite.api.EquipmentInventorySlot;
-import net.runelite.api.Skill;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.PluginPanel;
 
@@ -40,12 +39,12 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 
 	@Inject
 	public EquipmentPanel(
-		@Nullable ItemManager rlItemManager, ItemStatsProvider itemStatsProvider,
+		@Nullable ItemManager rlItemManager,
 		PanelStateManager manager, ClientDataProviderThreadProxy clientDataProviderThreadProxy,
-		EquipmentTotalsPanel equipmentTotalsPanel, AttackStyleSelectPanel attackStyleSelectPanel,
+		EquipmentTotalsPanel equipmentTotalsPanel, PlayerCombatStyleSelectPanel playerCombatStyleSelectPanel,
 		InWildernessCheckBox inWildernessCheckBox, OnSlayerTaskCheckBox onSlayerTaskCheckBox,
 		UsingChargeCheckBox usingChargeCheckBox, UsingMarkOfDarknessCheckBox usingMarkOfDarknessCheckBox,
-		BlowpipeDartsSelectPanel blowpipeDartsSelectPanel, DharokHpPanel dharokHpPanel,
+		BlowpipeDartsSelectPanel blowpipeDartsSelectPanel,
 		ChinchompaDistancePanel chinchompaDistancePanel, SpellSelectPanel spellSelectPanel
 	)
 	{
@@ -67,9 +66,9 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 		slotPanel.setAlignmentX(CENTER_ALIGNMENT);
 		add(slotPanel);
 
-		for (EquipmentInventorySlot slot : EquipmentInventorySlot.values())
+		for (EquipmentInventorySlot slot : ALL_SLOTS)
 		{
-			EquipmentSlotPanel innerPanel = new EquipmentSlotPanel(manager, rlItemManager, slot, itemStatsProvider);
+			EquipmentSlotPanel innerPanel = new EquipmentSlotPanel(manager, rlItemManager, slot);
 			innerPanel.addCallback(this::fromState);
 			addPanel(innerPanel, slotPanel);
 
@@ -87,17 +86,14 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 		}
 		add(Box.createVerticalStrut(5));
 
-		addPanel(dharokHpPanel);
-		dharokHpPanel.add(Box.createVerticalStrut(10));
-
 		addPanel(chinchompaDistancePanel);
 		chinchompaDistancePanel.add(Box.createVerticalStrut(10));
 
 		addPanel(blowpipeDartsSelectPanel);
 		blowpipeDartsSelectPanel.addCallback(this::fromState);
 
-		addPanel(attackStyleSelectPanel);
-		attackStyleSelectPanel.addCallback(this::fromState);
+		addPanel(playerCombatStyleSelectPanel);
+		playerCombatStyleSelectPanel.addCallback(this::fromState);
 
 		addPanel(spellSelectPanel);
 		spellSelectPanel.addCallback(this::fromState);
@@ -115,15 +111,13 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 	{
 		clientDataProviderThreadProxy.tryAcquire(clientDataProvider ->
 		{
-			getState().setAttackerItems(new HashMap<>(clientDataProvider.getPlayerEquipment()));
-			getState().setAttackStyle(clientDataProvider.getAttackStyle().toBuilder().build());
-			getState().setBlowpipeDarts(clientDataProvider.getBlowpipeDarts());
-			getState().setOnSlayerTask(clientDataProvider.playerIsOnSlayerTask());
-			getState().setUsingChargeSpell(clientDataProvider.playerIsUsingChargeSpell());
-			getState().setUsingMarkOfDarkness(clientDataProvider.playerIsUsingMarkOfDarkness());
-			getState().setInWilderness(clientDataProvider.playerIsInWilderness());
-			getState().getAttackerSkills().put(Skill.HITPOINTS, clientDataProvider.getPlayerSkills().getLevels().getOrDefault(Skill.HITPOINTS, 99));
-			getState().getAttackerBoosts().put(Skill.HITPOINTS, clientDataProvider.getPlayerSkills().getBoosts().getOrDefault(Skill.HITPOINTS, 0));
+			Player client = clientDataProvider.getPlayer();
+			Player state = getState().getPlayer();
+
+			state.setEquipment(client.getEquipment());
+			state.setStyle(client.getStyle());
+			state.setBuffs(client.getBuffs());
+
 			SwingUtilities.invokeLater(this::fromState);
 		});
 	}
@@ -162,19 +156,20 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 	public boolean isReady()
 	{
 		// ensure selected dart if using tbp
-		if (blowpipeDartsSelectPanel.isVisible() && getState().getBlowpipeDarts() == null)
+		Player player = getState().getPlayer();
+		if (blowpipeDartsSelectPanel.isVisible() && player.getEquipment().getWeapon().getVars() == null)
 		{
 			return false;
 		}
 
 		// ensure spell is selected if needed
-		if (spellSelectPanel.isVisible() && getState().getSpell() == null)
+		if (spellSelectPanel.isVisible() && player.getSpell() == null)
 		{
 			return false;
 		}
 
 		// ensure selected attack style (wearing nothing is fine)
-		return getState().getAttackStyle() != null;
+		return player.getStyle() != null;
 	}
 
 	public String getSummary()
@@ -184,8 +179,9 @@ public class EquipmentPanel extends JPanel implements StateBoundComponent
 			return "Not Set";
 		}
 
-		ItemStats weapon = getState().getAttackerItems().get(EquipmentInventorySlot.WEAPON);
+		Player player = getState().getPlayer();
+		EquipmentPiece weapon = player.getEquipment().getWeapon();
 		String weaponName = weapon == null ? "Unarmed" : weapon.getName();
-		return getState().getAttackStyle().getAttackType() + " - " + weaponName;
+		return player.getStyle().getType() + " - " + weaponName;
 	}
 }
