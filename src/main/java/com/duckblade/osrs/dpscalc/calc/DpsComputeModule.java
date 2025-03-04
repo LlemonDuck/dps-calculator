@@ -7,6 +7,7 @@ import com.duckblade.osrs.dpscalc.calc.defender.skills.SkillScaling;
 import com.duckblade.osrs.dpscalc.calc.defender.skills.TheatreSkillScaling;
 import com.duckblade.osrs.dpscalc.calc.compute.ComputeOutput;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.AhrimsAutocastGearBonus;
+import com.duckblade.osrs.dpscalc.calc.gearbonus.BerserkerNecklaceGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.BlackMaskGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.ChinchompaDistanceGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.CrystalGearBonus;
@@ -17,6 +18,7 @@ import com.duckblade.osrs.dpscalc.calc.gearbonus.KerisGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.LeafyGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.MageDemonbaneGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.MeleeDemonbaneGearBonus;
+import com.duckblade.osrs.dpscalc.calc.gearbonus.ObsidianGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.RevenantWeaponGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.SalveAmuletGearBonus;
 import com.duckblade.osrs.dpscalc.calc.gearbonus.SmokeBattlestaffGearBonus;
@@ -62,6 +64,7 @@ public class DpsComputeModule extends AbstractModule
 
 		Multibinder<GearBonusComputable> gearBonusComputables = Multibinder.newSetBinder(binder(), GearBonusComputable.class);
 		gearBonusComputables.addBinding().to(AhrimsAutocastGearBonus.class);
+		gearBonusComputables.addBinding().to(BerserkerNecklaceGearBonus.class);
 		gearBonusComputables.addBinding().to(BlackMaskGearBonus.class);
 		gearBonusComputables.addBinding().to(ChinchompaDistanceGearBonus.class);
 		gearBonusComputables.addBinding().to(CrystalGearBonus.class);
@@ -71,6 +74,7 @@ public class DpsComputeModule extends AbstractModule
 		gearBonusComputables.addBinding().to(KerisGearBonus.class);
 		gearBonusComputables.addBinding().to(LeafyGearBonus.class);
 		gearBonusComputables.addBinding().to(MeleeDemonbaneGearBonus.class);
+		gearBonusComputables.addBinding().to(ObsidianGearBonus.class);
 		gearBonusComputables.addBinding().to(RevenantWeaponGearBonus.class);
 		gearBonusComputables.addBinding().to(SalveAmuletGearBonus.class);
 		gearBonusComputables.addBinding().to(SmokeBattlestaffGearBonus.class);
